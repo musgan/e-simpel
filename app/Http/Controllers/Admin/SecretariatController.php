@@ -290,6 +290,8 @@ class SecretariatController extends Controller
             'uraian'    => 'required'
         ]);
 
+        
+
         $send = indikatorSector::where('id',$id)->first();
         $send->uraian = $request->uraian;
         

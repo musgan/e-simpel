@@ -235,7 +235,7 @@ class HawasbidIndikatorController extends Controller
                 }
             }
 
-            return redirect(url(session('role').'/pengawas-bidang/hawasbid_indikator/create'))->with('status','Berhasil Menambah Data');
+            return redirect(url(session('role').'/hawasbid_indikator/create'))->with('status','Berhasil Menambah Data');
         }
     }
 
@@ -364,7 +364,7 @@ class HawasbidIndikatorController extends Controller
             }
 
         }
-        return redirect(url(session('role').'/pengawas-bidang/hawasbid_indikator/'.$id.'/edit'))->with('status','Berhasil Memperbaharui Data');
+        return redirect(url(session('role').'/hawasbid_indikator/'.$id.'/edit'))->with('status','Berhasil Memperbaharui Data');
     }
 
     /**
@@ -379,6 +379,6 @@ class HawasbidIndikatorController extends Controller
         Secretariat::where('id',$id)
             ->delete();
 
-        return redirect(url(session('role').'/pengawas-bidang/hawasbid_indikator'))->with('status','Berhasil Menghapus Data');
+        return redirect(url(session('role').'/hawasbid_indikator'))->with('status','Berhasil Menghapus Data');
     }
 }
