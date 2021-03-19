@@ -83,6 +83,9 @@ Route::group(['namespace' => 'Admin','prefix'=>'admin','middleware' => ['auth','
 	Route::resource('generate_indikator','GenerateIndikatorController', ['except' => ['update','create','show','edit','destroy']]);
 	Route::delete('generate_indikator','GenerateIndikatorController@delete_periode');
 
+	Route::get('performa-hawasbid','PerformaHawasbidController@index');
+	Route::post('performa-hawasbid','PerformaHawasbidController@store');
+
 });
 
 // MPN or Monitor Pengadilan Negeri

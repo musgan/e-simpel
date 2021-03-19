@@ -70,7 +70,7 @@ class SecretariatController extends Controller
         ->join('secretariats','secretariats.id','=','secretariat_id')
         ->join('sectors','sectors.id','indikator_sectors.sector_id')
         ->where('secretariats.sector_id',$sector->id)
-        ->select('indikator_sectors.id','indikator','periode_tahun','periode_bulan','evidence','secretariats.created_at','sectors.nama');
+        ->select('indikator_sectors.id','indikator','periode_tahun','periode_bulan','evidence','indikator_sectors.updated_at','sectors.nama');
         
         if($search != ""){
             $secretariats = $secretariats->where('indikator','like','%'.$search.'%');

@@ -77,6 +77,8 @@ if(isset($root_menu))
          <a class="collapse-item <?php if($sb == "hawasbid_indikator") echo 'active'?>" href="{{url(session('role').'/hawasbid_indikator')}}">Indikator</a>
          @if($user->user_level_id == 1)
          <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url(session('role').'/generate_indikator')}}">Generate Indikator</a>
+
+         <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url(session('role').'/performa-hawasbid')}}">Performa Hawasbid</a>
          @endif
       </div>
     </div>

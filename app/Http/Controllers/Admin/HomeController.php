@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\UserLevel;
 use App\UserLevelGroup;
 use App\Sector;
+use App\PerformaSector;
 use DB;
 
 class HomeController extends Controller
@@ -148,7 +149,88 @@ class HomeController extends Controller
 
         // chart performa tindak lanjut
 
+        $query_performa_year = PerformaSector::orderBy('periode_tahun','DESC')
+            ->orderBy('periode_bulan','DESC')
+            ->select('periode_bulan','periode_tahun')
+            ->groupBy('periode_tahun','periode_bulan')
+            ->limit(3)
+            ->get();
+
+        $label_performa = array_fill(0, count($query_performa_year), "");
+        $idx = count($query_performa_year) - 1;
+        foreach ($query_performa_year as $val) {
+            # code...
+            // array_push($label_performa, $val->periode_bulan.'-'.$val->periode_tahun);
+            
+            $label_performa[$idx] = $val->periode_bulan.'-'.$val->periode_tahun;
+            $idx -= 1;
+        }
+
+        $sectors = DB::table('sectors')
+            ->orderBy('category','ASC')
+            ->orderBy('nama','ASC')
+            ->get();
+
+
+        $data_cperforma['labels'] = $label_performa;
+        $data_cperforma['datasets'] = array();
+
+        $data_cperforma_bidang['labels'] = $label_performa;
+        $data_cperforma_bidang['datasets'] = array();
+
+
+        foreach ($sectors as $row) {
+            # code...
+            $init_v = array_fill(0, count($label_performa), 0);
+            $init_v_bidang = array_fill(0, count($label_performa), 0);
+            
+            $tmp_data = array(
+                "label"           => $row->nama,
+                "backgroundColor" => "#".$row->base_color,//"rgb(255, 99, 132)",
+                "borderColor"     => "#".$row->base_color,
+                "data"            => $init_v
+              );
+
+            $tmp_data_bidang = array(
+                "label"           => $row->nama,
+                "backgroundColor" => "#".$row->base_color,//"rgb(255, 99, 132)",
+                "borderColor"     => "#".$row->base_color,
+                "data"            => $init_v_bidang
+              );
+
+            $performa_sector = PerformaSector::whereIn(DB::raw('CONCAT(periode_bulan,"-",periode_tahun)'), $label_performa)
+                ->where('sector_id',$row->id)
+                ->orderBy('periode_bulan','ASC')
+                ->orderBy('periode_tahun','ASC')
+                ->get();
+           
+            $idx = 0;
+            foreach ($performa_sector as $val) {
+                # code...
+                if($val->total_tindak_lanjut == 0)
+                    $init_v[$idx] = 0;
+                else
+                    $init_v[$idx] = ($val->total_tindak_lanjut_success/ $val->total_tindak_lanjut) * 100 ;
+
+
+                if($val->total_bidang == 0)
+                    $init_v_bidang[$idx] = 0;
+                else
+                    $init_v_bidang[$idx] = ($val->total_bidang_success/ $val->total_bidang) * 100 ;
+
+                $idx++;
+            }
+
+            $tmp_data["data"] = $init_v;
+            $tmp_data_bidang["data"] = $init_v_bidang;
+
+            array_push($data_cperforma['datasets'], $tmp_data);
+            array_push($data_cperforma_bidang['datasets'], $tmp_data_bidang);
+        }
         
+        // dd($data_cperforma);
+
+        // dd($data_cperforma);
 
         $send = [
             'menu' => 'dashboard',
@@ -157,7 +239,9 @@ class HomeController extends Controller
             'user_level'    => $user_level,
             'domain_sector' => $domain_sector,
             'menu_sectors'   => $this->sectors,
-            'data_chart'  => json_encode($data_chart)
+            'data_chart'  => json_encode($data_chart),
+            'tl_chart'  => json_encode($data_cperforma),
+            'bidang_chart'  => json_encode($data_cperforma_bidang),
         ];
         return view('admin.dashboard',$send);
     }

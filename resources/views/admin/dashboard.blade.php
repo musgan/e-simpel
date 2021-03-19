@@ -50,18 +50,19 @@
     </div>
   </div>
 
+  
   <div class="row">
     <div class="col-xl-6 col-md-6 mb-4 ">
       <div class="card border-left-danger shadow h-100 py-2" style="width: 100%;">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-md font-weight-bold text-danger text-uppercase mb-1">Chart Evidence
+              <div class="text-md font-weight-bold text-danger text-uppercase mb-1">Performa Bidang
               </div>
             </div>
           </div>
 
-          <canvas id="myChart"></canvas>
+          <canvas id="myChart3"></canvas>
 
         </div>
       </div>
@@ -77,6 +78,26 @@
             </div>
           </div>
 
+          <canvas id="myChart2"></canvas>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="card border-left-danger shadow h-100 py-2" style="width: 100%;">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-md font-weight-bold text-danger text-uppercase mb-1">Chart Evidence
+              </div>
+            </div>
+          </div>
+
           <canvas id="myChart"></canvas>
 
         </div>
@@ -84,6 +105,7 @@
     </div>
 
   </div>
+
   
 
   
@@ -154,7 +176,49 @@
       type: 'bar',
       data: {!! $data_chart !!},
       
-      options: opt,
+      options: {
+
+        legend: {
+            display: true,
+            align : 'left',
+            position : 'bottom'
+        },
+
+      },
+  });
+
+  var ctx2 = document.getElementById('myChart2').getContext('2d');
+  var chart = new Chart(ctx2, {
+      // The type of chart we want to create
+      type: 'bar',
+      data: {!! $tl_chart !!},
+      
+      options: {
+
+        legend: {
+            display: true,
+            align : 'left',
+            position : 'bottom'
+        },
+
+      },
+  });
+
+  var ctx3 = document.getElementById('myChart3').getContext('2d');
+  var chart = new Chart(ctx3, {
+      // The type of chart we want to create
+      type: 'bar',
+      data: {!! $bidang_chart !!},
+      
+      options: {
+
+        legend: {
+            display: true,
+            align : 'left',
+            position : 'bottom'
+        },
+
+      },
   });
 </script>
 @endsection

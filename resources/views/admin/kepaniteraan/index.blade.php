@@ -127,7 +127,7 @@
             <td>{{($row->evidence == 1)? 'ada' : 'tidak ada' }}</td>
             <td>
               <p>
-                {{date_format(date_create($row->created_at),"d M Y")}}
+                {{date_format(date_create($row->updated_at),"d M Y")}}
               </p>
 
               <a href="{{url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu.'/'.$row->id)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-folder-open" aria-hidden="true"></i> open</a>
