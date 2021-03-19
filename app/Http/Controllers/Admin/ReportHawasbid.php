@@ -492,13 +492,19 @@ class ReportHawasbid extends Controller
 
 	       $start_row += 1;
 	       $sheet->cell('C'.$start_row, function($cell) use($ketua_nip){
-	       		$cell->setValue("Nip: ".$ketua_nip);
+	       		$cell->setValue($ketua_nip);
 	       		$cell->setFontSize(12);
+
+	       		$cell->setAlignment('left');
+			    $cell->setValignment('top');
 	       });
 
 	       $sheet->cell('I'.$start_row, function($cell) use($wketua_nip){
-	       		$cell->setValue("Nip: ".$wketua_nip);
+	       		$cell->setValue($wketua_nip);
 	       		$cell->setFontSize(12);
+
+	       		$cell->setAlignment('left');
+			    $cell->setValignment('top');
 	       });
 
 
@@ -711,13 +717,19 @@ class ReportHawasbid extends Controller
 
 	       $start_row += 1;
 	       $sheet->cell('C'.$start_row, function($cell) use($ketua_nip){
-	       		$cell->setValue("Nip: ".$ketua_nip);
+	       		$cell->setValue($ketua_nip);
 	       		$cell->setFontSize(12);
+
+	       		$cell->setAlignment('left');
+			    $cell->setValignment('top');
 	       });
 
 	       $sheet->cell('I'.$start_row, function($cell) use($wketua_nip){
-	       		$cell->setValue("Nip: ".$wketua_nip);
+	       		$cell->setValue($wketua_nip);
 	       		$cell->setFontSize(12);
+
+	       		$cell->setAlignment('left');
+			    $cell->setValignment('top');
 	       });
 
 
@@ -932,13 +944,19 @@ class ReportHawasbid extends Controller
 
 	       $start_row += 1;
 	       $sheet->cell('C'.$start_row, function($cell) use($ketua_nip){
-	       		$cell->setValue("Nip: ".$ketua_nip);
+	       		$cell->setValue($ketua_nip);
 	       		$cell->setFontSize(12);
+
+	       		$cell->setAlignment('left');
+			    $cell->setValignment('top');
 	       });
 
 	       $sheet->cell('I'.$start_row, function($cell) use($wketua_nip){
-	       		$cell->setValue("Nip: ".$wketua_nip);
+	       		$cell->setValue($wketua_nip);
 	       		$cell->setFontSize(12);
+
+	       		$cell->setAlignment('left');
+			    $cell->setValignment('top');
 	       });
 
 
@@ -1262,12 +1280,9 @@ class ReportHawasbid extends Controller
 			        });
 
 			        $start_row += 3;
-			        $sheet->cell('H'.$start_row, function($cell){
-			        	$cell->setValue("Nama");
-			        	$cell->setFontSize(12);
-			        });
-			        $sheet->cell('I'.$start_row, function($cell) use($info_sector){
-			        	$cell->setValue(": ".$info_sector->penanggung_jawab);
+			        
+			        $sheet->cell('H'.$start_row, function($cell) use($info_sector){
+			        	$cell->setValue($info_sector->penanggung_jawab);
 			        	$cell->setFontSize(12);
 			        });
 
@@ -1275,13 +1290,8 @@ class ReportHawasbid extends Controller
 			        $sheet->getStyle('H'.$start_row.':K'.$start_row)->applyFromArray($border_style);
 
 			        $start_row += 1;
-			        $sheet->cell('H'.$start_row, function($cell){
-			        	$cell->setValue("NIP");
-			        	$cell->setFontSize(12);
-			        });
-
-			        $sheet->cell('I'.$start_row, function($cell) use($info_sector){
-			        	$cell->setValue(": ".$info_sector->nip);
+			        $sheet->cell('H'.$start_row, function($cell) use($info_sector){
+			        	$cell->setValue($info_sector->nip);
 			        	$cell->setFontSize(12);
 			        });
 

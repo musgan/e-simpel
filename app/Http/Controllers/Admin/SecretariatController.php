@@ -177,11 +177,14 @@ class SecretariatController extends Controller
         // }
 
         // return redirect(url(session('role').'/kepaniteraan/'.$submenu.'/'.$id))->with('status','Berhasil Menambah Data');
+
+        
     }
 
     public function upload_evidence($submenu, $id, Request $request)
     {
         //
+        $sector = DB::table('sectors')->where('alias', $submenu)->first();
         if($request->file('evidence')){
             foreach($request->evidence as $file){
                 $fname = $file->getClientOriginalName();
@@ -203,7 +206,7 @@ class SecretariatController extends Controller
             }
 
         }
-        return redirect(url(session('role').'/pengawas-bidang/kepaniteraan/'.$submenu.'/'.$id));
+        return redirect(url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$submenu.'/'.$id));
     }
 
     public function checkfileName($file_name, $pth){
@@ -290,6 +293,7 @@ class SecretariatController extends Controller
             'uraian'    => 'required'
         ]);
 
+        $sector = DB::table('sectors')->where('alias', $submenu)->first();
         
 
         $send = indikatorSector::where('id',$id)->first();
@@ -297,7 +301,7 @@ class SecretariatController extends Controller
         
         $send->save();
 
-        return redirect(url(session('role').'/pengawas-bidang/kepaniteraan/'.$submenu.'/'.$id));
+        return redirect(url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$submenu.'/'.$id));
 
     }
 
@@ -328,6 +332,8 @@ class SecretariatController extends Controller
     public function destroy_file($submenu, $id, Request $request)
     {
         //
+        $sector = DB::table('sectors')->where('alias', $submenu)->first();
+
         $file = $request->get('file');
         Storage::delete($file);
 
@@ -342,6 +348,6 @@ class SecretariatController extends Controller
                 ]);
         }
 
-        return redirect(url(session('role').'/pengawas-bidang/kepaniteraan/'.$submenu.'/'.$id));
+        return redirect(url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$submenu.'/'.$id));
     }
 }

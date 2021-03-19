@@ -76,8 +76,8 @@
 	<br>
 	<br>
 	<br>
-	<p  class="normal_font p_ttd"><u>Nama: {{$sektor->penanggung_jawab}}</u></p>
-	<p  class="normal_font p_ttd">NIP: {{$sektor->nip}}</p>
+	<p  class="normal_font p_ttd"><u>{{$sektor->penanggung_jawab}}</u></p>
+	<p  class="normal_font p_ttd">{{$sektor->nip}}</p>
 	
 
 </div>
