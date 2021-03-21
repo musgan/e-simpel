@@ -32,7 +32,11 @@
 	    @endif
 
 	    <div class="action-btn btn-back">
-	      	<a href="{{url(session('role').'/hawasbid_indikator')}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
+	      	<a href="{{
+
+	      	((session('backlink_indikator_hawasbid'))) ? session('backlink_indikator_hawasbid') : url(session('role').'/hawasbid_indikator')
+
+	      }}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
 	    </div>
 	    {!! Form::model($send, [
 	          'method' =>'PUT',

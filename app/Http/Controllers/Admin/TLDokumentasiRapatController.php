@@ -43,6 +43,9 @@ class TLDokumentasiRapatController extends Controller
     	$tahun = "";
     	$bulan = "";
 
+        
+
+
     	$user = \Auth::user();
         
         $user_levels = DB::table('user_levels')->where('id',$user->user_level_id)->first();

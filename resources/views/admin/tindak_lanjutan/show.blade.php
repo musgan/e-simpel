@@ -18,7 +18,12 @@ $action = CostumHelper::checkActionTindakLanjut($user->user_level_id,
 
 <div class="action-btn btn-back">
   	
-  	<a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
+  	<a href="{{
+  		
+  		((session('backlink_tl'.$sub_menu))) ? session('backlink_tl'.$sub_menu) :
+  		url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu)
+
+  	}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
   	@if($action == 1)
   	<a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu).'/'.$secretariat->id.'/edit'}}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Uraian</a>
 	@endif

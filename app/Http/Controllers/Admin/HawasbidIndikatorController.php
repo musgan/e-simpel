@@ -47,6 +47,9 @@ class HawasbidIndikatorController extends Controller
     public function index(Request $request)
     {
         //
+        $full_url = url()->full();
+        $request->session()->put('backlink_indikator_hawasbid', $full_url);
+
         $search = "";
         $periode_tahun = "";
         $periode_bulan = "";
@@ -181,62 +184,62 @@ class HawasbidIndikatorController extends Controller
             'sector_id' => 'required',
             'tahun' => 'required',
             'bulan' => 'required',
-            'pj_sector_id'  => 'pj_sector_id'
+            'pj_sector_id'  => 'required'
         ]);
         $user = Auth::user();
         $id_indikator = time().$user->id;
         
-        #check indikator
-        $check = DB::table('secretariats')
-            ->where('indikator', rtrim(ltrim($request->indikator)))
-            ->where('periode_tahun', $request->tahun)
-            ->where('periode_bulan', $request->bulan);
-        $check_id = clone $check;
-        $check_id = $check_id->first();
+        // #check indikator
+        // $check = DB::table('secretariats')
+        //     ->where('indikator', rtrim(ltrim($request->indikator)))
+        //     ->where('periode_tahun', $request->tahun)
+        //     ->where('periode_bulan', $request->bulan);
+        // $check_id = clone $check;
+        // $check_id = $check_id->first();
 
-        if(count($check_id) == 1){
-            $check_sectors = clone $check;
-            $check_sectors = $check_sectors->join('indikator_sectors','secretariats.id','=','secretariat_id')
-                ->pluck('sector_id')->toArray();
+        // if(count($check_id) == 1){
+        //     $check_sectors = clone $check;
+        //     $check_sectors = $check_sectors->join('indikator_sectors','secretariats.id','=','secretariat_id')
+        //         ->pluck('sector_id')->toArray();
 
-            $id_indikator = $check_id->id;
+        //     $id_indikator = $check_id->id;
+        //     for ($i=0; $i < count($request->sector_id) ; $i++) { 
+        //         # code...
+        //         if(!in_array($request->sector_id[$i], $check_sectors)){
+        //             $id_s = $id_indikator.$request->sector_id[$i];
+        //             $send_sec = new IndikatorSector;
+        //             $send_sec->id = $id_s;
+        //             $send_sec->secretariat_id = $id_indikator;
+        //             $send_sec->sector_id = $request->sector_id[$i];
+        //             $send_sec->save();
+        //         }
+        //     }
+        //     return redirect(url(session('role').'/pengawas-bidang/hawasbid_indikator/create'))->with('status','Indikator telah ada sebelumnya. Berhasil Menambah Data Bidang Pada Indikator');
+
+        // }else{
+        $send = new Secretariat;
+        $send->id = $id_indikator;
+        $send->user_level_id = 10;
+        $send->sector_id = $request->pj_sector_id;
+        $send->indikator = rtrim(ltrim($request->indikator));
+        $send->periode_tahun = $request->tahun;
+        $send->periode_bulan = $request->bulan;
+        $send->save();
+
+        if($send){
             for ($i=0; $i < count($request->sector_id) ; $i++) { 
                 # code...
-                if(!in_array($request->sector_id[$i], $check_sectors)){
-                    $id_s = $id_indikator.$request->sector_id[$i];
-                    $send_sec = new IndikatorSector;
-                    $send_sec->id = $id_s;
-                    $send_sec->secretariat_id = $id_indikator;
-                    $send_sec->sector_id = $request->sector_id[$i];
-                    $send_sec->save();
-                }
+                $id_s = $id_indikator.$request->sector_id[$i];
+                $send_sec = new IndikatorSector;
+                $send_sec->id = $id_s;
+                $send_sec->secretariat_id = $id_indikator;
+                $send_sec->sector_id = $request->sector_id[$i];
+                $send_sec->save();
             }
-            return redirect(url(session('role').'/pengawas-bidang/hawasbid_indikator/create'))->with('status','Indikator telah ada sebelumnya. Berhasil Menambah Data Bidang Pada Indikator');
-
-        }else{
-            $send = new Secretariat;
-            $send->id = $id_indikator;
-            $send->user_level_id = 10;
-            $send->sector_id = $request->pj_sector_id;
-            $send->indikator = rtrim(ltrim($request->indikator));
-            $send->periode_tahun = $request->tahun;
-            $send->periode_bulan = $request->bulan;
-            $send->save();
-
-            if($send){
-                for ($i=0; $i < count($request->sector_id) ; $i++) { 
-                    # code...
-                    $id_s = $id_indikator.$request->sector_id[$i];
-                    $send_sec = new IndikatorSector;
-                    $send_sec->id = $id_s;
-                    $send_sec->secretariat_id = $id_indikator;
-                    $send_sec->sector_id = $request->sector_id[$i];
-                    $send_sec->save();
-                }
-            }
-
-            return redirect(url(session('role').'/hawasbid_indikator/create'))->with('status','Berhasil Menambah Data');
         }
+
+        return redirect(url(session('role').'/hawasbid_indikator/create'))->with('status','Berhasil Menambah Data');
+        // }
     }
 
     /**
@@ -379,6 +382,11 @@ class HawasbidIndikatorController extends Controller
         Secretariat::where('id',$id)
             ->delete();
 
-        return redirect(url(session('role').'/hawasbid_indikator'))->with('status','Berhasil Menghapus Data');
+        return redirect(
+
+            (session('backlink_indikator_hawasbid'))? session('backlink_indikator_hawasbid'): 
+            url(session('role').'/hawasbid_indikator')
+            
+        )->with('status','Berhasil Menghapus Data');
     }
 }

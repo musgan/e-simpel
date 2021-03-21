@@ -32,7 +32,12 @@
 	    @endif
 
 	    <div class="action-btn btn-back">
-	      	<a href="{{url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
+	      	<a href="{{
+
+	      	((session('backlink_hawasbid'.$sub_menu))) ? session('backlink_hawasbid'.$sub_menu) :
+	      	url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu)
+
+	      }}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
 	    </div>
 
 

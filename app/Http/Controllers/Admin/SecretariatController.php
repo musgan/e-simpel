@@ -52,6 +52,10 @@ class SecretariatController extends Controller
         $periode_bulan = "";
         $periode_tahun  = "";
         $evidence = "";
+
+        $full_url = url()->full();
+        $request->session()->put('backlink_hawasbid'.$submenu, $full_url);
+        
         
         if(isset($_GET['search']))
             $search = $request->get('search');
@@ -92,6 +96,8 @@ class SecretariatController extends Controller
         $secretariats->withPath('?search='.$search.'&evidence='.$evidence.'&periode_bulan='.$periode_bulan.'&periode_tahun='.$periode_tahun);
 
 
+
+
         $send = [
             'menu' => $sector->category,
             'title' => 'Pengguna',
@@ -114,6 +120,7 @@ class SecretariatController extends Controller
     public function create($submenu)
     {
         //
+
         $user = Auth::user();
         $sector = Sector::where('alias',$submenu)->first();
         $send = [

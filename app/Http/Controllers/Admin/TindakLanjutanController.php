@@ -52,6 +52,9 @@ class TindakLanjutanController extends Controller
         $periode_bulan = "";
         $periode_tahun  = "";
         $evidence = "";
+
+        $full_url = url()->full();
+        $request->session()->put('backlink_tl'.$submenu, $full_url);
         
         if(isset($_GET['search']))
             $search = $request->get('search');
