@@ -40,16 +40,16 @@ class ReportHawasbid extends Controller
     	$user = Auth::user();
 
     	$op_sector = [];
-    	if($user->user_level_id == 1 ||  $user->user_level_id == 10){
-    		$op_sector = Sector::orderBy('sectors.category','ASC')
-    			->orderBy('sectors.id','ASC')
-    			->select(DB::RAW('CONCAT(category," - ",nama) as nama'),"sectors.id as id");
-	    	if($user->user_level_id == 10){
-	    		$op_sector = $op_sector->join('user_level_groups','sector_id','=','sectors.id')
-	    			->where('user_id',$user->id);
-	    	}
-	    	$op_sector = $op_sector->pluck('nama','id');
+    	// if($user->user_level_id == 1 ||  $user->user_level_id == 10){
+		$op_sector = Sector::orderBy('sectors.category','ASC')
+			->orderBy('sectors.id','ASC')
+			->select(DB::RAW('CONCAT(category," - ",nama) as nama'),"sectors.id as id");
+    	if($user->user_level_id == 10 || $user->user_level_id == 4 || $user->user_level_id == 5){
+    		$op_sector = $op_sector->join('user_level_groups','sector_id','=','sectors.id')
+    			->where('user_id',$user->id);
     	}
+    	$op_sector = $op_sector->pluck('nama','id');
+    	// }
 
     	$jenis_laporan = [
     		1 => "Laporan Bidang",
@@ -1026,7 +1026,7 @@ class ReportHawasbid extends Controller
     		foreach ($request->sector_id as $vsector) {
 	    		$info_sector = Sector::where('sectors.id',$vsector);
 	    		
-	    		if($user->id >= 10){
+	    		if($user->id == 10){
 	    			$info_sector = 	$info_sector->where('user_id',$user->id)
 	    							->join('user_level_groups','sector_id','=','sectors.id');
 	    		}
@@ -1271,10 +1271,10 @@ class ReportHawasbid extends Controller
 			        });
 
 			        $start_row += 1;
-			        $sheet->mergeCells('H'.$start_row.':K'.$start_row);
-			        $sheet->cell('H'.$start_row, function($cell) use($sector_name){
-			        	$cell->setValue($sector_name);
-			        	$cell->setFontSize(12);$cell->setAlignment('center');
+			        // $sheet->mergeCells('H'.$start_row.':K'.$start_row);
+			        $sheet->cell('H'.$start_row, function($cell) use($info_sector){
+			        	$cell->setValue(ucfirst(strtolower($info_sector->nama_lengkap)));
+			        	// $cell->setFontSize(12);$cell->setAlignment('center');
 					    $cell->setValignment('top');
 
 			        });
@@ -1286,8 +1286,10 @@ class ReportHawasbid extends Controller
 			        	$cell->setFontSize(12);
 			        });
 
-			        $border_style= array('borders' => array('bottom' => array('style' =>'thin','color' => array('argb' => '766f6e'),)));
-			        $sheet->getStyle('H'.$start_row.':K'.$start_row)->applyFromArray($border_style);
+			        $sheet->getStyle('H'.$start_row)->getFont()->setUnderline(true);
+
+			        // $border_style= array('borders' => array('bottom' => array('style' =>'thin','color' => array('argb' => '766f6e'),)));
+			        // $sheet->getStyle('H'.$start_row.':K'.$start_row)->applyFromArray($border_style);
 
 			        $start_row += 1;
 			        $sheet->cell('H'.$start_row, function($cell) use($info_sector){

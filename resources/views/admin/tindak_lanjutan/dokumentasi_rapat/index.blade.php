@@ -13,8 +13,8 @@
 </div>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Filter Data</h6>
+    <div class="card-header py-3"  style="background-color: #{{$sector->base_color}}">
+      <h6 class="m-0 font-weight-bold"  style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">Filter Data</h6>
     </div>
     <div class="card-body">
       <div class="col-md-12" style="margin-bottom: 20px;">
@@ -51,8 +51,8 @@
 <div class="row">
 <div class="col-md-7">
   <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">{{($sector->nama)}}</h6>
+    <div class="card-header py-3"  style="background-color: #{{$sector->base_color}}">
+      <h6 class="m-0 font-weight-bold" style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">{{($sector->nama)}}</h6>
     </div>
     <div class="card-body">
       

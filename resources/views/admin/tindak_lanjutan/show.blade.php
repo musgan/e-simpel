@@ -33,8 +33,9 @@ $action = CostumHelper::checkActionTindakLanjut($user->user_level_id,
 <div class="row">
 	<div class="col-md-8">
 		<div class="card shadow mb-4">
-		    <div class="card-header py-3">
-		      <h6 class="m-0 font-weight-bold text-primary">{{$sector->nama}} <i class="fas fa-fw fa-chevron-right"></i> Show</h6>
+		    <div class="card-header py-3" style="background-color: #{{$sector->base_color}}">
+		      <h6 class="m-0 font-weight-bold"  style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">
+		      	{{$sector->nama}} <i class="fas fa-fw fa-chevron-right"></i> Show</h6>
 		    </div>
 		    <div class="card-body">
 		    		

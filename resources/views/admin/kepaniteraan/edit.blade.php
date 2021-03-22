@@ -6,8 +6,8 @@
 	<h1 class="h3 mb-0 text-gray-800">{{ucfirst($sector->category)}}</h1>
 </div>
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">{{str_replace("_", " & ", ucfirst($sub_menu))}}<i class="fas fa-fw fa-chevron-right"></i> Update</h6>
+    <div class="card-header py-3"  style="background-color: #{{$sector->base_color}}">
+      <h6 class="m-0 font-weight-bold"  style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">{{str_replace("_", " & ", ucfirst($sub_menu))}}<i class="fas fa-fw fa-chevron-right"></i> Update</h6>
     </div>
     <div class="card-body">
     	@if ($errors->any())

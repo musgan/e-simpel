@@ -91,8 +91,8 @@ class HawasbidIndikatorController extends Controller
 
         if($evidence != ""){
             $secretariats = $secretariats->join('indikator_sectors','secretariat_id','=','secretariats.id')
-                ->where('evidence',$evidence)
-                ->groupBy('secretariats.id','indikator','periode_tahun','periode_bulan','secretariats.created_at','secretariats.updated_at');
+                ->where('evidence',$evidence);
+                // ->groupBy('secretariats.id','indikator','periode_tahun','periode_bulan','secretariats.created_at','secretariats.updated_at');
         }
 
         $secretariats = $secretariats->paginate(15);
