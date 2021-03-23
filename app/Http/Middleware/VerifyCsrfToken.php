@@ -14,6 +14,9 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         //
         'admin/akun-saya/update-profil',
-        'hawasbid/akun-saya/update-profil'
+        'hawasbid/akun-saya/update-profil',
+        'mpn/akun-saya/update-profil',
+        'kapan/akun-saya/update-profil',
+        'hawasbid/akun-saya/update-profil',
     ];
 }
