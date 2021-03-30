@@ -29,9 +29,9 @@ Route::group(['namespace' => 'Admin','prefix'=>'admin','middleware' => ['auth','
 	Route::post('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
 	Route::delete('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy');
 
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
-	Route::post('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
-	Route::delete('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
+	Route::post('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
+	Route::delete('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy');
 
 
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}','SecretariatController@index');
@@ -42,21 +42,21 @@ Route::group(['namespace' => 'Admin','prefix'=>'admin','middleware' => ['auth','
 	
 	Route::delete('pengawas-bidang/kepaniteraan/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file');
 
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}','SecretariatController@index');
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/{id}/edit','SecretariatController@edit');
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/{id}','SecretariatController@show');
-	Route::post('pengawas-bidang/kesektariatan/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence');
-	Route::put('pengawas-bidang/kesektariatan/{sub_menu}/{id}','SecretariatController@update');
-	Route::delete('pengawas-bidang/kesektariatan/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}','SecretariatController@index');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/{id}/edit','SecretariatController@edit');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/{id}','SecretariatController@show');
+	Route::post('pengawas-bidang/kesekretariatan/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence');
+	Route::put('pengawas-bidang/kesekretariatan/{sub_menu}/{id}','SecretariatController@update');
+	Route::delete('pengawas-bidang/kesekretariatan/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file');
 
 
 	Route::get('tindak-lanjutan/kepaniteraan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
 	Route::post('tindak-lanjutan/kepaniteraan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store');
 	Route::delete('tindak-lanjutan/kepaniteraan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy');
 
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
-	Route::post('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store');
-	Route::delete('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
+	Route::post('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store');
+	Route::delete('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy');
 
 
 
@@ -68,12 +68,12 @@ Route::group(['namespace' => 'Admin','prefix'=>'admin','middleware' => ['auth','
 	
 	Route::delete('tindak-lanjutan/kepaniteraan/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file');
 
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}','TindakLanjutanController@index');
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/{id}/edit','TindakLanjutanController@edit');
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/{id}','TindakLanjutanController@show');
-	Route::post('tindak-lanjutan/kesektariatan/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence');
-	Route::put('tindak-lanjutan/kesektariatan/{sub_menu}/{id}','TindakLanjutanController@update');
-	Route::delete('tindak-lanjutan/kesektariatan/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}','TindakLanjutanController@index');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}/edit','TindakLanjutanController@edit');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}','TindakLanjutanController@show');
+	Route::post('tindak-lanjutan/kesekretariatan/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence');
+	Route::put('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}','TindakLanjutanController@update');
+	Route::delete('tindak-lanjutan/kesekretariatan/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file');
 
 
 	Route::get('laporan/hawasbid','ReportHawasbid@index');
@@ -100,20 +100,20 @@ Route::group(['namespace' => 'Admin','prefix'=>'mpn','middleware' => ['auth','ro
 
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
 	
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
 	
 
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}','SecretariatController@index');
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/{id}','SecretariatController@show');
 	
 	
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}','SecretariatController@index');
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/{id}','SecretariatController@show');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}','SecretariatController@index');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/{id}','SecretariatController@show');
 	
 
 	Route::get('tindak-lanjutan/kepaniteraan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
 	
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
 	
 
 
@@ -122,9 +122,9 @@ Route::group(['namespace' => 'Admin','prefix'=>'mpn','middleware' => ['auth','ro
 	Route::get('tindak-lanjutan/kepaniteraan/{sub_menu}/{id}','TindakLanjutanController@show');
 	
 	
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}','TindakLanjutanController@index');
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/{id}/edit','TindakLanjutanController@edit');
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/{id}','TindakLanjutanController@show');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}','TindakLanjutanController@index');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}/edit','TindakLanjutanController@edit');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}','TindakLanjutanController@show');
 	
 	Route::get('laporan/hawasbid','ReportHawasbid@index');
 	Route::post('laporan/hawasbid','ReportHawasbid@print_laporan');
@@ -142,9 +142,9 @@ Route::group(['namespace' => 'Admin','prefix'=>'hawasbid','middleware' => ['auth
 	Route::post('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
 	Route::delete('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy');
 
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
-	Route::post('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
-	Route::delete('pengawas-bidang/kesektariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
+	Route::post('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
+	Route::delete('pengawas-bidang/kesekretariatan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy');
 	
 
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}','SecretariatController@index');
@@ -155,12 +155,12 @@ Route::group(['namespace' => 'Admin','prefix'=>'hawasbid','middleware' => ['auth
 	
 	Route::delete('pengawas-bidang/kepaniteraan/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file');
 
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}','SecretariatController@index');
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/{id}/edit','SecretariatController@edit');
-	Route::get('pengawas-bidang/kesektariatan/{sub_menu}/{id}','SecretariatController@show');
-	Route::post('pengawas-bidang/kesektariatan/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence');
-	Route::put('pengawas-bidang/kesektariatan/{sub_menu}/{id}','SecretariatController@update');
-	Route::delete('pengawas-bidang/kesektariatan/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}','SecretariatController@index');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/{id}/edit','SecretariatController@edit');
+	Route::get('pengawas-bidang/kesekretariatan/{sub_menu}/{id}','SecretariatController@show');
+	Route::post('pengawas-bidang/kesekretariatan/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence');
+	Route::put('pengawas-bidang/kesekretariatan/{sub_menu}/{id}','SecretariatController@update');
+	Route::delete('pengawas-bidang/kesekretariatan/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file');
 
 	
 
@@ -179,9 +179,9 @@ Route::group(['namespace' => 'Admin','prefix'=>'kapan','middleware' => ['auth','
 	Route::post('tindak-lanjutan/kepaniteraan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store');
 	Route::delete('tindak-lanjutan/kepaniteraan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy');
 
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
-	Route::post('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store');
-	Route::delete('tindak-lanjutan/kesektariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index');
+	Route::post('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store');
+	Route::delete('tindak-lanjutan/kesekretariatan/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy');
 
 
 	Route::get('tindak-lanjutan/kepaniteraan/{sub_menu}','TindakLanjutanController@index');
@@ -192,12 +192,12 @@ Route::group(['namespace' => 'Admin','prefix'=>'kapan','middleware' => ['auth','
 	
 	Route::delete('tindak-lanjutan/kepaniteraan/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file');
 
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}','TindakLanjutanController@index');
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/{id}/edit','TindakLanjutanController@edit');
-	Route::get('tindak-lanjutan/kesektariatan/{sub_menu}/{id}','TindakLanjutanController@show');
-	Route::post('tindak-lanjutan/kesektariatan/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence');
-	Route::put('tindak-lanjutan/kesektariatan/{sub_menu}/{id}','TindakLanjutanController@update');
-	Route::delete('tindak-lanjutan/kesektariatan/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}','TindakLanjutanController@index');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}/edit','TindakLanjutanController@edit');
+	Route::get('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}','TindakLanjutanController@show');
+	Route::post('tindak-lanjutan/kesekretariatan/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence');
+	Route::put('tindak-lanjutan/kesekretariatan/{sub_menu}/{id}','TindakLanjutanController@update');
+	Route::delete('tindak-lanjutan/kesekretariatan/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file');
 
 
 	Route::get('laporan/hawasbid','ReportHawasbid@index');

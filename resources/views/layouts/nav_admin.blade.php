@@ -9,7 +9,7 @@ $sb = "";
 if(isset($sub_menu)){
   $sb = $sub_menu;
 }
-$category_hawasbid = ["Kepaniteraan","Kesektariatan"];
+$category_hawasbid = ["Kepaniteraan","Kesekretariatan"];
 
 $rm = "";
 if(isset($root_menu)) 

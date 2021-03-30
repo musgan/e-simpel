@@ -492,7 +492,7 @@ class ReportHawasbid extends Controller
 
 	       $start_row += 1;
 	       $sheet->cell('C'.$start_row, function($cell) use($ketua_nip){
-	       		$cell->setValue($ketua_nip);
+	       		$cell->setValue(" ".$ketua_nip);
 	       		$cell->setFontSize(12);
 
 	       		$cell->setAlignment('left');
@@ -500,7 +500,7 @@ class ReportHawasbid extends Controller
 	       });
 
 	       $sheet->cell('I'.$start_row, function($cell) use($wketua_nip){
-	       		$cell->setValue($wketua_nip);
+	       		$cell->setValue(" ".$wketua_nip);
 	       		$cell->setFontSize(12);
 
 	       		$cell->setAlignment('left');
@@ -717,7 +717,7 @@ class ReportHawasbid extends Controller
 
 	       $start_row += 1;
 	       $sheet->cell('C'.$start_row, function($cell) use($ketua_nip){
-	       		$cell->setValue($ketua_nip);
+	       		$cell->setValue(" ".$ketua_nip);
 	       		$cell->setFontSize(12);
 
 	       		$cell->setAlignment('left');
@@ -725,7 +725,7 @@ class ReportHawasbid extends Controller
 	       });
 
 	       $sheet->cell('I'.$start_row, function($cell) use($wketua_nip){
-	       		$cell->setValue($wketua_nip);
+	       		$cell->setValue(" ".$wketua_nip);
 	       		$cell->setFontSize(12);
 
 	       		$cell->setAlignment('left');
@@ -944,7 +944,7 @@ class ReportHawasbid extends Controller
 
 	       $start_row += 1;
 	       $sheet->cell('C'.$start_row, function($cell) use($ketua_nip){
-	       		$cell->setValue($ketua_nip);
+	       		$cell->setValue(" ".$ketua_nip);
 	       		$cell->setFontSize(12);
 
 	       		$cell->setAlignment('left');
@@ -952,7 +952,7 @@ class ReportHawasbid extends Controller
 	       });
 
 	       $sheet->cell('I'.$start_row, function($cell) use($wketua_nip){
-	       		$cell->setValue($wketua_nip);
+	       		$cell->setValue(" ".$wketua_nip);
 	       		$cell->setFontSize(12);
 
 	       		$cell->setAlignment('left');
@@ -1293,7 +1293,7 @@ class ReportHawasbid extends Controller
 
 			        $start_row += 1;
 			        $sheet->cell('H'.$start_row, function($cell) use($info_sector){
-			        	$cell->setValue($info_sector->nip);
+			        	$cell->setValue(" ".$info_sector->nip);
 			        	$cell->setFontSize(12);
 			        });
 
