@@ -105,10 +105,11 @@ class ReportHawasbid extends Controller
     	foreach ($request->sector_id as $vsector) {
 	    	$info_sector = Sector::where('sectors.id',$vsector);
 	    	
-	    	if($user->id >= 10){
-    			$info_sector = 	$info_sector->where('user_id',$user->id)
-    							->join('user_level_groups','sector_id','=','sectors.id');
-    		}
+	    	// if($user->id >= 10){
+    		// 	$info_sector = 	$info_sector->where('user_id',$user->id)
+    		// 					->join('user_level_groups','sector_id','=','sectors.id');
+    		// }
+    		
 	    	$info_sector = $info_sector->first();
 
 	    	$indikator = DB::table('indikator_sectors')
@@ -120,6 +121,7 @@ class ReportHawasbid extends Controller
 			        	->where('periode_tahun',$request->periode_tahun)
 			        	->where('secretariats.sector_id',$vsector)
 			        	->orderBY('indikator','ASC');
+			
 			$all_sector = DB::table('sectors')
 							->select(DB::raw('CONCAT("pengawas-bidang/",LOWER(category),"/",LOWER(alias),"/dokumentasi_rapat") as path'),'id')
 							->pluck('path','id');
@@ -127,9 +129,10 @@ class ReportHawasbid extends Controller
 			$indikator = $indikator->get();
 			array_push($bidang, array('sector'	=> $info_sector, 'indikator'=>$indikator));
 	    }
+
+
 	    $periode = "Periode: ".\CostumHelper::getNameMonth($request->periode_bulan)." ".$request->periode_tahun;
-
-
+	    // dd($bidang);
 	    $send = [
 	    	'indikator_sectors'	=> 	$bidang,
 	    	'periode'	=> $periode,
@@ -138,6 +141,7 @@ class ReportHawasbid extends Controller
 	    	'periode_tahun'	=> $request->periode_tahun,
 	    ];
 
+	    // dd($send);
 
 	    // return view('admin.laporan.hawasbid.laporan_bidang_pdf', $send);
     	$pdf = PDF::loadview('admin.laporan.hawasbid.laporan_bidang_pdf', $send);
