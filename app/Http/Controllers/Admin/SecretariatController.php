@@ -12,7 +12,7 @@ use App\UserLevelGroup;
 use App\Secretariat;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use App\indikatorSector;
+use App\IndikatorSector;
 use DB;
 
 class SecretariatController extends Controller
@@ -303,7 +303,7 @@ class SecretariatController extends Controller
         $sector = DB::table('sectors')->where('alias', $submenu)->first();
         
 
-        $send = indikatorSector::where('id',$id)->first();
+        $send = IndikatorSector::where('id',$id)->first();
         $send->uraian = $request->uraian;
         
         $send->save();
