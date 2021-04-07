@@ -14,6 +14,11 @@
 Route::get('/','Auth\LoginController@showLoginForm');
 Auth::routes();
 
+Route::get('/token-failed', function () {
+    return view('token_failed');
+});
+
+
 Route::group(['namespace' => 'Admin','prefix'=>'admin','middleware' => ['auth','role:admin']], function() {
   // Other routes under the Admin namespace here...
 	Route::get('home', 'HomeController@index')->name('home');
