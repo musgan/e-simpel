@@ -25,11 +25,11 @@
               </div>
 
               <div class="form-group mx-sm-3 mb-3">
-                {{Form::select('periode_bulan',$periode_bulan,null,['class'  => 'form-control', 'placeholder'  => '- Periode Bulan -'])}}  
+                {{Form::select('periode_bulan',$periode_bulan,$bulan,['class'  => 'form-control', 'placeholder'  => '- Periode Bulan -'])}}  
               </div>
 
               <div class="form-group mx-sm-3 mb-3">
-                {{Form::input('number','periode_tahun',null,['class'  => 'form-control', 'placeholder'  => 'Periode Tahun','min'  => 2018])}}  
+                {{Form::input('number','periode_tahun',$tahun,['class'  => 'form-control', 'placeholder'  => 'Periode Tahun','min'  => 2018])}}  
               </div>
               
               <div class="form-group mx-sm-3 mb-3">
@@ -59,7 +59,8 @@
               <th>No</th>
               <th>Periode</th>
               <th>Bidang</th>
-              <th>Indikator</th>
+              <th width="300px">Indikator</th>
+              <th width="300px">Uraian</th>
               <th>Evidence</th>    
               <th width="120px;"></th>          
             </tr> 
@@ -87,6 +88,7 @@
             <td>{{CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun}}</td>
             <td>{{$row->nama}}</td>
             <td>{!! $row->indikator !!}</td>
+            <td>{!! $row->uraian !!}</td>
             <td>{{($row->evidence == 1)? 'ada' : 'tidak ada' }}</td>
             <td>
               <p>

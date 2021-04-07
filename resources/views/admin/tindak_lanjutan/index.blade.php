@@ -57,7 +57,8 @@ $user  = \Auth::user();
               <th>No</th>
               <th>Periode</th>
               <th>Bidang</th>
-              <th>Indikator</th>
+              <th width="300px">Indikator</th>
+              <th width="300px">Uraian</th>
               <th>Evidence</th>    
               <th width="120px;"></th>          
             </tr> 
@@ -83,6 +84,7 @@ $user  = \Auth::user();
             <td>{{CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun}}</td>
             <td>{{$row->nama}}</td>
             <td>{!! $row->indikator !!}</td>
+            <td>{!! $row->uraian !!}</td>
             <td>@if($row->evidence == 1) ada @else tidak ada @endif</td>
             <td>
               <p>

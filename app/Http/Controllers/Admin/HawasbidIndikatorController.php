@@ -51,8 +51,8 @@ class HawasbidIndikatorController extends Controller
         $request->session()->put('backlink_indikator_hawasbid', $full_url);
 
         $search = "";
-        $periode_tahun = "";
-        $periode_bulan = "";
+        $periode_tahun = date('Y');
+        $periode_bulan = date('m');
         $evidence = "";
         
         if(isset($_GET['search']))
@@ -132,7 +132,9 @@ class HawasbidIndikatorController extends Controller
             'secretariats'      => $secretariats,
             'search'            => $search,
             'evidence'          => $evidence,
-            'bidang_terkait'    => $bidang_terkait
+            'bidang_terkait'    => $bidang_terkait,
+            'bulan'             => $periode_bulan,
+            'tahun'             => $periode_tahun
         ];
         return view('admin.hawasbid.indikator.index',$send);
     }

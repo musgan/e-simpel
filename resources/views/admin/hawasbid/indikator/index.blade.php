@@ -51,11 +51,11 @@ if($user->user_level_id == 1){
               {{Form::select('evidence',[0 => 'Tidak Ada Evidence',1 => 'Ada Evidence'],null,['class'  => 'form-control', 'placeholder'  => '- Pilih Evidence -'])}}  
             </div>
             <div class="form-group mx-sm-3 mb-3">
-              {{Form::select('periode_bulan',$periode_bulan,null,['class'=>'form-control','placeholder'  => '- Periode Bulan -'])}}
+              {{Form::select('periode_bulan',$periode_bulan,$bulan,['class'=>'form-control','placeholder'  => '- Periode Bulan -'])}}
             </div>
             
             <div class="form-group mx-sm-3 mb-3">
-              {{Form::input('number','periode_tahun',null,['class'=>'form-control','placeholder'  => 'Periode Tahun'])}}
+              {{Form::input('number','periode_tahun',$tahun,['class'=>'form-control','placeholder'  => 'Periode Tahun'])}}
             </div>
             
             <div class="form-group mx-sm-3 mb-3">
@@ -105,7 +105,8 @@ if($user->user_level_id == 1){
           	@foreach($secretariats as $row)
           	<tr>
               <td>{{$start_num++}}</td>
-              <td>{!! CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun !!} <br>{!! $row->nama !!}</td>
+              <td>{!! CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun !!} <br>
+                <strong>{!! $row->nama !!}</strong></td>
               
               <td>{!! $row->indikator !!}</td>
               <td>{{array_key_exists($row->id,$bidang_terkait) ? implode(", ",$bidang_terkait[$row->id]) : '' }}</td>

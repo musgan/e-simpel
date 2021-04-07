@@ -49,8 +49,8 @@ class SecretariatController extends Controller
     public function index($submenu, Request $request)
     {
         $search = "";
-        $periode_bulan = "";
-        $periode_tahun  = "";
+        $periode_bulan = date("m");
+        $periode_tahun  = date("Y");
         $evidence = "";
 
         $full_url = url()->full();
@@ -65,6 +65,7 @@ class SecretariatController extends Controller
 
         if(isset($_GET['periode_bulan']))
             $periode_bulan = $request->get('periode_bulan');
+
         if(isset($_GET['periode_tahun']))
             $periode_tahun = $request->get('periode_tahun');
         
@@ -74,7 +75,7 @@ class SecretariatController extends Controller
         ->join('secretariats','secretariats.id','=','secretariat_id')
         ->join('sectors','sectors.id','indikator_sectors.sector_id')
         ->where('secretariats.sector_id',$sector->id)
-        ->select('indikator_sectors.id','indikator','periode_tahun','periode_bulan','evidence','indikator_sectors.updated_at','sectors.nama');
+        ->select('indikator_sectors.id','indikator','periode_tahun','periode_bulan','evidence','indikator_sectors.updated_at','sectors.nama','indikator_sectors.uraian');
         
         if($search != ""){
             $secretariats = $secretariats->where('indikator','like','%'.$search.'%');
@@ -107,7 +108,9 @@ class SecretariatController extends Controller
             'sector'    => $sector,
             'secretariats'  => $secretariats,
             'search'      => $search,
-            'periode_bulan' => $this->bulan
+            'periode_bulan' => $this->bulan,
+            'bulan' => $periode_bulan,
+            'tahun' => $periode_tahun
         ];
         return view('admin.kepaniteraan.index',$send);
     }
