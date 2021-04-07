@@ -63,6 +63,10 @@ class GenerateIndikatorController extends Controller
     		'periode_bulan'	=> 'required',
     		'periode_tahun'	=> 'required',
     	]);
+      // dd(time());
+
+      $default_time = date('Y-m-d H:i:s');
+
 
     	$user = Auth::user();
         $id_indikator = "";
@@ -86,13 +90,24 @@ class GenerateIndikatorController extends Controller
 	        $secretariat_id = "";
 	        $bath_indikator = array();
 	        $bath_indikator_sektor = array();
+          $idx = 0;
 	        foreach($data_generate_sector as $row){
 	        	if($row->secretariat_id != $secretariat_id){
-	        		if($secretariat_id != "")
-	        			sleep(1);
+	        		$idx += 1;
+              $set_idx = "000";
+              
+              if($idx < 10)
+                $set_idx = "00".$idx;
+              else if($idx < 100)
+                $set_idx = "0".$idx;
+              else $set_idx = $idx;
+
+              // if($secretariat_id != "")
+	        		// 	sleep(1);
 	        		
 	        		$secretariat_id = $row->secretariat_id;
-	        		$id_indikator = time().$user->id;
+	        		$id_indikator = time().$set_idx.$user->id;
+              // dd($id_indikator);
 
 	        		array_push($bath_indikator,array(
 	        			'id'	=> $id_indikator,
@@ -100,14 +115,18 @@ class GenerateIndikatorController extends Controller
 	        			'indikator'	=> $row->indikator,
 	        			'user_level_id'	=> 10,
 	        			'periode_tahun'	=> $request->periode_tahun,
-	        			'periode_bulan'	=> $request->periode_bulan
+	        			'periode_bulan'	=> $request->periode_bulan,
+                'created_at'    => $default_time,
+                'updated_at'    => $default_time
 	        		));
 	        	}
 
 	        	array_push($bath_indikator_sektor, array(
 	        		'id'		=> $id_indikator.$row->sector_id,
 	        		'sector_id'	=> $row->sector_id,
-	        		'secretariat_id'	=> $id_indikator
+	        		'secretariat_id'	=> $id_indikator,
+              'created_at'    => $default_time,
+              'updated_at'    => $default_time
 	        	));
 	        }
 
