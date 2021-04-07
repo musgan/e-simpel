@@ -119,7 +119,15 @@ class ReportHawasbid extends Controller
 			        		,'secretariat_id','sectors.nama','status_tindakan')
 			        	->where('periode_bulan',$request->periode_bulan)
 			        	->where('periode_tahun',$request->periode_tahun)
-			        	->where('secretariats.sector_id',$vsector)
+			        	// ->where('secretariats.sector_id',$vsector)
+			        	->where(function($q) use($vsector){
+			        		$q->where('secretariats.sector_id',$vsector)
+			        			->orWhere(function($qq) use($vsector){
+			        				$qq->where('indikator_sectors.sector_id',$vsector)
+			        				->whereRaw('indikator_sectors.sector_id != secretariats.sector_id');
+			        			});
+			        	})
+
 			        	->orderBY('indikator','ASC');
 			
 			$all_sector = DB::table('sectors')
