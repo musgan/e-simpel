@@ -142,6 +142,8 @@ Route::group(['namespace' => 'Admin','prefix'=>'hawasbid','middleware' => ['auth
 	Route::get('home', 'HomeController@index')->name('home');
 	Route::resource('akun-saya','MyAccountController',['except' => ['store','destroy','create','show','edit']]);
 	Route::post('akun-saya/update-profil','MyAccountController@update_profil');
+
+	Route::get('hawasbid_indikator/{id}','HawasbidIndikatorController@show');
 	
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
 	Route::post('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');
