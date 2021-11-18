@@ -53,11 +53,13 @@
 	</tbody>
 </table>
 
+@if($request->get('signature_break_01') == "y")
+<div class="page-break"></div>
+@endif
+
 @include('admin.laporan.ttd_laporan_keseluruhan_pdf')
 
 <div class="page-break"></div>
-
-
 
 <!-- laporan temuan -->
 
@@ -115,6 +117,10 @@
 	</tbody>
 </table>
 
+@if($request->get('signature_break_02') == "y")
+<div class="page-break"></div>
+@endif
+
 @include('admin.laporan.ttd_laporan_keseluruhan_pdf')
 
 <div class="page-break"></div>
@@ -166,13 +172,13 @@
 			<td class="text-center">{{\CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun}}</td>
 			<td class="text-center">{!! '<p class="no_margin">('.$sektor[$row->sector_id].')</p>'.str_replace('"','',$row->nama) !!}</td>
 			<td class="text-left">{!!  str_replace("\n","<br>",$row->indikator) !!}</td>
-			<!-- <td class="text-left">{!! $row->uraian !!}</td>
-			<td class="text-center">{!! $tindakan !!}</td>
-			<td class="text-center"><a target="_blank" href="{{$link}}">{{$ev}} </a></td> -->
 		</tr>
 		@endforeach
 	</tbody>
 </table>
 
-@include('admin.laporan.ttd_laporan_keseluruhan_pdf')
+@if($request->get('signature_break_03') == "y")
+<div class="page-break"></div>
+@endif
 
+@include('admin.laporan.ttd_laporan_keseluruhan_pdf')

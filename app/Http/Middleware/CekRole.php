@@ -19,7 +19,7 @@ class CekRole
         $user = Auth::user();
         if($role == "admin" && $user->user_level_id == 1){
             return $next($request);    
-        }else if($role == "hawasbid" && $user->user_level_id == 10) {
+        }else if($role == "hawasbid" && ($user->user_level_id == 10 || $user->user_level_id == 6 || $user->user_level_id == 7)) {
             if($request->sub_menu){
                 $check_segment = \Request::segment(2);
                 
@@ -41,7 +41,7 @@ class CekRole
         
         }
 
-        else if($role == "kapan" && ($user->user_level_id == 4 || $user->user_level_id == 5))  {
+        else if($role == "kapan" && ($user->user_level_id == 4 || $user->user_level_id == 5 ))  {
             
             if($request->sub_menu){
                 $check_segment = \Request::segment(2);

@@ -69,7 +69,11 @@
 	</tbody>
 </table>
 
-<div class="col-md-4 col-md-offset-8 col-sm-offset-8 col-xs-offset-8">
+@if($request->get('signature_break_'.$sektor->id) == "y")
+<div class="page-break"></div>
+@endif
+
+<div class="col-md-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6">
 	<p  class="normal_font p_ttd">Kendari/  {{date('d').' '.\CostumHelper::getNameMonth(date('m')).' '.date('Y') }} </p>
 	<p  class="normal_font p_ttd">Hakim Pengawas Bidang</p>
 	<p  class="normal_font p_ttd">{!! ucwords(strtolower($sektor->nama_lengkap)) !!}</p>

@@ -55,7 +55,7 @@
 
 	user_id = $("#user_id")
 	function check_lvl_user(user_id){
-		if(user_id == 10 || user_id == 4 || user_id == 5){
+		if(user_id == 10 || user_id == 4 || user_id == 5 || user_id == 6 || user_id == 7){
 			$("#fsector_form").show();
 			$("#sector_form").attr("required","required").show();
 		}else{

@@ -10,8 +10,8 @@ use Excel;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use PHPExcel_Worksheet_Drawing;
-
 use PDF;
+use App\SettingPeriodHawasbid;
 
 class ReportHawasbid extends Controller
 {
@@ -44,7 +44,7 @@ class ReportHawasbid extends Controller
 		$op_sector = Sector::orderBy('sectors.category','ASC')
 			->orderBy('sectors.id','ASC')
 			->select(DB::RAW('CONCAT(category," - ",nama) as nama'),"sectors.id as id");
-    	if($user->user_level_id == 10 || $user->user_level_id == 4 || $user->user_level_id == 5){
+    	if($user->user_level_id == 10 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 6 || $user->user_level_id == 7){
     		$op_sector = $op_sector->join('user_level_groups','sector_id','=','sectors.id')
     			->where('user_id',$user->id);
     	}
@@ -140,19 +140,20 @@ class ReportHawasbid extends Controller
 
 
 	    $periode = "Periode: ".\CostumHelper::getNameMonth($request->periode_bulan)." ".$request->periode_tahun;
-	    // dd($bidang);
+
 	    $send = [
 	    	'indikator_sectors'	=> 	$bidang,
 	    	'periode'	=> $periode,
 	    	'all_sector' => $all_sector,
 	    	'periode_bulan'	=> $request->periode_bulan,
 	    	'periode_tahun'	=> $request->periode_tahun,
+	    	'request' => $request
 	    ];
 
-	    // dd($send);
-
-	    // return view('admin.laporan.hawasbid.laporan_bidang_pdf', $send);
+	    ini_set("memory_limit", "999M");
+		ini_set("max_execution_time", 999);
     	$pdf = PDF::loadview('admin.laporan.hawasbid.laporan_bidang_pdf', $send);
+    	// return $pdf->stream('xxx.pdf');
     	return $pdf->download($request->nama_file.'.pdf');
     }
 
@@ -164,12 +165,21 @@ class ReportHawasbid extends Controller
 	    	'lp_tindak_lanjut'	=> $this->sheet_laporan_tindak_lanjut_pdf($request),
 	    	'kpn'	=> User::where('user_level_id',2)->first(),
 	    	'wkpn'	=> User::where('user_level_id',3)->first(),
-	    	'sektor'	=> DB::table('sectors')->pluck('nama','id'),
+	    	'sektor'	=> DB::table('sectors')->pluck('nama','id')->toArray(),
+	    	'request' => $request
 	    ];
 
+	    
+	    // $html2pdf = new HTML2PDF('P','A4','en', false, 'ISO-8859-15',array(30, 0, 20, 0));
 
-    	$pdf = PDF::loadView('admin.laporan.hawasbid.laporan_keseluruhan_pdf', $send);
-		return $pdf->download($request->nama_file.'.pdf');
+	    // $d = compact($send);
+	    // dd($send);
+    	$pdf = \PDF::loadView('admin.laporan.hawasbid.laporan_keseluruhan_pdf', $send);
+    	// return view('admin.laporan.hawasbid.laporan_keseluruhan_pdf',$send);
+		ini_set("memory_limit", "999M");
+		ini_set("max_execution_time", 999);
+		// dd($pdf);
+		return $pdf->stream($request->nama_file.'.pdf');
     }
 
     private function sheet_laporan_temuan_pdf($request){
@@ -185,27 +195,23 @@ class ReportHawasbid extends Controller
         	->whereNotNull('secretariats.sector_id')
         	->orderBy('periode_tahun','DESC')
         	->orderBy('periode_bulan','DESC')
+	        ->orderBy('sectors.id','ASC')
         	->orderBy('indikator','ASC');
 
-        if($date > 16){
-        	$indikator = $indikator->whereDate(
-        		DB::raw('CONCAT(periode_tahun,"-",periode_bulan,"-01")'),'<=',DB::raw(" '".date('Y-m-01')."' ")
-        	);
-        }else{
-        	$indikator = $indikator->whereDate(
-        		DB::raw('CONCAT(periode_tahun,"-",periode_bulan,"-01")'),'<=',DB::raw(" '".date('Y-m-01',strtotime('-1 month'))."' ")
-        	);
-        }
+        $m = $request->periode_bulan;
+		$y = $request->periode_tahun;
 
-        // dd(date('Y-m-01', strtotime(' -1 month')));
+		$treshold_d = $y."-".$m."-01";
+		// $treshold_d =  date('Y-m-d',strtotime($treshold_date." -1 month"));
+		$indikator = $indikator->whereDate(DB::raw('CONCAT(periode_tahun,"-",periode_bulan,"-01")'),"<",$treshold_d);
+        
         $indikator = $indikator->get();
-	   	// dd($indikator);
 	    $send = [
 	    	'indikator'	=> 	$indikator
 	    ];
 
-	    return $send;
 
+	    return $send;
     }
 
 
@@ -215,30 +221,24 @@ class ReportHawasbid extends Controller
     	$date = date('d');
 
         $indikator = [];
-        if($date > 4 && $date < 16){
-        	$indikator = DB::table('indikator_sectors')
-        	->join('secretariats','secretariats.id','=','secretariat_id')
-        	->join('sectors','sectors.id','=','indikator_sectors.sector_id')
-        	->select('secretariats.id','sectors.nama','indikator','evidence','uraian','secretariats.sector_id','status_tindakan','periode_bulan','periode_tahun')
-        	->where('evidence',0)
-        	->whereNotNull('secretariats.sector_id')
-        	->orderBy('periode_tahun','DESC')
-        	->orderBy('periode_bulan','DESC')
-        	->orderBy('indikator','ASC');
+    	$indikator = DB::table('indikator_sectors')
+    	->join('secretariats','secretariats.id','=','secretariat_id')
+    	->join('sectors','sectors.id','=','indikator_sectors.sector_id')
+    	->select('secretariats.id','sectors.nama','indikator','evidence','uraian','secretariats.sector_id','status_tindakan','periode_bulan','periode_tahun')
+    	->where('evidence',0)
+    	->whereNotNull('secretariats.sector_id')
+    	->orderBy('periode_tahun','DESC')
+    	->orderBy('periode_bulan','DESC')
+	    ->orderBy('sectors.id','ASC')
+    	->orderBy('indikator','ASC');
 
-        	$indikator = $indikator->where(
-        		DB::raw('CONCAT(periode_tahun,"-",periode_bulan)'),'=',date('Y-m',strtotime('-1 month'))
-        	);
-        	$indikator = $indikator->get();
-        	// dd($indikator.$date.'xx '.date('Y-m',strtotime('-1 month')));
-        }
+    	$indikator = $indikator->where('periode_bulan',$request->periode_bulan)
+    		->where('periode_tahun', $request->periode_tahun);
 
-        // dd($indikator);
+    	$indikator = $indikator->get();
 
+    
 
-        // dd(date('Y-m-01', strtotime(' -1 month')));
-        
-	   	// dd($indikator);
 	    $send = [
 	    	'indikator'	=> 	$indikator
 	    ];
@@ -259,6 +259,7 @@ class ReportHawasbid extends Controller
 	        	->whereNotNull('secretariats.sector_id')
 	        	->orderBy('periode_tahun','DESC')
 	        	->orderBy('periode_bulan','DESC')
+	        	->orderBy('sectors.id','ASC')
 	        	->orderBy('indikator','ASC')->get();
 
 	    $periode = "Periode: ".$this->getNameMonth($request->periode_bulan)." ".$request->periode_tahun;
@@ -274,6 +275,9 @@ class ReportHawasbid extends Controller
 
 
     private function laporan_keseluruhan($request){
+    	ini_set("memory_limit", "999M");
+		ini_set("max_execution_time", 999);
+
     	Excel::create($request->nama_file, function($excel) use($request) {
     		$this->sheet_laporan_keseluruhan($excel, $request);
     		$this->sheet_laporan_tindak_lanjut($excel, $request);
@@ -285,6 +289,7 @@ class ReportHawasbid extends Controller
     }
 
     private function sheet_laporan_temuan($excel, $request){
+    	
     	$excel->sheet("Laporan Temuan", function($sheet) use($request){
 	        // Sheet manipulation
 
@@ -344,21 +349,12 @@ class ReportHawasbid extends Controller
 			    $cell->setFontSize(12);
 			});
 
-			$m = date('m');
-			$y = date('Y');
-			$treshold_d = null;
-			$treshold_date = $y."-".$m."-03";
+			$m = $request->periode_bulan;
+			$y = $request->periode_tahun;
 
-			if(date('d') < 16){
-				// dd($treshold_date);
-				$treshold_d =  strtotime($treshold_date." -1 month");
-				// dd("xxxxxxx ".date('Y-m-d', $treshold_d));
-			}else{
-				$treshold_d = strtotime($treshold_date);
-			}
-			$treshold_d = date('Y-m',$treshold_d)."-01";
-			// dd($treshold_d);
-			
+			$treshold_d = $y."-".$m."-01";
+			// $treshold_d =  date('Y-m-d',strtotime($treshold_date." -1 month"));
+
 			$start_row +=1;
 			$no = 1;
 	        $indikator = DB::table('indikator_sectors')
@@ -366,16 +362,18 @@ class ReportHawasbid extends Controller
 	        	->join('sectors','sectors.id','=','indikator_sectors.sector_id')
 	        	->select('secretariats.id','sectors.nama','indikator','evidence','uraian','secretariats.sector_id','secretariat_id','periode_tahun','periode_bulan','status_tindakan')
 	        	->where('evidence',0)
-
-
 	        	->whereDate(DB::raw('CONCAT(periode_tahun,"-",periode_bulan,"-01")'),"<",$treshold_d)
+	        	->whereNotNull('secretariats.sector_id')
 	        	->orderBy('periode_tahun','DESC')
 	        	->orderBy('periode_bulan','DESC')
+	        	->orderBy('sectors.id','ASC')
 	        	->orderBy('indikator','ASC');
 
 	        $indikator = $indikator->get();
 
 	        $sectors = DB::table('sectors')->pluck('nama','id');
+	        // dd($sectors[17]);
+	        // dd($indikator[700]);
 
 	        foreach ($indikator as $row_indikator) {
 	        	# code...
@@ -399,6 +397,7 @@ class ReportHawasbid extends Controller
 
 	        	
 	        	$periode = $this->getNameMonth($row_indikator->periode_bulan)." ".$row_indikator->periode_tahun;
+
 		        $sheet->row($start_row, array(
 				     $no,"(".$sectors[$row_indikator->sector_id].")\n".$row_indikator->nama,$periode,$row_indikator->indikator,$row_indikator->uraian,"","","","","","","",$status_tindakan, $temuan,
 				));
@@ -583,11 +582,7 @@ class ReportHawasbid extends Controller
 			    $cell->setFontSize(12);
 			});
 
-			$m = date('m');
-			$y = date('Y');
-			$treshold_d = null;
-			$treshold_date = $y."-".$m."-03";
-			$treshold_d =  strtotime($treshold_date." -1 month");
+			
 
 			
 			$start_row +=1;
@@ -598,10 +593,11 @@ class ReportHawasbid extends Controller
 	        	->join('sectors','sectors.id','=','indikator_sectors.sector_id')
 	        	->select('secretariats.id','sectors.nama','indikator','evidence','uraian','secretariats.sector_id','secretariat_id','periode_tahun','periode_bulan')
 	        	->where('evidence',0)
-	        	->where('periode_bulan',date('m',$treshold_d))
-	        	->where('periode_tahun',date('Y',$treshold_d))
+	        	->where('periode_bulan',$request->periode_bulan)
+	        	->where('periode_tahun',$request->periode_tahun)
 	        	->orderBy('periode_tahun','DESC')
 	        	->orderBy('periode_bulan','DESC')
+	        	->orderBy('sectors.id','ASC')
 	        	->orderBy('indikator','ASC');
 	        $indikator = $indikator->get();
 
@@ -840,6 +836,7 @@ class ReportHawasbid extends Controller
 	        	->where('periode_tahun',$request->periode_tahun)
 	        	->orderBy('periode_tahun','DESC')
 	        	->orderBy('periode_bulan','DESC')
+	        	->orderBy('sectors.id','ASC')
 	        	->orderBy('indikator','ASC');
 
 	        $sectors = DB::table('sectors')->pluck('nama','id');	        
@@ -1032,6 +1029,8 @@ class ReportHawasbid extends Controller
     
 
     private function laporan_bidang($request){
+    	ini_set("memory_limit", "999M");
+		ini_set("max_execution_time", 999);
 
     	Excel::create($request->nama_file, function($excel) use($request) {
     		$user = Auth::user();

@@ -77,8 +77,9 @@ if(isset($root_menu))
          <a class="collapse-item <?php if($sb == "hawasbid_indikator") echo 'active'?>" href="{{url(session('role').'/hawasbid_indikator')}}">Indikator</a>
          @if($user->user_level_id == 1)
          <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url(session('role').'/generate_indikator')}}">Generate Indikator</a>
-
          <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url(session('role').'/performa-hawasbid')}}">Performa Hawasbid</a>
+         <a class="collapse-item <?php if($sb == "setting_time_hawasbid") echo 'active'?>" href="{{url(session('role').'/setting_time_hawasbid')}}">Setting Periode</a>
+         
          @endif
       </div>
     </div>
@@ -86,14 +87,14 @@ if(isset($root_menu))
   @endif
 
 
-  @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2)
+  @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2 || $user->user_level_id == 6 || $user->user_level_id == 7 )
   
   <li class="nav-item {{($rm == 'pengawas_bidang')? 'active': ''}}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePB" aria-expanded="true" aria-controls="collapsePB">
       <span>Pengawas Bidang</span></a>
     <ul  id="collapsePB" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
-        @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2)
+        @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2 )
         <?php
         ?>
         <li class="nav-item {{($menu == $row_cat && $rm == 'pengawas_bidang')? 'active' : '' }} ">
@@ -125,11 +126,6 @@ if(isset($root_menu))
   </li>
 
   @endif
-
-
-
-
-
 
 
   @if($user->user_level_id == 1 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 3  || $user->user_level_id == 2)
@@ -184,7 +180,7 @@ if(isset($root_menu))
       <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
       <span>Cetak Laporan</span>
     </a>
-    @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 3  || $user->user_level_id == 2)
+    @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 6 || $user->user_level_id == 7 || $user->user_level_id == 3  || $user->user_level_id == 2)
     <div id="collapseCetakLaporan" class="collapse <?php if($menu == "cetak_laporan") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item <?php if($sb == "hawasbid") echo 'active'?>" href="{{url(session('role').'/laporan/hawasbid')}}">Hawasbid</a>

@@ -70,6 +70,9 @@
 	jenis_laporan = $("#jenis_laporan")
 	sector_form = $("#sector_form")
 
+	$("#signature_lap_bidang").hide();
+	$("#signature_lap_keseluruhan").hide();
+
 	$("#cetak").submit(function(){
 		var bidang = sector_form.val().length
 		var jl = jenis_laporan.val()
@@ -81,6 +84,15 @@
 		return true;
 	})
 
+	sector_form.on('change', function(){
+		sectors = sector_form.val()
+		$(".signature_bidang_item").hide()
+
+		for(i=0; i<sectors.length; i++){
+			$("#signature_bidang_"+sectors[i]).show();
+		}
+	})
+
 	jenis_laporan.on('change',function(){
 		if(jenis_laporan.val() == 1){
 			sector_form.attr("required","required")
@@ -89,9 +101,30 @@
 			$("#fsector_form").hide()
 			sector_form.removeAttr("required","required")
 		}
+
+		signature();
 	});	
 
+	$("#id_jenisFile").on('change', function(e){
+		signature();
+	})
 
+	function signature(){
+		val_jf = $("#id_jenisFile").val()
+		if(val_jf == 1){
+			$("#signature_lap_bidang").hide();
+			$("#signature_lap_keseluruhan").hide();
+		}else if(val_jf == 2){
+			jl = jenis_laporan.val()
+			if(jl == 1){
+				$("#signature_lap_bidang").show(1000);	
+				$("#signature_lap_keseluruhan").hide();
+			}else{
+				$("#signature_lap_bidang").hide();	
+				$("#signature_lap_keseluruhan").show(1000);
+			}
+		}
+	}
 
 </script>
 @endsection

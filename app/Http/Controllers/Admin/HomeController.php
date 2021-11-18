@@ -9,6 +9,7 @@ use App\UserLevel;
 use App\UserLevelGroup;
 use App\Sector;
 use App\PerformaSector;
+use App\SettingPeriodHawasbid;
 use DB;
 
 class HomeController extends Controller
@@ -83,7 +84,6 @@ class HomeController extends Controller
                 ->get();
             
             $periode_tindak_lanjut = \CostumHelper::getNameMonth(date('m', $treshold_d)).' '.date('Y',$treshold_d);
-
             $treshold_temuan = strtotime($treshold_date." -2 month");
             
         }else{
@@ -93,10 +93,6 @@ class HomeController extends Controller
         $time_temuan = $treshold_temuan;
         $treshold_temuan = date('Y-m',$treshold_temuan)."-01";
 
-        // $current_periode_evidence = clone $check_evidence;
-        // $current_periode_evidence = $current_periode_evidence->where('periode_bulan',date('m'))
-        //                                 ->where('periode_tahun',date('Y'))
-        //                                 ->get();
 
         $hasil_temuan_evidence = clone $check_evidence;
         $hasil_temuan_evidence = $hasil_temuan_evidence->whereDate(DB::raw('CONCAT(periode_tahun,"-",periode_bulan,"-01")'),"<=",$treshold_temuan)->get();
@@ -148,7 +144,6 @@ class HomeController extends Controller
         );
 
         // chart performa tindak lanjut
-
         $query_performa_year = PerformaSector::orderBy('periode_tahun','DESC')
             ->orderBy('periode_bulan','DESC')
             ->select('periode_bulan','periode_tahun')
@@ -228,10 +223,6 @@ class HomeController extends Controller
             array_push($data_cperforma_bidang['datasets'], $tmp_data_bidang);
         }
         
-        // dd($data_cperforma);
-
-        // dd($data_cperforma);
-
         $send = [
             'menu' => 'dashboard',
             'title' => 'Dashboard',

@@ -40,7 +40,7 @@ if($user->user_level_id == 1){
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Filter Data</h6>
+      <h6 class="m-0 font-weight-bold text-primary">FILTER DATA</h6>
     </div>
     <div class="card-body">
       
@@ -69,14 +69,12 @@ if($user->user_level_id == 1){
 
     </div>
 </div>
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Indikator</h6>
+      <h6 class="m-0 font-weight-bold text-primary">INDIKATOR</h6>
     </div>
     <div class="card-body">
-     
-      
-      
 
     	<table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
           	<thead>
@@ -139,6 +137,46 @@ if($user->user_level_id == 1){
       </table>
       <div style="float: right; padding: 0px 20px">
       {{ $secretariats->render("pagination::bootstrap-4") }}
+      </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">SUMMARY</h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <?php
+          $no = 1;
+          $total_indikator = 0;
+        ?>
+        @foreach($summary->chunk(5) as $row_chunk)  
+          <div class="col-md-6">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Sektor</th>
+                  <th>Jumlah Indikator</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                @foreach($row_chunk as $row)
+                <tr>
+                  <td>{{$no++}}</td>
+                  <td>{!! $row->nama !!}</td>
+                  <td>{!! $row->total_indikator !!}</td>
+                </tr>
+                <?php $total_indikator += $row->total_indikator ?>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        @endforeach
+        <h5 class="col-md-12 font-weight-bold">TOTAL INDIKATOR : {!! $total_indikator !!}</h5>
       </div>
     </div>
 </div>

@@ -76,11 +76,19 @@
           <?php
           $start_num = ($secretariats->currentPage() - 1) * 15;
           $start_num += 1;
+          $periode_check = array();
           ?>
           @foreach($secretariats as $row)
           
           <?php
-          $edit = CostumHelper::checkActionHawasbid($user->user_level_id, $row->periode_bulan, $row->periode_tahun);
+            $edit = 0;
+            $key = $row->periode_bulan."-".$row->periode_tahun;
+            if(array_key_exists($key, $periode_check)){
+              $edit = $periode_check[$key];
+            }else{
+              $edit = CostumHelper::checkActionHawasbid($user->user_level_id, $row->periode_bulan, $row->periode_tahun);
+              $periode_check[$key] = $edit;
+            }
 
           ?>
           <tr>

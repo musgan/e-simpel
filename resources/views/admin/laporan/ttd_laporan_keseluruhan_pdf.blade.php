@@ -1,5 +1,5 @@
 <table class="table-ttd">
-	<<thead>
+	<thead>
 		<tr>
 			<th ></th>
 			<th width="70%"></th>

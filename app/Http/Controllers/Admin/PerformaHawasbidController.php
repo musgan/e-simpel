@@ -9,6 +9,7 @@ use App\Sector;
 use DB;
 
 use App\PerformaSector;
+use App\SettingPeriodHawasbid;
 
 class PerformaHawasbidController extends Controller
 {
@@ -117,83 +118,82 @@ class PerformaHawasbidController extends Controller
     }
 
     private function calculate_performa($base_query, $periode_bulan, $periode_tahun){
-        // getting total evidence each sectors
-        $total_evicence = clone $base_query;
-        $total_evicence = $total_evicence
-            ->groupBy('secretariats.sector_id')
-            ->select('secretariats.sector_id',DB::raw('COUNT(secretariats.sector_id) as total'))->get();
-
-        // mengambil informasi sektor
-        $sectors = DB::table('sectors')->select('id')->get();
-
-        // init_val
-        $init_val = [];
-        foreach ($sectors as $val) {
-             # code...
-            $init_val[$val->id]['total_bidang'] = 0;
-            $init_val[$val->id]['total_bidang_success'] = 0;
-            $init_val[$val->id]['total_tindak_lanjut'] = 0;
-            $init_val[$val->id]['total_tindak_lanjut_success'] = 0;
-        }
-
-        foreach ($total_evicence as $val) {
+        // get treshold each periode
+        $periode = SettingPeriodHawasbid::where('periode_bulan', $periode_bulan)
+            ->where('periode_tahun', $periode_tahun)
+            ->first();
+        if (count($periode) > 0) {
             # code...
-            $init_val[$val->sector_id]['total_bidang'] = $val->total;
+            // dd($periode);
+            // getting total evidence each sectors
+            $total_evicence = clone $base_query;
+            $total_evicence = $total_evicence
+                ->groupBy('secretariats.sector_id')
+                ->select('secretariats.sector_id',DB::raw('COUNT(secretariats.sector_id) as total'))->get();
+
+            // mengambil informasi sektor
+            $sectors = DB::table('sectors')->select('id')->get();
+
+            // init_val
+            $init_val = [];
+            foreach ($sectors as $val) {
+                 # code...
+                $init_val[$val->id]['total_bidang_success'] = 0;
+                $init_val[$val->id]['total_bidang_success'] = 0;
+                $init_val[$val->id]['total_tindak_lanjut'] = 0;
+                $init_val[$val->id]['total_tindak_lanjut_success'] = 0;
+            }
+
+            foreach ($total_evicence as $val) {
+                # code...
+                $init_val[$val->sector_id]['total_bidang'] = $val->total;
+            }
+
+            // mengambil total evidence yang diselesaikan
+            $total_evidence_selesai = clone $base_query;
+            $total_evidence_selesai = $total_evidence_selesai
+                ->where('evidence',1)
+                ->whereBetween(DB::raw('DATE(indikator_sectors.updated_at)'),[$periode->start_input_session, $periode->stop_input_session])
+                
+                ->groupBy('secretariats.sector_id')
+                ->select('secretariats.sector_id',DB::raw('COUNT(secretariats.sector_id) as total'))->get();
+
+            foreach ($total_evidence_selesai as $val) {
+                # code...
+                $init_val[$val->sector_id]['total_bidang_success'] = $val->total;
+                $init_val[$val->sector_id]['total_tindak_lanjut'] = $init_val[$val->sector_id]['total_bidang'] - $val->total;
+            }
+
+            $total_evidence_tindak_lanjut = clone $base_query;
+            $total_evidence_tindak_lanjut = $total_evidence_tindak_lanjut
+                ->where('evidence',1)
+                
+                ->whereBetween(DB::raw('DATE(indikator_sectors.updated_at)'),[$periode->start_periode_tindak_lanjut, $periode->stop_periode_tindak_lanjut])
+
+                ->groupBy('secretariats.sector_id')
+                ->select('secretariats.sector_id',DB::raw('COUNT(secretariats.sector_id) as total'))->get();
+
+
+            foreach($total_evidence_tindak_lanjut as $val){
+                $init_val[$val->sector_id]['total_tindak_lanjut_success'] = $val->total;
+            }
+
+            $batch = array();
+            foreach ($init_val as $key => $value) {
+                # code...
+                array_push($batch, array(
+                    'periode_bulan' => $periode_bulan,
+                    'periode_tahun' => $periode_tahun,
+                    'sector_id' => $key,
+                    'total_bidang' => $value['total_bidang'],
+                    'total_bidang_success' => $value['total_bidang_success'],
+                    'total_tindak_lanjut' => $value['total_tindak_lanjut'],
+                    'total_tindak_lanjut_success' => $value['total_tindak_lanjut_success'])
+                );
+            }
+
+            PerformaSector::insert($batch);
         }
-
-        // mengambil total evidence yang diselesaikan
-        $total_evidence_selesai = clone $base_query;
-        $total_evidence_selesai = $total_evidence_selesai
-            ->where('evidence',1)
-            ->whereDate(DB::raw('DATE_ADD(CONCAT(periode_tahun,"-",periode_bulan,"-05"), INTERVAL 1 MONTH)'),'>',DB::raw('DATE(indikator_sectors.updated_at)'))
-            ->groupBy('secretariats.sector_id')
-            ->select('secretariats.sector_id',DB::raw('COUNT(secretariats.sector_id) as total'))->get();
-
-        foreach ($total_evidence_selesai as $val) {
-            # code...
-            $init_val[$val->sector_id]['total_bidang_success'] = $val->total;
-            $init_val[$val->sector_id]['total_tindak_lanjut'] = $init_val[$val->sector_id]['total_bidang'] - $val->total;
-        }
-
-        $total_evidence_tindak_lanjut = clone $base_query;
-        $total_evidence_tindak_lanjut = $total_evidence_tindak_lanjut
-            ->where('evidence',1)
-            
-            // ->where(function($q){
-            //     $q->whereBetween(DB::raw('DATE(indikator_sectors.updated_at)'),
-
-            //     [DB::raw('DATE_ADD(CONCAT(periode_tahun,"-",periode_bulan,"-05"), INTERVAL 1 MONTH)'), 
-
-            //     DB::raw('DATE_ADD(CONCAT(periode_tahun,"-",periode_bulan,"-15"), INTERVAL 1 MONTH)')]);
-            // })
-
-            ->whereDate(DB::raw('DATE_ADD(CONCAT(periode_tahun,"-",periode_bulan,"-05"), INTERVAL 1 MONTH)'), '<=', DB::raw('DATE(indikator_sectors.updated_at)'))
-            ->whereDate(DB::raw('DATE_ADD(CONCAT(periode_tahun,"-",periode_bulan,"-15"), INTERVAL 1 MONTH)'), '>=', DB::raw('DATE(indikator_sectors.updated_at)'))
-
-
-            ->groupBy('secretariats.sector_id')
-            ->select('secretariats.sector_id',DB::raw('COUNT(secretariats.sector_id) as total'))->get();
-
-
-        foreach($total_evidence_tindak_lanjut as $val){
-            $init_val[$val->sector_id]['total_tindak_lanjut_success'] = $val->total;
-        }
-
-        $batch = array();
-        foreach ($init_val as $key => $value) {
-            # code...
-            array_push($batch, array(
-                'periode_bulan' => $periode_bulan,
-                'periode_tahun' => $periode_tahun,
-                'sector_id' => $key,
-                'total_bidang' => $value['total_bidang'],
-                'total_bidang_success' => $value['total_bidang_success'],
-                'total_tindak_lanjut' => $value['total_tindak_lanjut'],
-                'total_tindak_lanjut_success' => $value['total_tindak_lanjut_success'])
-            );
-        }
-
-        PerformaSector::insert($batch);
     }
 
 

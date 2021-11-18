@@ -29,6 +29,7 @@ Route::group(['namespace' => 'Admin','prefix'=>'admin','middleware' => ['auth','
 	Route::resource('users','UserController');
 	
 	Route::resource('hawasbid_indikator','HawasbidIndikatorController');
+	Route::resource('setting_time_hawasbid','SettingTimeHawasbid');
 
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index');
 	Route::post('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store');

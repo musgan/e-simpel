@@ -74,10 +74,21 @@ $user  = \Auth::user();
           <?php
           $start_num = ($secretariats->currentPage() - 1) * 15;
           $start_num += 1;
+          $periode_check = array();
           // $start_num = 0;
           ?>
           @foreach($secretariats as $row)
 
+          <?php
+            $edit = 0;
+            $key = $row->periode_bulan."-".$row->periode_tahun;
+            if(array_key_exists($key, $periode_check)){
+              $edit = $periode_check[$key];
+            }else{
+              $edit = CostumHelper::checkActionTindakLanjut($user->user_level_id, $row->periode_bulan, $row->periode_tahun);
+              $periode_check[$key] = $edit;
+            }
+          ?>
           
           <tr>
             <td>{{$start_num++}}</td>
@@ -92,8 +103,9 @@ $user  = \Auth::user();
               </p>
 
               <a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu.'/'.$row->id)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-folder-open" aria-hidden="true"></i> open</a>
-              @if(CostumHelper::checkActionTindakLanjut($user->user_level_id, $row->periode_bulan, $row->periode_tahun) == 1)
-              <a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu).'/'.$row->id.'/edit'}}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> uraian</a>
+              
+              @if($edit == 1)
+                <a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu).'/'.$row->id.'/edit'}}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> uraian</a>
               @endif
             
             </td>

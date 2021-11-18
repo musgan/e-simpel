@@ -82,7 +82,7 @@ class UserController extends Controller
             'nip'   => 'required'
         ]);
 
-        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5){
+        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5 || $request->user_level_id == 6 || $request->user_level_id == 7){
             $this->validate($request,[
                 'sector_id'  => 'required'
             ]);
@@ -97,7 +97,7 @@ class UserController extends Controller
         $send->save();
 
         // perbaharui sektor user
-        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5){
+        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5 || $request->user_level_id == 6 || $request->user_level_id == 7){
             $batch = array();
             for($i=0; $i<count($request->sector_id); $i++){
                 array_push($batch,array('user_level_id'=> $request->user_level_id,
@@ -175,7 +175,7 @@ class UserController extends Controller
             'nip'   => 'required'
         ]);
 
-        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5){
+        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5 || $request->user_level_id == 6 || $request->user_level_id == 7){
             $this->validate($request,[
                 'sector_id'  => 'required'
             ]);            
@@ -197,7 +197,7 @@ class UserController extends Controller
         UserLevelGroup::where('user_id',$id)
                 ->delete();
         // perbaharui sektor user
-        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5){
+        if($request->user_level_id == 10 || $request->user_level_id == 4 || $request->user_level_id == 5 || $request->user_level_id == 6 || $request->user_level_id == 7){
             
             $batch = array();
             for($i=0; $i<count($request->sector_id); $i++){

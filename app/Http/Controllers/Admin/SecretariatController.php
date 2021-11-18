@@ -12,7 +12,7 @@ use App\UserLevelGroup;
 use App\Secretariat;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use App\IndikatorSector;
+use App\IndikatorSector; 
 use DB;
 
 class SecretariatController extends Controller

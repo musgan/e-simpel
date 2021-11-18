@@ -87,6 +87,7 @@ class HawasbidIndikatorController extends Controller
         $secretariats = $secretariats
             ->orderBy('periode_tahun','DESC')
             ->orderBy('periode_bulan','DESC')
+            ->orderBy('sectors.nama','ASC')
             ->orderBy('secretariats.indikator','ASC');
 
         if($evidence != ""){
@@ -123,6 +124,18 @@ class HawasbidIndikatorController extends Controller
             }
         }
 
+        $summary =  DB::table('secretariats')
+            ->select('sectors.id',"sectors.nama",DB::raw("COUNT(sectors.id) as total_indikator"))
+            ->leftJoin('sectors','sector_id','=','sectors.id')
+            ->where('periode_bulan',$periode_bulan)
+            ->where('periode_tahun',$periode_tahun)
+            ->groupBy('sectors.id','sectors.nama')
+            ->orderBy('periode_tahun','DESC')
+            ->orderBy('periode_bulan','DESC')
+            ->orderBy('sectors.nama','ASC')
+            ->orderBy('secretariats.indikator','ASC')
+            ->get();
+
         $send = [
             'menu'              => 'hawasbid',
             'title'             => 'hawasbid',
@@ -134,7 +147,8 @@ class HawasbidIndikatorController extends Controller
             'evidence'          => $evidence,
             'bidang_terkait'    => $bidang_terkait,
             'bulan'             => $periode_bulan,
-            'tahun'             => $periode_tahun
+            'tahun'             => $periode_tahun,
+            'summary'           => $summary
         ];
         return view('admin.hawasbid.indikator.index',$send);
     }
