@@ -61,7 +61,7 @@
 	            },
 	            { data: 'name', name: 'name' },
 	            { data: 'email', name: 'email' },
-	            { data: 'nama_level', name: 'nama_level' }
+	            { data: 'nama_level', name: 'user_levels.nama' }
 	        ],
 	        drawCallback: function( settings ) {
 
