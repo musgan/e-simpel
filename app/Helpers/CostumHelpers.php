@@ -45,10 +45,11 @@ class CostumHelpers{
 
 public static function checkActionTindakLanjut($user_level_id, $periode_bulan, $periode_tahun){
 	$current_time = strtotime(date('Y-m-d'));
+	
 	$checkPeriode = SettingPeriodHawasbid::where('periode_bulan', $periode_bulan)
 		->where('periode_tahun',$periode_tahun)
 		->first();
-	if (count($checkPeriode) > 0) {
+	if ($checkPeriode) {
 		# code...
 		$action = 0;
 		if($user_level_id == 1){
@@ -74,7 +75,7 @@ public static function checkActionHawasbid($user_level_id, $periode_bulan, $peri
 	$checkPeriode = SettingPeriodHawasbid::where('periode_bulan', $periode_bulan)
 		->where('periode_tahun',$periode_tahun)
 		->first();
-	if (count($checkPeriode) > 0) {
+	if ($checkPeriode) {
 		# code...
 		$action = 0;
 		if($user_level_id == 1){
