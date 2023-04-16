@@ -26,4 +26,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function user_level(){
+        return $this->hasOne("App\UserLevel","id",'user_level_id');
+    }
+
+    protected $table = 'users';
 }

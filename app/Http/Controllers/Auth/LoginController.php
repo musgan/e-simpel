@@ -91,15 +91,9 @@ class LoginController extends Controller
             'sector_menu'   => $sector_menu,
             'sector_category'  => $sector_category
         ];
+        
+        $this->redirectTo = '/home';
 
-        // //
-        $role = DB::table('user_levels')
-            ->where('id',$user->user_level_id)
-            ->select('alias')->first();
-
-        $this->redirectTo = $role->alias.'/home';
-
-        $request->session()->put('role',$role->alias);
         $request->session()->put('session_login',Crypt::encryptString(serialize($session_login)));
     }
 

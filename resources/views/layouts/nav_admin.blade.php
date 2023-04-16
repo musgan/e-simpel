@@ -165,24 +165,18 @@ if(isset($root_menu))
 
   
   @if($user->user_level_id == 1 || $user->user_level_id == 2 || $user->user_level_id == 3)
-  <li class="nav-item <?php if($menu == "PRhawasbid") echo 'active'?>">
+  <li class="nav-item <?php if($menu == "pr-hawasbid") echo 'active'?>">
     
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
       <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
       <span>Hawasbid</span>
     </a>
     
-    <div id="collapsePRegulerHawasbid" class="collapse <?php if($menu == "hawasbid") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <div id="collapsePRegulerHawasbid" class="collapse <?php if($menu == "pr-hawasbid") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @if($user->user_level_id == 1)
-        <a class="collapse-item <?php if($sb == "hawasbid_bidang") echo 'active'?>" href="{{url(session('role').'/sector_hawasbid')}}">B. Penanggung Jawab</a>
-         @endif
-         <a class="collapse-item <?php if($sb == "hawasbid_indikator") echo 'active'?>" href="{{url(session('role').'/hawasbid_indikator')}}">Indikator</a>
-         @if($user->user_level_id == 1)
-         <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url(session('role').'/generate_indikator')}}">Generate Indikator</a>
-         <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url(session('role').'/performa-hawasbid')}}">Performa Hawasbid</a>
-         <a class="collapse-item <?php if($sb == "setting_time_hawasbid") echo 'active'?>" href="{{url(session('role').'/setting_time_hawasbid')}}">Setting Periode</a>
-         
+        <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url(session('role').'/lingkup-pengawasan')}}">L. Pengawasan</a> 
+        <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url(session('role').'/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
          @endif
       </div>
     </div>

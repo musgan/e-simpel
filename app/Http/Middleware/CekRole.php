@@ -14,67 +14,16 @@ class CekRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
-    {
-        $user = Auth::user();
-        if($role == "admin" && $user->user_level_id == 1){
-            return $next($request);    
-        }else if($role == "hawasbid" && ($user->user_level_id == 10 || $user->user_level_id == 6 || $user->user_level_id == 7)) {
-            if($request->sub_menu){
-                $check_segment = \Request::segment(2);
-                
-                if($check_segment != "pengawas-bidang"){
-                    Auth::logout();
-                    return redirect('/');
-                }
-                
-                $cek_submenu = UserLevelGroup::where('user_id',$user->id)
-                    ->join('sectors','sectors.id','=','sector_id')
-                    ->where('sectors.alias',$request->sub_menu)
-                    ->count();
-                if($cek_submenu > 0){
-                    return $next($request);   
-                }else{
-                    return redirect(session('role').'/home');
-                }
-            }else return $next($request);    
+    public function handle($request, Closure $next, ...$roles)
+    {   
+        $user = Auth::user()->user_level;
+        if($user)
+            if(in_array($user->alias, $roles))
+                return $next($request);
         
-        }
-
-        else if($role == "kapan" && ($user->user_level_id == 4 || $user->user_level_id == 5 ))  {
-            
-            if($request->sub_menu){
-                $check_segment = \Request::segment(2);
-                
-                if($check_segment != "tindak-lanjutan"){
-                    Auth::logout();
-                    return redirect('/');
-                }
-
-                $cek_submenu = UserLevelGroup::where('user_id',$user->id)
-                    ->join('sectors','sectors.id','=','sector_id')
-                    ->where('sectors.alias',$request->sub_menu)
-                    ->count();
-                if($cek_submenu > 0){
-                    return $next($request);   
-                }else{
-                    return redirect(session('role').'/home');
-                }
-            }else return $next($request);    
-        }
-
-        else if($role == "apm" && $user->user_level_id == 11){
-            return $next($request);    
-        }
-         else if($role == "mpn" && ($user->user_level_id == 2 || $user->user_level_id == 3)){
-            return $next($request);    
-        }
-        else if($role == "zi" && $user->user_level_id == 12){
-            return $next($request);    
-        }else {
-            Auth::logout();
-            return redirect('/');
-        }
+        
+        Auth::logout();
+        return redirect('/');
         
     }
 }
