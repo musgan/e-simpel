@@ -143,10 +143,21 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::middleware('role:admin,kapan')->delete('generate_indikator','GenerateIndikatorController@delete_periode');
 
 	Route::get('performa-hawasbid','PerformaHawasbidController@index')
-	->middleware('role:admin,kapan');
+	    ->middleware('role:admin,kapan');
 
 	Route::post('performa-hawasbid','PerformaHawasbidController@store')
-	->middleware('role:admin,kapan');
+	    ->middleware('role:admin,kapan');
+});
+
+Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
+    Route::get("lingkup-pengawasan", "LingkupPengawasanController@index")->middleware('role:admin');
+    Route::get("lingkup-pengawasan/create", "LingkupPengawasanController@create")->middleware('role:admin');
+    Route::get("lingkup-pengawasan/{id}", "LingkupPengawasanController@show")->middleware('role:admin');
+    Route::post("lingkup-pengawasan", "LingkupPengawasanController@store")->middleware('role:admin');
+    Route::post("lingkup-pengawasan/gettable", "LingkupPengawasanController@getTable")->middleware('role:admin');
+    Route::get("lingkup-pengawasan/{id}/edit", "LingkupPengawasanController@edit")->middleware('role:admin');
+    Route::put("lingkup-pengawasan/{id}", "LingkupPengawasanController@update")->middleware('role:admin');
+    Route::delete("lingkup-pengawasan/{id}", "LingkupPengawasanController@destroy")->middleware('role:admin');
 });
 
 Route::get('redev','RedirectLinkController@redev');// redirect evidence

@@ -4,6 +4,8 @@ $session = unserialize (\Crypt::decryptString(Session::get('session_login')));
 $user = $session['user'];
 $sector_menu = $session['sector_menu'];
 $sector_category = $session['sector_category'];
+if(isset($menu))
+    $menu = strtolower($menu);
 
 $sb = "";
 if(isset($sub_menu)){
@@ -175,8 +177,8 @@ if(isset($root_menu))
     <div id="collapsePRegulerHawasbid" class="collapse <?php if($menu == "pr-hawasbid") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @if($user->user_level_id == 1)
-        <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url(session('role').'/lingkup-pengawasan')}}">L. Pengawasan</a> 
-        <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url(session('role').'/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
+        <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url('pr/lingkup-pengawasan')}}">L. Pengawasan</a>
+        <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url('pr/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
          @endif
       </div>
     </div>

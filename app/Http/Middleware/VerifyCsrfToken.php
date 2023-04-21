@@ -20,6 +20,7 @@ class VerifyCsrfToken extends BaseVerifier
         'mpn/akun-saya/update-profil',
         'kapan/akun-saya/update-profil',
         'hawasbid/akun-saya/update-profil',
+        '**/gettable',
     ];
 
 

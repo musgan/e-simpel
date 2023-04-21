@@ -30,6 +30,7 @@
 
   <!-- Custom styles for this template-->
   <link href="{{asset('template')}}/css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="{{asset('template')}}/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{asset('library/font-awesome-4.7.0/css/font-awesome.min.css')}}">
 
   <style type="text/css">
@@ -37,6 +38,9 @@
       position: fixed;
       bottom: 30px;
       right: 30px;
+    }
+    table th{
+      text-align: center !important;
     }
     .floatbtn, .floatbtn:hover{
       border-radius: 50%;
@@ -63,6 +67,9 @@
     }
     .text-gray-800{
       color: #02020A !important;
+    }
+    .btn-flat{
+      border-radius: 0 !important;
     }
     /*.nav-item:active ul {
       display: block;
@@ -136,6 +143,9 @@
   <!-- Core plugin JavaScript-->
   <script src="{{asset('template')}}/vendor/jquery-easing/jquery.easing.min.js"></script>
 
+  <script src="{{asset('template')}}/vendor/datatables/jquery.dataTables.js"></script>
+  <script src="{{asset('template')}}/vendor/datatables/dataTables.bootstrap4.js"></script>
+
   <!-- Custom scripts for all pages-->
   <script src="{{asset('template')}}/js/sb-admin-2.min.js"></script>
 
@@ -143,6 +153,10 @@
   <script src="{{asset('template')}}/vendor/chart.js/Chart.min.js"></script>
 
   @yield('js','')
+
+<script type="text/javascript">
+
+</script>
 
 </body>
 
