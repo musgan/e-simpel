@@ -158,6 +158,13 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get("lingkup-pengawasan/{id}/edit", "LingkupPengawasanController@edit")->middleware('role:admin');
     Route::put("lingkup-pengawasan/{id}", "LingkupPengawasanController@update")->middleware('role:admin');
     Route::delete("lingkup-pengawasan/{id}", "LingkupPengawasanController@destroy")->middleware('role:admin');
+
+
+    Route::get("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@index")->middleware('role:admin');
+    Route::post("lingkup-pengawasan-bidang/gettable", "LingkupPengawasanBidangController@getTable")->middleware('role:admin');
+    Route::get("lingkup-pengawasan-bidang/create", "LingkupPengawasanBidangController@create")->middleware('role:admin');
+    Route::get("lingkup-pengawasan-bidang/{sector_id}/edit", "LingkupPengawasanBidangController@edit")->middleware('role:admin');
+    Route::put("lingkup-pengawasan-bidang/{sector_id}", "LingkupPengawasanBidangController@update")->middleware('role:admin');
 });
 
 Route::get('redev','RedirectLinkController@redev');// redirect evidence

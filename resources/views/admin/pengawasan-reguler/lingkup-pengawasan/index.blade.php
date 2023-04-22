@@ -43,7 +43,7 @@
                 {data:"no",width: 50, orderable: false, filterable:false, className:"text-center", targets:0},
                 {name: "nama", data:"nama",targets: 1},
                 {name: "created_at", data:"created_at",targets: 2},
-                {name: "action", data:"action",className:"text-center", targets: 3},
+                {data:"action",orderable:false, searchable:false, className:"text-center", targets: 3},
             ],
             order : [[1,'asc']]
         })
