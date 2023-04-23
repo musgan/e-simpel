@@ -20,6 +20,7 @@ class LingkupPengawasanRepositories
         return LingkupPengawasanModel::all();
     }
 
+
     public function getDataTable(Request $request){
         $dtbHelper = new DataTableHelper($request);
         $params = $dtbHelper->getParams();

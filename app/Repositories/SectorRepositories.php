@@ -11,4 +11,10 @@ class SectorRepositories
             ->orderBy('category','ASC')
             ->orderBy('id','ASC')->get();
     }
+
+    public static function getByAliasAndCategory($alias, $category){
+        return Sector::where('alias', $alias)
+            ->whereRaw('LOWER(category) = "'.$category.'"' )
+            ->first();
+    }
 }

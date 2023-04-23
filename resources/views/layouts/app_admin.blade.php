@@ -32,11 +32,15 @@
   <link href="{{asset('template')}}/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{asset('library/font-awesome-4.7.0/css/font-awesome.min.css')}}">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="{{asset('template')}}/css/sb-admin-2.min.css" rel="stylesheet">
 
   <style type="text/css">
+    .summernote p{
+      margin-bottom: 5px;
+    }
     .div-add{
       position: fixed;
       bottom: 30px;
@@ -73,6 +77,10 @@
     }
     .btn-flat{
       border-radius: 0 !important;
+    }
+    .field-form .error{
+      color: darkred;
+      font-size: 12pt;
     }
     /*.nav-item:active ul {
       display: block;
@@ -158,12 +166,9 @@
 
   <!-- Custom scripts for all pages-->
   <script src="{{asset('template')}}/js/sb-admin-2.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
   @yield('js','')
-
-<script type="text/javascript">
-
-</script>
 
 </body>
 

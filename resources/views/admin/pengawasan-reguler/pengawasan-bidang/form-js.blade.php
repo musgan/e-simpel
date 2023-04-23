@@ -1,17 +1,29 @@
 @section("js")
     <script type="text/javascript">
         $(".select2").select2()
-        @if(isset($form))
-            $("#sector_id").prop("disabled", true);
-        @endif
+        $(".editor").summernote({
+            tabsize: 2,
+            height: 250,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+            ]
+        });
 
-        $("#form-submit").on('submit', function(e){
-            e.preventDefault()
-            const data = $(this).serialize()
-            const url = $(this).attr('action')
-            $.post(url, data, onSuccess)
-                .fail(onFail)
-        })
+        $("#form-submit").validate({
+            submitHandler: function(form) {
+                const data = $(form).serialize()
+                const url = $(form).attr('action')
+                $.post(url, data, onSuccess)
+                    .fail(onFail)
+                return false;
+            },
+            errorPlacement: function (error, e) {
+                console.log(error)
+                e.parents(".field-form").append(error);
+            },
+        });
 
         function onSuccess(response){
             alert(response.message)
@@ -38,5 +50,4 @@
             alert(message)
         }
     </script>
-
 @endsection

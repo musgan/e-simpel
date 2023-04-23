@@ -86,7 +86,7 @@ class SettingTimeHawasbid extends Controller
             ->where('periode_bulan', $request->periode_bulan)
             ->first();
 
-        if (count($checkData) > 0) {
+        if ($checkData !== null) {
             return redirect(url(session('role').'/setting_time_hawasbid'))->with('failed','Gagal memasukan data. Periode telah ada. Silahkan anda mengubah atau menghapus periode yang telah ada');
         }else{
 
@@ -125,7 +125,7 @@ class SettingTimeHawasbid extends Controller
     {
         //
         $data = SettingPeriodHawasbid::where('id',$id)->first();
-        if(count($data) > 0){
+        if($data !== null){
             $send = [
                 'menu'              => 'hawasbid',
                 'title'             => 'SETTING PERIODE HAWASBID',

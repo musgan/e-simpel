@@ -84,17 +84,17 @@ if(isset($root_menu))
   <li class="nav-item {{($rm == 'pengawas_bidang')? 'active': ''}}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePB" aria-expanded="true" aria-controls="collapsePB">
       <span>Pengawas Bidang</span></a>
-    <ul  id="collapsePB" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <ul  id="collapsePB" class="collapse {{($rm == 'pengawas_bidang')? 'show': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2 )
         <?php
         ?>
-        <li class="nav-item {{($menu == $row_cat && $rm == 'pengawas_bidang')? 'active' : '' }} ">
+        <li class="nav-item {{($menu == ($row_cat) && $rm == 'pengawas_bidang')? 'active' : '' }} ">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
-          <div id="collapsePB{{$row_cat}}" class="collapse {{ ($menu == $row_cat && $rm == 'pengawas_bidang') ? 'show' : '' }}" >
+          <div id="collapsePB{{$row_cat}}" class="collapse {{ ($menu == strtolower($row_cat) && $rm == 'pengawas_bidang') ? 'show' : '' }}" >
             <div class="bg-white py-2 collapse-inner rounded">
               @foreach($menu_sectors as $val)
                 @if($val->category == $row_cat && ( in_array($val->alias, $sector_menu) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2))
@@ -124,17 +124,17 @@ if(isset($root_menu))
   
   <li class="nav-item {{($rm == 'tindak_lanjut') ? 'active': ''}}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTL" aria-expanded="true" aria-controls="collapseTL"><span>Tindak Lanjutan</span></a>
-    <ul  id="collapseTL" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <ul  id="collapseTL" class="collapse {{($rm == 'tindak_lanjut') ? 'show': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2)
         <?php
         ?>
-        <li class="nav-item {{ ($menu == $row_cat && $rm == 'tindak_lanjut') ? 'active' : '' }}">
+        <li class="nav-item {{ ($menu == strtolower($row_cat) && $rm == 'tindak_lanjut') ? 'active' : '' }}">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTL{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
-          <div id="collapseTL{{$row_cat}}" class="collapse {{ ($menu == $row_cat && $rm == 'tindak_lanjut') ? 'show' : '' }}" >
+          <div id="collapseTL{{$row_cat}}" class="collapse {{ ($menu == strtolower($row_cat) && $rm == 'tindak_lanjut') ? 'show' : '' }}" >
             <div class="bg-white py-2 collapse-inner rounded">
               @foreach($menu_sectors as $val)
                 @if($val->category == $row_cat && ( in_array($val->alias, $sector_menu) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2))
@@ -188,28 +188,28 @@ if(isset($root_menu))
 
   @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2 || $user->user_level_id == 6 || $user->user_level_id == 7 )
   
-  <li class="nav-item {{($rm == 'pengawas_bidang')? 'active': ''}}">
+  <li class="nav-item {{($rm == 'pr_pengawas_bidang')? 'active': ''}}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB" aria-expanded="true" aria-controls="collapsePB">
       <span>Pengawas Bidang</span></a>
-    <ul  id="collapsePRegulerPB" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <ul  id="collapsePRegulerPB" class="collapse {{($rm == 'pr_pengawas_bidang')? 'active': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2 )
         <?php
         ?>
-        <li class="nav-item {{($menu == $row_cat && $rm == 'pengawas_bidang')? 'active' : '' }} ">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
+        <li class="nav-item {{($menu == strtolower($row_cat) && $rm == 'pr_pengawas_bidang')? 'active' : '' }} ">
+          <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
-          <div id="collapsePRegulerPB{{$row_cat}}" class="collapse {{ ($menu == $row_cat && $rm == 'pengawas_bidang') ? 'show' : '' }}" >
-            <div class="bg-white py-2 collapse-inner rounded">
+          <div id="collapsePRegulerPB{{$row_cat}}" class="collapse {{ ($menu == strtolower($row_cat) && $rm == 'pr_pengawas_bidang') ? 'show' : '' }}" >
+            <div class="bg-white py-2 collapse-inner rounded ">
               @foreach($menu_sectors as $val)
                 @if($val->category == $row_cat && ( in_array($val->alias, $sector_menu) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2))
 
                 <?php
                   $link_name = $val->alias;
                 ?>
-                <a class="collapse-item {{ ($sb == $link_name && $rm == 'pengawas_bidang')? 'active' : '' }}" href="{{url(session('role').'/pengawas-bidang/'.strtolower($val->category).'/'.$link_name)}}">{!! $val->nama !!}</a>
+                <a class="collapse-item {{ ($sb == $link_name && $rm == 'pr_pengawas_bidang')? 'active' : '' }}" href="{{url('pr/pengawasan-bidang/'.strtolower($val->category).'/'.$link_name)}}">{!! $val->nama !!}</a>
 
                 @endif
               @endforeach
@@ -228,19 +228,19 @@ if(isset($root_menu))
 
 
   @if($user->user_level_id == 1 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 3  || $user->user_level_id == 2)
-  <li class="nav-item {{($rm == 'tindak_lanjut') ? 'active': ''}}">
+  <li class="nav-item {{($rm == 'pr_tindak_lanjut') ? 'active': ''}}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL" aria-expanded="true" aria-controls="collapsePRegulerTL"><span>Tindak Lanjutan</span></a>
     <ul  id="collapsePRegulerTL" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2)
         <?php
         ?>
-        <li class="nav-item {{ ($menu == $row_cat && $rm == 'tindak_lanjut') ? 'active' : '' }}">
+        <li class="nav-item {{ ($menu == $row_cat && $rm == 'pr_tindak_lanjut') ? 'active' : '' }}">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
-          <div id="collapsePRegulerTL{{$row_cat}}" class="collapse {{ ($menu == $row_cat && $rm == 'tindak_lanjut') ? 'show' : '' }}" >
+          <div id="collapsePRegulerTL{{$row_cat}}" class="collapse {{ ($menu == $row_cat && $rm == 'pr_tindak_lanjut') ? 'show' : '' }}" >
             <div class="bg-white py-2 collapse-inner rounded">
               @foreach($menu_sectors as $val)
                 @if($val->category == $row_cat && ( in_array($val->alias, $sector_menu) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2))
@@ -248,7 +248,7 @@ if(isset($root_menu))
                 <?php
                   $link_name = $val->alias;
                 ?>
-                <a class="collapse-item {{ ($sb == $link_name && $rm == 'tindak_lanjut')? 'active' : '' }} " href="{{url(session('role').'/tindak-lanjutan/'.strtolower($val->category).'/'.$link_name)}}">{!! $val->nama !!}</a>
+                <a class="collapse-item {{ ($sb == $link_name && $rm == 'pr_tindak_lanjut')? 'active' : '' }} " href="{{url('pr/tindak-lanjutan/'.strtolower($val->category).'/'.$link_name)}}">{!! $val->nama !!}</a>
                 @endif
               @endforeach
 

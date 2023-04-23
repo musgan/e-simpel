@@ -59,10 +59,6 @@ class LingkupPengawasanBidangRepositories
         return $dataTable;
     }
 
-    public function getLingkupPengawasanBidang($sector_id){
-        return LingkupPengawasanBidangModel::where('sector_id', $sector_id)->get();
-    }
-
     public function getDataDatatable(array $params){
         $query = DB::table('lingkup_pengawasan_bidang')
             ->select('lingkup_pengawasan_bidang.*','lingkup_pengawasan.nama as lingkup_pengawasan_nama','item_lingkup_pengawasan.nama as item_lingkup_pengawasan_nama','sectors.nama as sector_nama','sectors.id as sector_id')
@@ -78,6 +74,10 @@ class LingkupPengawasanBidangRepositories
                 $query->orderBy($column[0],$column[1]);
         }
         return $query->get();
+    }
+
+    public function getLingkupPengawasanBidang($sector_id){
+        return LingkupPengawasanBidangModel::where('sector_id', $sector_id)->get();
     }
 
     public static function store(Request $request){

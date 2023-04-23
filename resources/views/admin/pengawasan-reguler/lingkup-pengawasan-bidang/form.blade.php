@@ -8,6 +8,9 @@ if(isset($lingkup_pengawasan_bidang)){
 
 @endphp
 <div class="card mb-3">
+    <div class="card-header">
+        <h5>Lingkup Pengawasan Bidang</h5>
+    </div>
     <div class="card-body">
         <div class="form-group">
             <label>Bidang</label>

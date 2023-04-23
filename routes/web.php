@@ -163,8 +163,22 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@index")->middleware('role:admin');
     Route::post("lingkup-pengawasan-bidang/gettable", "LingkupPengawasanBidangController@getTable")->middleware('role:admin');
     Route::get("lingkup-pengawasan-bidang/create", "LingkupPengawasanBidangController@create")->middleware('role:admin');
+    Route::post("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@store")->middleware('role:admin');
     Route::get("lingkup-pengawasan-bidang/{sector_id}/edit", "LingkupPengawasanBidangController@edit")->middleware('role:admin');
     Route::put("lingkup-pengawasan-bidang/{sector_id}", "LingkupPengawasanBidangController@update")->middleware('role:admin');
+
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@index')->middleware('role:admin');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/create','PengawasanRegulerController@create')->middleware('role:admin');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@store')->middleware('role:admin');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/gettable','PengawasanRegulerController@getTable')->middleware('role:admin');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}/edit','PengawasanRegulerController@edit')->middleware('role:admin');
+    Route::put('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@update')->middleware('role:admin');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('role:admin');
+    Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('role:admin');
+
+    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('role:admin');
+    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('role:admin');
+
 });
 
 Route::get('redev','RedirectLinkController@redev');// redirect evidence

@@ -4,12 +4,15 @@
 @section('content')
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Lingkup Pengawasan</h1>
+        <h1 class="h3 mb-0 text-gray-800">Pengawasan Reguler</h1>
     </div>
     <div class="form-group text-right">
         <a class="btn btn-primary btn-flat" href="{{url($path_url."/create")}}" >@lang("form.button.add.show")</a>
     </div>
     <div class="card">
+        <div class="card-header">
+            <h5>Lingkup Pengawasan</h5>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover table-striped" id="datatable" >
