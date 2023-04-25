@@ -176,6 +176,15 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('role:admin');
     Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('role:admin');
 
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/create','KesesuaianPengawasanRegularController@create')->middleware('role:admin');
+    Route::post('kesesuaian/{sector_category}/{sector_alias}','KesesuaianPengawasanRegularController@store')->middleware('role:admin');
+    Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable')->middleware('role:admin');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}/edit','KesesuaianPengawasanRegularController@edit')->middleware('role:admin');
+    Route::put('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@update')->middleware('role:admin');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@show')->middleware('role:admin');
+    Route::delete('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@destroy')->middleware('role:admin');
+
+
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('role:admin,kapan');
     Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('role:admin,kapan');
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('role:admin,kapan');

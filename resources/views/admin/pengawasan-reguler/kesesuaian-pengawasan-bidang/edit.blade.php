@@ -5,28 +5,28 @@
     <section class="justify-content-between mb-4">
         <div class="row">
             <div class="col-sm-6">
-                <h1 class="h3 mb-0 text-gray-800"><a href="{{url($path_url)}}" class="mr-2  text-decoration-none"><i class="fa fa-chevron-left" aria-hidden="true"></i> Pengawasan Reguler</a></h1>
+                <h1 class="h3 mb-0 text-gray-800"><a href="{{url($path_url_pengawasan_bidang)}}" class="mr-2  text-decoration-none"><i class="fa fa-chevron-left" aria-hidden="true"></i> Pengawasan Reguler</a></h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">{{$sector_selected->category}}</a></li>
                     <li class="breadcrumb-item"><a href="#">{{$sector_selected->nama}}</a></li>
-                    <li class="breadcrumb-item active">@lang("form.button.add.text")</li>
+                    <li class="breadcrumb-item"><a href="#">Kesesuaian</a></li>
+                    <li class="breadcrumb-item active">@lang("form.button.edit.text")</li>
                 </ol>
             </div>
         </div>
     </section>
 
-    <form action="{{url($path_url)}}" method="POST" id="form-submit">
+    <form action="{{url($path_url)."/".$form->id}}" method="POST" id="form-submit">
         {{ csrf_field() }}
-        @include($path_view."form-periode")
-        @include("admin.pengawasan-reguler.kesesuaian-pengawasan-bidang.form",["form_detail" => true])
+        {{ method_field('PUT') }}
+        @include("admin.pengawasan-reguler.pengawasan-bidang.form-periode")
         @include($path_view."form")
         <div class="form-group">
-            <a class="btn btn-secondary btn-flat mr-2" href="{{url($path_url)}}">@lang("form.button.back.show")</a>
+            <a class="btn btn-secondary btn-flat mr-2" href="{{url($path_url_pengawasan_bidang)}}">@lang("form.button.back.show")</a>
             <button class="btn btn-primary btn-flat">@lang("form.button.save.show")</button>
         </div>
     </form>
 @endsection
-
-@include($path_view.'form-js')
+@include($path_view."form-js")

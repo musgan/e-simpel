@@ -19,6 +19,7 @@ class PengawasanRegulerController extends Controller
      */
     private $path_view = "admin.pengawasan-reguler.pengawasan-bidang.";
     private $path_url = "pr/pengawasan-bidang";
+    private $path_url_kesesuaian = "pr/kesesuaian";
 
     private $data = [
         "menu"  => "",
@@ -45,6 +46,7 @@ class PengawasanRegulerController extends Controller
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+        $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
         $this->data['status_pengawasan_regular'] = StatusPengawasanRegularRepositories::getAll();
         return view($this->path_view."index", $this->data);
@@ -52,6 +54,9 @@ class PengawasanRegulerController extends Controller
 
     function getPathUrl($category, $aliasName){
         return $this->path_url."/".$category.'/'.$aliasName;
+    }
+    function getPathUrlKesesuaian($category, $aliasName){
+        return $this->path_url_kesesuaian."/".$category.'/'.$aliasName;
     }
 
     public function getTable($sector_category, $sector_alias, Request $request){

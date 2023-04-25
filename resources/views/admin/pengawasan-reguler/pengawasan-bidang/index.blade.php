@@ -28,11 +28,12 @@
     </div>
 
     <div class="form-group text-right">
-        <a class="btn btn-primary btn-flat" href="{{url($path_url."/create")}}" >@lang("form.button.add.show")</a>
+        <a class="btn btn-info btn-flat mr-2" href="{{url($path_url_kesesuaian."/create")}}" >@lang("form.button.add.show") Kesesuaian</a>
+        <a class="btn btn-primary btn-flat" href="{{url($path_url."/create")}}" >@lang("form.button.add.show") Temuan</a>
     </div>
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">
-            <h4>{{$sector_selected->nama}}</h4>
+            <h4>Temuan {{$sector_selected->nama}}</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -44,6 +45,32 @@
                         <th rowspan="2">Lingkup pengawasan</th>
                         <th rowspan="2">Temuan</th>
                         <th rowspan="2">Status</th>
+                        <th rowspan="2">@lang("form.label.created_at")</th>
+                        <th rowspan="2">@lang("form.label.action")</th>
+                    </tr>
+                    <tr>
+                        <th>Bulan</th>
+                        <th>Tahun</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4>Kesesuaian</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped" id="datatable-kesesuaian" >
+                    <thead>
+                    <tr>
+                        <th rowspan="2">No</th>
+                        <th colspan="2">Periode</th>
+                        <th rowspan="2">Uraian</th>
                         <th rowspan="2">@lang("form.label.created_at")</th>
                         <th rowspan="2">@lang("form.label.action")</th>
                     </tr>
@@ -83,15 +110,39 @@
             order : [[6,'desc']]
         })
 
+        const table_kesesuaian = $("#datatable-kesesuaian").DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{url($path_url_kesesuaian."/gettable")}}",
+                method: "post"
+            },
+            "autoWidth": false,
+            columnDefs: [
+                {data:"no",width: 50, orderable: false, filterable:false, className:"text-center", targets:0},
+                {data:"periode_bulan",name:"periode_bulan",width: 50, orderable: true, filterable:false, targets:1},
+                {data:"periode_tahun",name:"periode_tahun",width: 50, orderable: true, filterable:false, targets:2},
+                {data:"uraian",name:"uraian", orderable: true, filterable:true, targets:3},
+                {data:"created_at",name:"created_at",width: 120, orderable: true, filterable:false, targets:4},
+                {data:"action",width: 120, orderable: false, filterable:false, className:"text-center", targets:5},
+            ],
+            order : [[4,'desc']]
+        })
+
         $(document).on('click','.btn-link-delete', function (e){
             e.preventDefault()
+            const table_id = $(this).parents("table").attr("id");
+            let table_selected = table;
+            if(table_id == "datatable-kesesuaian")
+                table_selected = table_kesesuaian;
+
             const url = $(this).attr('href')
             if(confirm("Apakah anda ingin menghapus data ini ?")){
-                requestDelete(url);
+                requestDelete(table_selected, url);
             }
         })
 
-        function requestDelete(url){
+        function requestDelete(table,url){
             const data = {
                 "_token": "{{ csrf_token() }}"
             }
