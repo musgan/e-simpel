@@ -32,17 +32,17 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::middleware('role:admin')
 		->resource('users','UserController');
 	
-	Route::middleware('role:admin')->resource('hawasbid_indikator','HawasbidIndikatorController');
+//	Route::middleware('role:admin')->resource('hawasbid_indikator','HawasbidIndikatorController');
 	
 	Route::get('hawasbid_indikator','HawasbidIndikatorController@index')
 		->middleware('role:admin,mpn');
 	Route::get('hawasbid_indikator/{id}','HawasbidIndikatorController@show')
 		->middleware('role:admin,mpn,hawasbid');
-	Route::get('hawasbid_indikator','HawasbidIndikatorController@create')
+	Route::get('hawasbid_indikator/create','HawasbidIndikatorController@create')
 		->middleware('role:admin');
 	Route::post('hawasbid_indikator','HawasbidIndikatorController@post')
 		->middleware('role:admin');
-	Route::get('hawasbid_indikator/{id}','HawasbidIndikatorController@edit')
+	Route::get('hawasbid_indikator/{id}/edit','HawasbidIndikatorController@edit')
 		->middleware('role:admin');
 	Route::put('hawasbid_indikator/{id}','HawasbidIndikatorController@update')
 		->middleware('role:admin');
@@ -176,8 +176,10 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('role:admin');
     Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('role:admin');
 
-    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('role:admin');
-    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('role:admin');
+    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('role:admin,kapan');
+    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('role:admin,kapan');
+    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('role:admin,kapan');
+    Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('role:admin,kapan');
 
 });
 

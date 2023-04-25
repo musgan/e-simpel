@@ -2,17 +2,22 @@
 
 namespace App\Repositories;
 
+use App\Helpers\CostumHelpers;
 use App\Helpers\DataTableHelper;
 use App\Helpers\VariableHelper;
 use App\PengawasanRegulerModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PengawasanRegulerRepositories
 {
     private  $base_url;
     private $sector_category, $sector_alias;
     private $sector;
+    private $type = "pengawasan-regular";
+
     public function __construct($sector_category, $sector_alias){
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
@@ -21,6 +26,9 @@ class PengawasanRegulerRepositories
 
     public function setBaseUrl(String $base_url){
         $this->base_url = $base_url;
+    }
+    public function setType($type){
+        $this->type = $type;
     }
 
     public function getById($id){
@@ -56,13 +64,16 @@ class PengawasanRegulerRepositories
         $no = 1;
         foreach ($resultData as $row){
             $action = "";
-            $url_view = '<a href="'.url($this->base_url."/".$row->id).'" class="btn btn-sm btn-flat btn-success mr-1 ml-1">'.__('form.button.view.icon').'</a>';
-            $url_edit = '<a href="'.url($this->base_url."/".$row->id.'/edit').'" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">'.__('form.button.edit.icon').'</a>';
-            $url_delete = '<a href="'.url($this->base_url."/".$row->id).'" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">'.__('form.button.delete.icon').'</a>';
+            if($this->type == "pengawasan-regular") {
+                $url_view = '<a href="' . url($this->base_url . "/" . $row->id) . '" class="btn btn-sm btn-flat btn-success mr-1 ml-1">' . __('form.button.view.icon') . '</a>';
+                $url_edit = '<a href="' . url($this->base_url . "/" . $row->id . '/edit') . '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
+                $url_delete = '<a href="' . url($this->base_url . "/" . $row->id) . '" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">' . __('form.button.delete.icon') . '</a>';
 
-            $action .= $url_view;
-            $action .= $url_edit;
-            $action .= $url_delete;
+                $action .= $url_view;
+                $action .= $url_edit;
+                $action .= $url_delete;
+            }else
+                $action = '<a href="' . url($this->base_url . "/" . $row->id . '/edit') . '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
 
             $status = '<h5><span class="badge" style="padding: 5px;background-color: '.$row->background_color.'; color: '.$row->text_color.'" data-toggle="tooltip" data-placement="top" title="'.$row->status_pengawasan_regular_nama.'">'.$row->icon.'</span></h5>';
 
@@ -156,6 +167,63 @@ class PengawasanRegulerRepositories
                 return response()->json($e->getMessage(), $e->getCode());
             }else return abort(500,$e->getMessage());
         }
+    }
+
+    public function updateUraian($id, Request  $request){
+        $user_level = Auth::user()->user_level;
+        DB::beginTransaction();
+        try {
+            if ($this->sector) {
+                $costumHelper = new CostumHelpers();
+                $model = PengawasanRegulerModel::where("sector_id", $this->sector->id)
+                    ->where('id', $id)->first();
+
+                if ($model == null)
+                    throw new \Exception("Gagal memperbaharui data",400);
+
+
+                $dir = "public/pengawasan-reguler/" . $this->sector_alias."/".$model->id;
+                $files = $request->file('files');
+                $costumHelper->uploadToStorage($dir, $files);
+
+                $files = Storage::allFiles($dir);
+                $total_files = count($files);
+                if($request->uncheckedfiles != null)
+                    foreach ($request->uncheckedfiles as $file){
+                        if(in_array($file,$files)){
+                            Storage::delete($file);
+                            $total_files -= 1;
+                        }
+                    }
+
+                $model->uraian = $request->uraian;
+                $model->total_evidence = $total_files;
+                if(count($files) > 0 && $request->uraian !== null && $model->status_pengawasan_regular_id == "SUBMITEDBYHAWASBID")
+                    $model->status_pengawasan_regular_id = "WAITINGAPPROVALFROMADMIN";
+
+                if($user_level->alias == "admin") {
+                    if ($request->status_pengawasan_regular_id) {
+                        $model->status_pengawasan_regular_id = $request->status_pengawasan_regular_id;
+                    }
+                }
+
+                $model->save();
+
+                DB::commit();
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'Update data berhasil'
+                ], 200);
+            }else{
+                throw new \Exception("Gagal memperbaharui data",400);
+            }
+        }catch (\Exception $e){
+            DB::rollBack();
+            if ($e->getCode() >= 400 && $e->getCode() < 500) {
+                return response()->json($e->getMessage(), $e->getCode());
+            }else return abort(500,$e->getMessage());
+        }
+
     }
 
     public function delete($id){

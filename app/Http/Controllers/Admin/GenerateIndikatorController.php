@@ -46,7 +46,7 @@ class GenerateIndikatorController extends Controller
     		->orderBY('periode_bulan','DESC')
     		->paginate(12);
     	$send = [
-            'menu' => 'hawasbid',
+            'menu' => 'Master',
             'sub_menu' => 'generate_indikator',
             'title'	=> '',
             'indikator_periode'	=> $indikator_periode,

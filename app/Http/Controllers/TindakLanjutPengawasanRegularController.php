@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\VariableHelper;
+use App\Repositories\LingkupPengawasanBidangRepositories;
 use App\Repositories\PengawasanRegulerRepositories;
 use App\Repositories\SectorRepositories;
 use App\Repositories\StatusPengawasanRegularRepositories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TindakLanjutPengawasanRegularController extends Controller
 {
@@ -53,6 +55,7 @@ class TindakLanjutPengawasanRegularController extends Controller
 
     public function getTable($sector_category, $sector_alias, Request  $request){
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        $repo->setType("tindak-lanjut");
         $repo->setBaseUrl($this->getPathUrl($sector_category, $sector_alias));
         return $repo->getDataTable($request);
     }
@@ -95,9 +98,32 @@ class TindakLanjutPengawasanRegularController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($sector_category, $sector_alias, $id)
     {
         //
+        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
+        $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+        if($sector_selected == null)
+            return redirect(url("/home"));
+
+        $this->data["menu"] = $sector_category;
+        $this->data["sub_menu"] = $sector_alias;
+        $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+        $this->data["sector_selected"] = $sector_selected;
+        $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
+        $this->data['status_pengawasan_regular']   = StatusPengawasanRegularRepositories::getAll();
+        $this->data['form'] = $repo->getById($id);
+        if($this->data['form'] == null)
+            return redirect(url("/home"));
+        $this->data['periode_tahun'] = $this->data['form']->periode_tahun;
+        $this->data['periode_bulan']    = $this->data['form']->periode_bulan;
+        $this->data["form_detail"] = true;
+
+        $dir = "public/pengawasan-reguler/" . $sector_alias."/".$this->data['form']->id;
+        $files = Storage::allFiles($dir);
+        $this->data["files"] = $files;
+        return view($this->path_view."edit", $this->data);
     }
 
     /**
@@ -107,9 +133,11 @@ class TindakLanjutPengawasanRegularController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($sector_category, $sector_alias,Request $request, $id)
     {
         //
+        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        return $repo->updateUraian($id, $request);
     }
 
     /**

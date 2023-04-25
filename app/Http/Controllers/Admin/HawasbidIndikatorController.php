@@ -137,7 +137,7 @@ class HawasbidIndikatorController extends Controller
             ->get();
 
         $send = [
-            'menu'              => 'hawasbid',
+            'menu'              => 'Master',
             'title'             => 'hawasbid',
             'menu_sectors'      => $this->sectors,
             'sub_menu'          => "hawasbid_indikator",
@@ -173,7 +173,7 @@ class HawasbidIndikatorController extends Controller
         $periode_tahun_select = date('Y');
 
         $send = [
-            'menu' => "hawasbid",
+            'menu' => "Master",
             'sub_menu'  => "hawasbid_indikator",
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,
@@ -317,7 +317,7 @@ class HawasbidIndikatorController extends Controller
         $periode_tahun_select = $send_edit->periode_tahun;
 
         $send = [
-            'menu' => "hawasbid",
+            'menu' => "Master",
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => "hawasbid_indikator",

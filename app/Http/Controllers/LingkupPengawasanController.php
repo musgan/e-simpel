@@ -17,7 +17,7 @@ class LingkupPengawasanController extends Controller
     private $path_url = "pr/lingkup-pengawasan";
 
     private $data = [
-        "menu"  => "PR-HAWASBID",
+        "menu"  => "Master",
         "sub_menu" => "lingkup-pengawasan",
         "path_url"  => "pr/lingkup-pengawasan",
         "path_view" => "admin.pengawasan-reguler.lingkup-pengawasan."

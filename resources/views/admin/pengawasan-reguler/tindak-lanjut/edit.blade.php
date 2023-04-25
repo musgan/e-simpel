@@ -1,8 +1,10 @@
 @extends('layouts.app_admin')
 @extends('layouts.nav_admin')
+
 @php
-    $status = $form->statuspengawasanregular;
+$status = $form->statuspengawasanregular;
 @endphp
+
 @section('content')
     <section class="justify-content-between mb-4">
         <div class="row">
@@ -23,15 +25,15 @@
             <h4><span class="badge mr-3" style="color: {{$status->text_color}}; background-color: {{$status->background_color}};">{!! $status->icon !!}</span>{{$status->nama}}</h4>
         </div>
     </div>
-    <form action="{{url($path_url.'/'.$form->id)}}" method="POST" id="form-submit">
+    @include("admin.pengawasan-reguler.pengawasan-bidang.form")
+    <form action="{{url($path_url."/".$form->id)}}"  method="POST" id="form-submit" enctype="multipart/form-data" >
         {{ csrf_field() }}
         {{ method_field('PUT') }}
         @include($path_view."form")
         <div class="form-group">
             <a class="btn btn-secondary btn-flat mr-2" href="{{url($path_url)}}">@lang("form.button.back.show")</a>
-            <button class="btn btn-primary btn-flat">@lang("form.button.save.show")</button>
+            <button class="btn btn-primary btn-flat mr-2">@lang("form.button.save.show")</button>
         </div>
     </form>
 @endsection
-
-@include($path_view.'form-js')
+@include($path_view."form-js")

@@ -234,15 +234,14 @@ class TindakLanjutanController extends Controller
 
 
         if($request->file('evidence')){
+            $directory = "public/evidence/".$submenu."/".$id;
             foreach($request->evidence as $file){
                 $fname = $file->getClientOriginalName();
-                $pth ="public/evidence/".$submenu."/".$id."/";
+                $pth =   $directory."/";
                 $fname = $this->checkfileName($fname, $pth);
                 
                 $file->storeAs($pth,$fname);
             }
-
-            $directory = "public/evidence/".$submenu."/".$id;
             $files = Storage::allFiles($directory);
 
             if(count($files) > 0){

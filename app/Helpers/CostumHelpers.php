@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 use App\SettingPeriodHawasbid;
+use Illuminate\Support\Facades\Storage;
 
 class CostumHelpers{
 
@@ -155,5 +156,26 @@ public static function checkActionHawasbid($user_level_id, $periode_bulan, $peri
 
 	    return $bulan;
 	}
+
+    public function uploadToStorage($dir, $files){
+        if ($files !== null) {
+            foreach ($files as $file) {
+                $fname = $file->getClientOriginalName();
+                $pth = $dir . "/";
+                $fname = $this->checkfileName($fname, $pth);
+
+                $file->storeAs($pth, $fname);
+            }
+        }
+    }
+
+    public function checkfileName($file_name, $pth){
+        if(Storage::exists($pth.$file_name)) {
+            $path_parts = pathinfo($pth.$file_name);
+
+            $file_name = $this->checkfileName($path_parts['filename']."_copy.".$path_parts['extension'], $pth);
+        }
+        return $file_name;
+    }
 
 }

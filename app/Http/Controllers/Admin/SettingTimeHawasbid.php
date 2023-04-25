@@ -44,7 +44,7 @@ class SettingTimeHawasbid extends Controller
             ->get();
 
         $send = [
-            'menu'              => 'hawasbid',
+            'menu'              => 'Master',
             'title'             => 'SETTING PERIODE HAWASBID',
             'menu_sectors'      => $this->sectors,
             'sub_menu'          => "setting_time_hawasbid",
@@ -127,7 +127,7 @@ class SettingTimeHawasbid extends Controller
         $data = SettingPeriodHawasbid::where('id',$id)->first();
         if($data !== null){
             $send = [
-                'menu'              => 'hawasbid',
+                'menu'              => 'Master',
                 'title'             => 'SETTING PERIODE HAWASBID',
                 'menu_sectors'      => $this->sectors,
                 'sub_menu'          => "setting_time_hawasbid",

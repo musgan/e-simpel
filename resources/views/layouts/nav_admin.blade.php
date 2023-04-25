@@ -50,33 +50,10 @@ if(isset($root_menu))
   <hr class="sidebar-divider">
 
   <div class="sidebar-heading">
-    Pengawasan APN
+    Pengawasan APM
   </div>
 
-  @if($user->user_level_id == 1 || $user->user_level_id == 2 || $user->user_level_id == 3)
-  <li class="nav-item <?php if($menu == "hawasbid") echo 'active'?>">
-    
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
-      <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
-      <span>Hawasbid</span>
-    </a>
-    
-    <div id="collapseHawasbid" class="collapse <?php if($menu == "hawasbid") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        @if($user->user_level_id == 1)
-        <a class="collapse-item <?php if($sb == "hawasbid_bidang") echo 'active'?>" href="{{url(session('role').'/sector_hawasbid')}}">B. Penanggung Jawab</a>
-         @endif
-         <a class="collapse-item <?php if($sb == "hawasbid_indikator") echo 'active'?>" href="{{url(session('role').'/hawasbid_indikator')}}">Indikator</a>
-         @if($user->user_level_id == 1)
-         <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url(session('role').'/generate_indikator')}}">Generate Indikator</a>
-         <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url(session('role').'/performa-hawasbid')}}">Performa Hawasbid</a>
-         <a class="collapse-item <?php if($sb == "setting_time_hawasbid") echo 'active'?>" href="{{url(session('role').'/setting_time_hawasbid')}}">Setting Periode</a>
-         
-         @endif
-      </div>
-    </div>
-  </li>
-  @endif
+
 
 
   @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2 || $user->user_level_id == 6 || $user->user_level_id == 7 )
@@ -165,26 +142,6 @@ if(isset($root_menu))
     Pengawasan Reguler
   </div>
 
-  
-  @if($user->user_level_id == 1 || $user->user_level_id == 2 || $user->user_level_id == 3)
-  <li class="nav-item <?php if($menu == "pr-hawasbid") echo 'active'?>">
-    
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
-      <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
-      <span>Hawasbid</span>
-    </a>
-    
-    <div id="collapsePRegulerHawasbid" class="collapse <?php if($menu == "pr-hawasbid") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        @if($user->user_level_id == 1)
-        <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url('pr/lingkup-pengawasan')}}">L. Pengawasan</a>
-        <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url('pr/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
-         @endif
-      </div>
-    </div>
-  </li>
-  @endif
-
 
   @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2 || $user->user_level_id == 6 || $user->user_level_id == 7 )
   
@@ -230,7 +187,7 @@ if(isset($root_menu))
   @if($user->user_level_id == 1 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 3  || $user->user_level_id == 2)
   <li class="nav-item {{($rm == 'pr_tindak_lanjut') ? 'active': ''}}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL" aria-expanded="true" aria-controls="collapsePRegulerTL"><span>Tindak Lanjutan</span></a>
-    <ul  id="collapsePRegulerTL" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <ul  id="collapsePRegulerTL" class="collapse {{($rm == 'pr_tindak_lanjut')? 'active': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2)
         <?php
@@ -240,7 +197,7 @@ if(isset($root_menu))
             <span>{{$row_cat}}</span>
           </a>
 
-          <div id="collapsePRegulerTL{{$row_cat}}" class="collapse {{ ($menu == $row_cat && $rm == 'pr_tindak_lanjut') ? 'show' : '' }}" >
+          <div id="collapsePRegulerTL{{$row_cat}}" class="collapse {{ ($menu == strtolower($row_cat) && $rm == 'pr_tindak_lanjut') ? 'show' : '' }}" >
             <div class="bg-white py-2 collapse-inner rounded">
               @foreach($menu_sectors as $val)
                 @if($val->category == $row_cat && ( in_array($val->alias, $sector_menu) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2))
@@ -264,6 +221,8 @@ if(isset($root_menu))
   @endif
 
   <hr class="sidebar-divider d-none d-md-block">
+
+
   
   @if($user->user_level_id == 1)
   <li class="nav-item <?php if($menu == "users") echo 'active'?>">
@@ -274,6 +233,29 @@ if(isset($root_menu))
   </li>
   @endif
 
+  @if($user->user_level_id == 1 || $user->user_level_id == 2 || $user->user_level_id == 3)
+    <li class="nav-item <?php if($menu == "master") echo 'active'?>">
+
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
+        <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
+        <span>Master</span>
+      </a>
+
+      <div id="collapseHawasbid" class="collapse <?php if($menu == "master") echo 'show'?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item <?php if($sb == "hawasbid_indikator") echo 'active'?>" href="{{url(session('role').'/hawasbid_indikator')}}">Indikator</a>
+          @if($user->user_level_id == 1)
+            <a class="collapse-item <?php if($sb == "hawasbid_bidang") echo 'active'?>" href="{{url(session('role').'/sector_hawasbid')}}">B. Penanggung Jawab</a>
+            <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url(session('role').'/generate_indikator')}}">Generate Indikator</a>
+            <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url(session('role').'/performa-hawasbid')}}">Performa Hawasbid</a>
+            <a class="collapse-item <?php if($sb == "setting_time_hawasbid") echo 'active'?>" href="{{url(session('role').'/setting_time_hawasbid')}}">Setting Periode</a>
+            <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url('pr/lingkup-pengawasan')}}">L. Pengawasan</a>
+            <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url('pr/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
+          @endif
+        </div>
+      </div>
+    </li>
+  @endif
 
   <li class="nav-item <?php if($menu == "cetak_laporan") echo 'active'?>">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCetakLaporan" aria-expanded="true" aria-controls="collapseCetakLaporan">

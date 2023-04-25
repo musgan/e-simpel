@@ -125,7 +125,6 @@ class PengawasanRegulerController extends Controller
         $this->data["sector_selected"] = $sector_selected;
         $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
         $this->data['form'] = $repo->getById($id);
-
         if($this->data['form'] == null)
             return redirect(url("/home"));
         $this->data['periode_tahun'] = $this->data['form']->periode_tahun;

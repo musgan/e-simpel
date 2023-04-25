@@ -54,7 +54,7 @@ class PerformaHawasbidController extends Controller
         }
         //
         $send = [
-            'menu' => 'hawasbid',
+            'menu' => 'Master',
             'sub_menu' => 'performa_hawasbid',
             'title' => '-',
             'indikator_periode' => $indikator_periode,

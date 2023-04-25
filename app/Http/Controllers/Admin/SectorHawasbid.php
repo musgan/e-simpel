@@ -26,7 +26,7 @@ class SectorHawasbid extends Controller
             ->orderBy('id','ASC')
             ->get();
         $send = [
-            'menu' => 'hawasbid',
+            'menu' => 'Master',
             'sub_menu'  => 'hawasbid_bidang',
             'title' => '-',
             'send'  => $data,
@@ -81,7 +81,7 @@ class SectorHawasbid extends Controller
         $data = Sector::where('id',$id)->first();
 
         $send = [
-            'menu' => 'hawasbid',
+            'menu' => 'Master',
             'sub_menu'  => 'hawasbid_bidang',
             'title' => '-',
             'send'  => $data,
