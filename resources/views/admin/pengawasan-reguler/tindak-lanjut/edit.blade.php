@@ -25,6 +25,8 @@ $status = $form->statuspengawasanregular;
             <h4><span class="badge mr-3" style="color: {{$status->text_color}}; background-color: {{$status->background_color}};">{!! $status->icon !!}</span>{{$status->nama}}</h4>
         </div>
     </div>
+    @include("admin.pengawasan-reguler.pengawasan-bidang.form-periode")
+    @include("admin.pengawasan-reguler.kesesuaian-pengawasan-bidang.form", ["detail-form"=>true])
     @include("admin.pengawasan-reguler.pengawasan-bidang.form")
     <form action="{{url($path_url."/".$form->id)}}"  method="POST" id="form-submit" enctype="multipart/form-data" >
         {{ csrf_field() }}

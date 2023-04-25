@@ -89,12 +89,15 @@ class KesesuaianPengawasanRegulerRepositories
             ->first();
     }
 
-    public function checkAvaibleData($periode_bulan, $periode_tahun){
-        $model = KesesuaianPengawasanRegularModel::where('sector_id', $this->sector->id)
+    public function getByPeriode($periode_bulan, $periode_tahun){
+        return KesesuaianPengawasanRegularModel::where('sector_id', $this->sector->id)
             ->where('periode_bulan', $periode_bulan)
             ->where('periode_tahun',$periode_tahun)
             ->first();
+    }
 
+    public function checkAvaibleData($periode_bulan, $periode_tahun){
+        $model = $this->getByPeriode($periode_bulan, $periode_tahun);
         if($model !== null)
             throw new \Exception("Telah ada data sebelumnya berdasarkan periode yang digunakan. Harap gunakan periode lain",
                 400);

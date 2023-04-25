@@ -53,6 +53,11 @@ class KesesuaianPengawasanRegularController extends Controller
         return $repo->getDataTable($request);
     }
 
+    public function getByPeriode($sector_category, $sector_alias, Request $request){
+        $repo = new KesesuaianPengawasanRegulerRepositories($sector_category, $sector_alias);
+        return response()->json($repo->getByPeriode($request->periode_bulan, $request->periode_tahun));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

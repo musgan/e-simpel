@@ -49,5 +49,20 @@
             }
             alert(message)
         }
+
+        $(".field_periode").on('change',getFormKesesuaian)
+        function getFormKesesuaian(){
+            const url = "{{url($path_url_kesesuaian."/getbyperiode")}}"
+            const data = {
+                'periode_bulan': $("#periode_bulan").val(),
+                'periode_tahun': $('#periode_tahun').val()
+            }
+            $.get(url, data, function(response){
+                if(response.uraian !== undefined)
+                    $("#uraian_kesesuaian").html(response.uraian)
+                else $("#uraian_kesesuaian").html("")
+            })
+        }
+        getFormKesesuaian()
     </script>
 @endsection

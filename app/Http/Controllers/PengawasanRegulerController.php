@@ -80,6 +80,7 @@ class PengawasanRegulerController extends Controller
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+        $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
         $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
 
@@ -156,6 +157,7 @@ class PengawasanRegulerController extends Controller
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+        $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
         $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
         $this->data['form'] = $repo->getById($id);

@@ -26,6 +26,8 @@
     <form action="{{url($path_url.'/'.$form->id)}}" method="POST" id="form-submit">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
+        @include($path_view."form-periode")
+        @include("admin.pengawasan-reguler.kesesuaian-pengawasan-bidang.form",["form_detail" => true])
         @include($path_view."form")
         <div class="form-group">
             <a class="btn btn-secondary btn-flat mr-2" href="{{url($path_url)}}">@lang("form.button.back.show")</a>

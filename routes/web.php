@@ -177,6 +177,7 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('role:admin');
 
     Route::get('kesesuaian/{sector_category}/{sector_alias}/create','KesesuaianPengawasanRegularController@create')->middleware('role:admin');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/getbyperiode','KesesuaianPengawasanRegularController@getByPeriode')->middleware('role:admin');
     Route::post('kesesuaian/{sector_category}/{sector_alias}','KesesuaianPengawasanRegularController@store')->middleware('role:admin');
     Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable')->middleware('role:admin');
     Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}/edit','KesesuaianPengawasanRegularController@edit')->middleware('role:admin');
