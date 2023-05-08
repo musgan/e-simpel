@@ -3,18 +3,29 @@
         <h5>{{$sector_selected->nama}}</h5>
     </div>
     <div class="card-body">
-        <div class="form-group">
-            <label>Lingkup Pengawasan</label>
-            <select name="item_lingkup_pengawasan_id" class="form-control" required {{isset($form)?'disabled':''}}>
-                @foreach($lingkup_pengawasan_bidang as $row)
-                    @php
-                        $item = $row->item;
-                        $lingkup_pengawasan = $item->lingkup_pengawasan;
-                    @endphp
-                    <option value="{{$item->id}}" {{isset($form)?($form->item_lingkup_pengawasan_id == $item->id?'selected': ''):''}}>{{$lingkup_pengawasan->nama." - ".$item->nama}}</option>
-                @endforeach
-            </select>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Tanggal Rapat Hawasbid</label>
+                    <input type="date" name="tanggal_rapat_hawasbid" class="form-control" value="{{isset($form)?$form->tanggal_rapat_hawasbid:''}}" required {{isset($form)?'disabled':''}} />
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>Lingkup Pengawasan</label>
+                    <select name="item_lingkup_pengawasan_id" class="form-control" required {{isset($form)?'disabled':''}}>
+                        @foreach($lingkup_pengawasan_bidang as $row)
+                            @php
+                                $item = $row->item;
+                                $lingkup_pengawasan = $item->lingkup_pengawasan;
+                            @endphp
+                            <option value="{{$item->id}}" {{isset($form)?($form->item_lingkup_pengawasan_id == $item->id?'selected': ''):''}}>{{$lingkup_pengawasan->nama." - ".$item->nama}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
+
 
         <div class="form-group field-form">
             <label>Temuan</label>

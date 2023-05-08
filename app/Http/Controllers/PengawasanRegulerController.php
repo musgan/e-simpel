@@ -110,6 +110,7 @@ class PengawasanRegulerController extends Controller
             'sebab'  => 'required',
             'akibat'  => 'required',
             'rekomendasi'  => 'required',
+            'tanggal_rapat_hawasbid'    => 'required'
         ], $this->getValidationMessage());
 
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
@@ -231,6 +232,7 @@ class PengawasanRegulerController extends Controller
             'sebab.required'    => 'Sebab wajib diisi',
             'akibat.required'   => 'Akibat wajib diisi',
             'rekomendasi.required'  => 'Rekomendasi wajib diisi',
+            'tanggal_rapat_hawasbid.required'   => 'Tanggal rapat hawasbid wajib diisi'
         ];
     }
 }

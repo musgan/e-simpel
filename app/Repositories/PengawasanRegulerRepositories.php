@@ -142,6 +142,7 @@ class PengawasanRegulerRepositories
             $model->sebab = $request->sebab;
             $model->akibat = $request->akibat;
             $model->rekomendasi = $request->rekomendasi;
+            $model->tanggal_rapat_hawasbid = $request->tanggal_rapat_hawasbid;
             $model->status_pengawasan_regular_id = "SUBMITEDBYHAWASBID";
             $model->save();
 
@@ -167,6 +168,7 @@ class PengawasanRegulerRepositories
             $model->sebab = $request->sebab;
             $model->akibat = $request->akibat;
             $model->rekomendasi = $request->rekomendasi;
+            $model->tanggal_rapat_hawasbid = $request->tanggal_rapat_hawasbid;
             $model->save();
 
             DB::commit();
