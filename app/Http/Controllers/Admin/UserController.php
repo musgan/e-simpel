@@ -28,7 +28,8 @@ class UserController extends Controller
     {
         //
         $send = [
-            'menu' => 'users',
+            'menu'              => 'Master',
+            'sub_menu' => 'users',
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors
         ];
