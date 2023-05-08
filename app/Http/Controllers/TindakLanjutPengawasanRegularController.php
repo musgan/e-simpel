@@ -19,6 +19,7 @@ class TindakLanjutPengawasanRegularController extends Controller
      */
     private $path_view = "admin.pengawasan-reguler.tindak-lanjut.";
     private $path_url = "pr/tindak-lanjutan";
+    private $path_url_dokumentasi_rapat = "pr/dokumentasi-rapat";
     private $path_url_kesesuaian = "pr/kesesuaian";
     private $data = [
         "menu"  => "",
@@ -44,6 +45,9 @@ class TindakLanjutPengawasanRegularController extends Controller
     function getPathUrlKesesuaian($category, $aliasName){
         return $this->path_url_kesesuaian."/".$category.'/'.$aliasName;
     }
+    function getPathUrlDokumentasiRapat($category, $aliasName){
+        return $this->path_url_dokumentasi_rapat."/".$category.'/'.$aliasName;
+    }
 
     public function index($sector_category, $sector_alias)
     {
@@ -52,6 +56,7 @@ class TindakLanjutPengawasanRegularController extends Controller
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+        $this->data["path_url_dokumentasi_rapat"] = $this->getPathUrlDokumentasiRapat($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
         $this->data['status_pengawasan_regular'] = StatusPengawasanRegularRepositories::getAll();
         return view($this->path_view."index", $this->data);

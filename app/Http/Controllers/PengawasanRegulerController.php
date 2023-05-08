@@ -20,6 +20,7 @@ class PengawasanRegulerController extends Controller
     private $path_view = "admin.pengawasan-reguler.pengawasan-bidang.";
     private $path_url = "pr/pengawasan-bidang";
     private $path_url_kesesuaian = "pr/kesesuaian";
+    private $path_url_dokumentasi_rapat = "pr/dokumentasi-rapat";
 
     private $data = [
         "menu"  => "",
@@ -47,6 +48,7 @@ class PengawasanRegulerController extends Controller
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
         $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
+        $this->data["path_url_dokumentasi_rapat"] = $this->getPathUrlDokumentasiRapat($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
         $this->data['status_pengawasan_regular'] = StatusPengawasanRegularRepositories::getAll();
         return view($this->path_view."index", $this->data);
@@ -57,6 +59,9 @@ class PengawasanRegulerController extends Controller
     }
     function getPathUrlKesesuaian($category, $aliasName){
         return $this->path_url_kesesuaian."/".$category.'/'.$aliasName;
+    }
+    function getPathUrlDokumentasiRapat($category, $aliasName){
+        return $this->path_url_dokumentasi_rapat."/".$category.'/'.$aliasName;
     }
 
     public function getTable($sector_category, $sector_alias, Request $request){
@@ -205,9 +210,20 @@ class PengawasanRegulerController extends Controller
         return $repo->delete($id);
     }
 
+    public function download($sector_category, $sector_alias, Request  $request){
+        $this->validate($request, [
+           'periode_bulan'  => 'required',
+           'periode_tahun'  => 'required'
+        ], $this->getValidationMessage());
+        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        return $repo->exportReportWord($request);
+
+    }
+
     function getValidationMessage(){
         return [
             'peride_bulan.required' => 'Periode bulan wajib diisi',
+            'periode_bulan.required' => 'Periode bulan wajib diisi',
             'periode_tahun.required'    => 'Periode tahun wajib diisi',
             'item_lingkup_pengawasan_id.required'   => 'Lingkup pengawasan wajib diisi',
             'temuan.required'   => 'Temuan wajib diisi',

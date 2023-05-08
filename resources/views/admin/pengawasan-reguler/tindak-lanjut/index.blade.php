@@ -26,10 +26,14 @@
             </ol>
         </div>
     </div>
+    <div class="text-right mb-3">
+        <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
+    </div>
 
-    <div class="card">
+
+    <div class="card mb-3">
         <div class="card-header">
-            <h4>{{$sector_selected->nama}}</h4>
+            <h5>{{$sector_selected->nama}}</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -55,9 +59,12 @@
         </div>
     </div>
 
+    @include("admin.pengawasan-reguler.dokumentasi-rapat.index")
+
 @endsection
 
 @section("js")
+    @include("admin.pengawasan-reguler.dokumentasi-rapat.modal-form")
     <script type="text/javascript">
         const table = $("#datatable").DataTable({
             processing: true,
@@ -79,5 +86,18 @@
             ],
             order : [[6,'desc']]
         })
+
+        $("#btn-form-dokumentasi-rapat").on('click', function(){
+            const modal_dokumentasi_rapat = $("#modal-form-dokumentasi-rapat")
+            const  form_dokumentasi_rapat = $("#form-dokumentasi-rapat")
+            modal_dokumentasi_rapat.modal()
+            const action_dokumentasi_rapat = "{{url($path_url_dokumentasi_rapat)}}"
+            form_dokumentasi_rapat.attr('action',action_dokumentasi_rapat)
+            $("#notulensi",modal_dokumentasi_rapat).val(null)
+            $("#absensi",modal_dokumentasi_rapat).val(null)
+            $("#foto",modal_dokumentasi_rapat).val(null)
+            $("#kategori_dokumentasi",modal_dokumentasi_rapat).val("tindak-lanjut")
+        })
     </script>
+    @include("admin.pengawasan-reguler.dokumentasi-rapat.modal-form-script", ['path_url'    => $path_url_dokumentasi_rapat, 'kategori_dokumentasi'  => 'tindak-lanjut'])
 @endsection

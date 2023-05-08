@@ -171,6 +171,7 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/create','PengawasanRegulerController@create')->middleware('role:admin');
     Route::post('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@store')->middleware('role:admin');
     Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/gettable','PengawasanRegulerController@getTable')->middleware('role:admin');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/download','PengawasanRegulerController@download')->middleware('role:admin');
     Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}/edit','PengawasanRegulerController@edit')->middleware('role:admin');
     Route::put('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@update')->middleware('role:admin');
     Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('role:admin');
@@ -191,6 +192,12 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('role:admin,kapan');
     Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('role:admin,kapan');
 
+    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@store')->middleware('role:admin');
+    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}/gettable','DokumentasiRapatPengawasanRegularController@getTable')->middleware('role:admin');
+    Route::delete('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@destroy')->middleware('role:admin');
+
+    Route::get('export-laporan','ExportLaporanPengawasanRegular@export');
+    Route::get('export-laporan/export2','ExportLaporanPengawasanRegular@export2');
 });
 
 Route::get('redev','RedirectLinkController@redev');// redirect evidence

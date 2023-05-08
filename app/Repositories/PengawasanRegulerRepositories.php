@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\ExportReportPengawasanRegulerHawasbid;
 use App\Helpers\CostumHelpers;
 use App\Helpers\DataTableHelper;
 use App\Helpers\VariableHelper;
@@ -17,6 +18,7 @@ class PengawasanRegulerRepositories
     private $sector_category, $sector_alias;
     private $sector;
     private $type = "pengawasan-regular";
+    private $kategori = "hawasbid";
 
     public function __construct($sector_category, $sector_alias){
         $this->sector_category = $sector_category;
@@ -31,10 +33,21 @@ class PengawasanRegulerRepositories
         $this->type = $type;
     }
 
+    public function setKategori($kategori){
+        $this->kategori = $kategori;
+    }
+
     public function getById($id){
         return PengawasanRegulerModel::where('id',$id)
             ->where('sector_id', $this->sector->id)
             ->first();
+    }
+
+    public function getByPeriode($periode_bulan, $periode_tahun){
+        return PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
+            ->where('periode_tahun', $periode_tahun)
+            ->where('sector_id',$this->sector->id)
+            ->get();
     }
 
     public function getDataTable(Request $request){
@@ -239,6 +252,33 @@ class PengawasanRegulerRepositories
             ], 200);
         }catch (\Exception $e){
             DB::rollBack();
+            if ($e->getCode() >= 400 && $e->getCode() < 500) {
+                return response()->json($e->getMessage(), $e->getCode());
+            }else return abort(500,$e->getMessage());
+        }
+    }
+
+    public function exportReportWord(Request $request){
+        $export = new ExportReportPengawasanRegulerHawasbid();
+        $template_name = "template_pr_".$this->kategori."_".$this->sector_category."_".$this->sector_alias.".docx";
+        try{
+
+            $kesesuaianPengawasanRegulerRepo = new KesesuaianPengawasanRegulerRepositories($this->sector_category, $this->sector_alias);
+            $kesesuaianByPeriode = $kesesuaianPengawasanRegulerRepo->getByPeriode($request->periode_bulan,$request->periode_tahun);
+            $temuanByPeriode = $this->getByPeriode($request->periode_bulan, $request->periode_tahun);
+
+            $export->setKesesuaian($kesesuaianByPeriode);
+            $export->setTemuan($temuanByPeriode);
+            $export->setFilename(date('ymdHis')."docx");
+            $export->setSectorName($this->sector_alias);
+            $export->setTemplateName($template_name);
+            $pth_export_file =  $export->exportWord();
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Berhasil data berhasil',
+                'path_download' => asset(Storage::url($pth_export_file))
+            ], 200);
+        }catch (\Exception $e){
             if ($e->getCode() >= 400 && $e->getCode() < 500) {
                 return response()->json($e->getMessage(), $e->getCode());
             }else return abort(500,$e->getMessage());

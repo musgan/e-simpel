@@ -29,6 +29,11 @@ return [
         'edit'  => [
             'icon'  => '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
             'text'  => 'Edit'
+        ],
+        'download'  => [
+            'icon'  => '<i class="fa fa-download" aria-hidden="true"></i>',
+            'text'  => 'Download',
+            'show'  => '<i class="fa fa-download" aria-hidden="true"></i><br>Download'
         ]
     ],
     "label" => [

@@ -12,7 +12,8 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4.0",
         "maatwebsite/excel": "~2.1.0",
-        "yajra/laravel-datatables-oracle": "~7.0"
+        "phpoffice/phpword": "^1.0",
+        "rkorebrits/htmltoopenxml": "^0.1.9"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -51,6 +52,9 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     }
 }

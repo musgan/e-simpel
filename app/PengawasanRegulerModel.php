@@ -12,4 +12,7 @@ class PengawasanRegulerModel extends Model
     public function statuspengawasanregular(){
         return $this->hasOne("App\StatusPengawasanRegularModel","id","status_pengawasan_regular_id");
     }
+    public function itemlingkupPengawasanregular(){
+        return $this->hasOne("App\ItemLingkupPengawasanModel","id","item_lingkup_pengawasan_id");
+    }
 }

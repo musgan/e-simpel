@@ -15,6 +15,9 @@
             </div>
         </div>
     </section>
+    <div class="form-group text-right">
+        <button type="button" id="btndownload" class="btn btn-primary btn-flat text-center pt-2 pb-2">@lang('form.button.download.show')</button>
+    </div>
     <div class="card mb-3">
         <div class="card-body">
             <ol>
@@ -28,12 +31,13 @@
     </div>
 
     <div class="form-group text-right">
-        <a class="btn btn-info btn-flat mr-2" href="{{url($path_url_kesesuaian."/create")}}" >@lang("form.button.add.show") Kesesuaian</a>
-        <a class="btn btn-primary btn-flat" href="{{url($path_url."/create")}}" >@lang("form.button.add.show") Temuan</a>
+        <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
+        <a class="btn btn-info btn-flat mr-2 mb-1" href="{{url($path_url_kesesuaian."/create")}}" >@lang("form.button.add.show") Kesesuaian</a>
+        <a class="btn btn-primary btn-flat mr-2 mb-1" href="{{url($path_url."/create")}}" >@lang("form.button.add.show") Temuan</a>
     </div>
     <div class="card mb-3">
         <div class="card-header">
-            <h4>Temuan {{$sector_selected->nama}}</h4>
+            <h5>Temuan {{$sector_selected->nama}}</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -61,7 +65,7 @@
 
     <div class="card mb-3">
         <div class="card-header">
-            <h4>Kesesuaian</h4>
+            <h5>Kesesuaian</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -84,11 +88,14 @@
             </div>
         </div>
     </div>
-
+    @include("admin.pengawasan-reguler.dokumentasi-rapat.index")
 @endsection
 
 @section("js")
+    @include("admin.pengawasan-reguler.dokumentasi-rapat.modal-form")
+    @include("admin.pengawasan-reguler.download.modal-index")
     <script type="text/javascript">
+
         const table = $("#datatable").DataTable({
             processing: true,
             serverSide: true,
@@ -157,5 +164,24 @@
                 alert('gagal menghapus data')
             });
         }
+
+        $("#btn-form-dokumentasi-rapat").on('click', function(){
+            const modal_dokumentasi_rapat = $("#modal-form-dokumentasi-rapat")
+            const  form_dokumentasi_rapat = $("#form-dokumentasi-rapat")
+            modal_dokumentasi_rapat.modal()
+            const action_dokumentasi_rapat = "{{url($path_url_dokumentasi_rapat)}}"
+            form_dokumentasi_rapat.attr('action',action_dokumentasi_rapat)
+            $("#notulensi",modal_dokumentasi_rapat).val(null)
+            $("#absensi",modal_dokumentasi_rapat).val(null)
+            $("#foto",modal_dokumentasi_rapat).val(null)
+            $("#kategori_dokumentasi",modal_dokumentasi_rapat).val("hawasbid")
+        })
+
+        $("#btndownload").on('click', function(){
+            $("#modal-download-index").modal()
+        })
+
     </script>
+    @include("admin.pengawasan-reguler.dokumentasi-rapat.modal-form-script", ['path_url'    => $path_url_dokumentasi_rapat])
+    @include("admin.pengawasan-reguler.download.modal-index-script")
 @endsection
