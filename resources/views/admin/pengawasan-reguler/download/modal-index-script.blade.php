@@ -29,4 +29,7 @@
             alert(message)
         });
     })
+    $(modal_download_index).on('click', "#upload-template", function (){
+        $("#file-template").trigger("click")
+    })
 </script>

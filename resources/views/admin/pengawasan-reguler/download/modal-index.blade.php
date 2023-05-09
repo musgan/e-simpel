@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="modal-download-index" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Download</h5>
@@ -11,10 +11,19 @@
             <form action="{{url($path_url.'/download')}}" id="modal-form-download" method="post">
                 {{ csrf_field() }}
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label>Template</label>
+                        <div class="input-group">
+                            <div class="form-control" readonly="">xx</div>
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary" id="upload-template" type="button">UPLOAD</button>
+                            </div>
+                        </div>
+                        <input type="file" id="file-template" class="d-none">
+                    </div>
                     <div class="">
                         <label>Periode</label>
                         <div class="row">
-
                             <div class="col-md-6">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -40,8 +49,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <a class="btn btn-success btn-flat mr-5"  href="{{url("template-report/template_pr_hawasbid.docx")}}" target="_blank">Contoh template</a>
                     <button type="button" class="btn btn-secondary btn-flat" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary btn-flat">Download</button>
+                    <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-file-word-o mr-2" aria-hidden="true"></i>Download</button>
                 </div>
             </form>
         </div>
