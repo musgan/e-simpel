@@ -15,6 +15,9 @@
             </div>
         </div>
     </section>
+    <div class="form-group text-right">
+        <button type="button" id="btndownload" class="btn btn-primary btn-flat text-center pt-2 pb-2">@lang('form.button.download.show')</button>
+    </div>
     <div class="card mb-3">
         <div class="card-body">
             <ol>
@@ -65,6 +68,7 @@
 
 @section("js")
     @include("admin.pengawasan-reguler.dokumentasi-rapat.modal-form")
+    @include("admin.pengawasan-reguler.download.modal-tindak-lanjut-pr-index")
     <script type="text/javascript">
         const table = $("#datatable").DataTable({
             processing: true,
@@ -98,6 +102,11 @@
             $("#foto",modal_dokumentasi_rapat).val(null)
             $("#kategori_dokumentasi",modal_dokumentasi_rapat).val("tindak-lanjut")
         })
+
+        $("#btndownload").on('click', function(){
+            $("#modal-download-index").modal()
+        })
     </script>
     @include("admin.pengawasan-reguler.dokumentasi-rapat.modal-form-script", ['path_url'    => $path_url_dokumentasi_rapat, 'kategori_dokumentasi'  => 'tindak-lanjut'])
+    @include("admin.pengawasan-reguler.download.modal-index-script")
 @endsection
