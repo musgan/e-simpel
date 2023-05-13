@@ -22,6 +22,7 @@ class PengawasanRegulerController extends Controller
     private $path_url_kesesuaian = "pr/kesesuaian";
     private $path_url_dokumentasi_rapat = "pr/dokumentasi-rapat";
 
+
     private $data = [
         "menu"  => "",
         "sub_menu" => "",
@@ -43,6 +44,11 @@ class PengawasanRegulerController extends Controller
     public function index($sector_category, $sector_alias)
     {
         //
+        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        $this->data["template_word_name"] = $repo->getReportTemplateName();
+        $this->data["template_word_url"] = $repo->getReportTemplateUrl();
+        $this->data["is_template_word_avaible"] = $repo->isTemplateWordAvaible();
+
         $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
@@ -220,6 +226,13 @@ class PengawasanRegulerController extends Controller
         return $repo->exportReportWord($request);
 
     }
+    public function uploadTemplate($sector_category, $sector_alias, Request  $request){
+        $this->validate($request,[
+            'file-template' => 'required|mimes:docx'
+        ], $this->getValidationMessage());
+        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        return $repo->uploadTemplate($request);
+    }
 
     function getValidationMessage(){
         return [
@@ -232,7 +245,9 @@ class PengawasanRegulerController extends Controller
             'sebab.required'    => 'Sebab wajib diisi',
             'akibat.required'   => 'Akibat wajib diisi',
             'rekomendasi.required'  => 'Rekomendasi wajib diisi',
-            'tanggal_rapat_hawasbid.required'   => 'Tanggal rapat hawasbid wajib diisi'
+            'tanggal_rapat_hawasbid.required'   => 'Tanggal rapat hawasbid wajib diisi',
+            'file-template.required'    => 'File template wajib ada',
+            'file-template.mimes'       => 'Jenis file template harus word(.docx)'
         ];
     }
 }

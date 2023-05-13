@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Helpers\CostumHelpers;
 use App\Helpers\ErpHtml;
+use App\Helpers\VariableHelper;
 use Illuminate\Support\Facades\Storage;
 use \PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Html;
@@ -15,10 +17,13 @@ class ExportReportPengawasanRegulerHawasbid
     private $filename;
     private $templateName;
     private $sectorName;
-    private $template_path = "public/report/template";
+    public static  $template_path = "public/report/template";
     private $pth_to_save = "public/report/export";
     private $kesesuaian ;
     private $temuan ;
+
+    private $periode;
+    private $tanggal_rapat = "";
 
     public function setFilename($filename){
         $this->filename = $filename;
@@ -38,8 +43,16 @@ class ExportReportPengawasanRegulerHawasbid
         $this->sectorName = $sectorName;
     }
 
+    public function setPeriode($periode_bulan, $periode_tahun){
+        $this->periode = VariableHelper::getMonthName($periode_bulan)." ".$periode_tahun;
+    }
+
     function getFileTemplate(){
-        return $this->template_path."/".$this->templateName;
+        return self::$template_path."/".$this->templateName;
+    }
+
+    public function setTanggalRapat($tanggal_rapat){
+        $this->tanggal_rapat = $tanggal_rapat;
     }
 
     public function exportWord(){
@@ -47,6 +60,14 @@ class ExportReportPengawasanRegulerHawasbid
             throw new \Exception("Template report pengawasan reguler ".$this->sectorName." Tidak ada. Harap hubungi admin", 400);
 
         $templateProcessor = new TemplateProcessor(public_path(Storage::url($this->getFileTemplate())));
+
+
+//        set other property
+        $tgl_rapat = CostumHelpers::getDateDMY($this->tanggal_rapat);
+        $hari_tanggal_rapat = CostumHelpers::getDateDMY($this->tanggal_rapat, true);
+        $templateProcessor->setValue("periode",$this->periode);
+        $templateProcessor->setValue("tanggal_rapat",$tgl_rapat);
+        $templateProcessor->setValue("hari_tanggal_rapat",$hari_tanggal_rapat);
 
         $phpword = new PhpWord();
 
@@ -56,7 +77,8 @@ class ExportReportPengawasanRegulerHawasbid
             'kesesuaian'    => $this->kesesuaian
         ])->render());
         $view_temuan = $this->clearNonHtmlTag(view("template-word.lr-temuan",[
-            'temuan'    => $this->temuan])->render());
+            'temuan'    => $this->temuan])
+            ->render());
 
 
 

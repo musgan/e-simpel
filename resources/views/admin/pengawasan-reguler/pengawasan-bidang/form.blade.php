@@ -7,7 +7,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Tanggal Rapat Hawasbid</label>
-                    <input type="date" name="tanggal_rapat_hawasbid" class="form-control" value="{{isset($form)?$form->tanggal_rapat_hawasbid:''}}" required {{isset($form)?'disabled':''}} />
+                    <input type="date" name="tanggal_rapat_hawasbid" class="form-control" value="{{isset($form)?$form->tanggal_rapat_hawasbid:''}}" required {{($form_detail)?'disabled':''}} />
                 </div>
             </div>
             <div class="col-md-8">

@@ -178,4 +178,21 @@ public static function checkActionHawasbid($user_level_id, $periode_bulan, $peri
         return $file_name;
     }
 
+    public static function getDateDMY($date, $withDay = false){
+        if($date == null)
+            return "";
+
+        $strToTime = strtotime($date);
+        $d = date("d",$strToTime);
+        $m = VariableHelper::getMonthName(date("m",$strToTime));
+        $y = date("Y",$strToTime);
+        $day = VariableHelper::getDayName(date("w",$strToTime));
+        $parseDate = $d." ".$m." ".$y;
+
+        if ($withDay == true)
+            $parseDate = $day.", ".$parseDate;
+
+        return $parseDate;
+    }
+
 }

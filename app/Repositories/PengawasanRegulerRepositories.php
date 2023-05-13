@@ -47,6 +47,7 @@ class PengawasanRegulerRepositories
         return PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
             ->where('periode_tahun', $periode_tahun)
             ->where('sector_id',$this->sector->id)
+            ->orderBy("id","ASC")
             ->get();
     }
 
@@ -260,9 +261,44 @@ class PengawasanRegulerRepositories
         }
     }
 
+    public function uploadTemplate(Request  $request){
+        try {
+            if ($this->sector == null)
+                throw new \Exception("Terjadi kesahalan. Harap muat ulang halaman anda",400);
+
+            $template_name = "template_pr_hawasbid_".$this->sector_category."_".$this->sector_alias.'.docx';
+            $template_path_save = "public/report/template";
+
+            $request->file('file-template')->storeAs($template_path_save,$template_name);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Berhasil mengupload file template'
+            ], 200);
+        }catch (\Exception $e){
+            if ($e->getCode() >= 400 && $e->getCode() < 500) {
+                return response()->json($e->getMessage(), $e->getCode());
+            }else return abort(500,$e->getMessage());
+        }
+    }
+
+    public function getReportTemplateName(){
+        return "template_pr_".$this->kategori."_".$this->sector_category."_".$this->sector_alias.".docx";
+    }
+
+    public function getReportTemplateUrl(){
+        return asset(Storage::url(ExportReportPengawasanRegulerHawasbid::$template_path."/".$this->getReportTemplateName()));
+    }
+
+    public function isTemplateWordAvaible(){
+        if(!Storage::exists(ExportReportPengawasanRegulerHawasbid::$template_path."/".$this->getReportTemplateName()))
+            return false;
+        return true;
+    }
+
     public function exportReportWord(Request $request){
         $export = new ExportReportPengawasanRegulerHawasbid();
-        $template_name = "template_pr_".$this->kategori."_".$this->sector_category."_".$this->sector_alias.".docx";
+        $template_name = $this->getReportTemplateName();
         try{
 
             $kesesuaianPengawasanRegulerRepo = new KesesuaianPengawasanRegulerRepositories($this->sector_category, $this->sector_alias);
@@ -274,6 +310,11 @@ class PengawasanRegulerRepositories
             $export->setFilename(date('ymdHis')."docx");
             $export->setSectorName($this->sector_alias);
             $export->setTemplateName($template_name);
+            $export->setPeriode($request->periode_bulan,$request->periode_tahun);
+            if($temuanByPeriode){
+                if(isset($temuanByPeriode->last()->tanggal_rapat_hawasbid))
+                    $export->setTanggalRapat($temuanByPeriode->last()->tanggal_rapat_hawasbid);
+            }
             $pth_export_file =  $export->exportWord();
             return response()->json([
                 'status'    => 'success',

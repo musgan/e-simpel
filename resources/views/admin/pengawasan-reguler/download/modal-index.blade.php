@@ -14,7 +14,13 @@
                     <div class="form-group">
                         <label>Template</label>
                         <div class="input-group">
-                            <div class="form-control" readonly="">xx</div>
+                            <div class="form-control" readonly="">
+                                @if($is_template_word_avaible)
+                                    <a href="{{$template_word_url}}" target="_blank">{{$template_word_name}}</a>
+                                @else
+                                Template world belum ada. Silahkan upload.
+                                @endif
+                            </div>
                             <div class="input-group-append">
                                 <button class="btn btn-sm btn-primary" id="upload-template" type="button">UPLOAD</button>
                             </div>
