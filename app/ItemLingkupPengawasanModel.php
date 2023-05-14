@@ -12,4 +12,10 @@ class ItemLingkupPengawasanModel extends Model
     public function lingkup_pengawasan(){
         return $this->hasOne("App\LingkupPengawasanModel","id","lingkup_pengawasan_id");
     }
+    public function pengawasan_regular(){
+        return $this->hasMany('App\PengawasanRegulerModel', "item_lingkup_pengawasan_id",'id');
+    }
+    public function lingkup_pengawasan_bidang(){
+        $this->hasMany('App\LingkupPengawasanBidangModel', 'item_lingkup_pengawasan_id','id');
+    }
 }

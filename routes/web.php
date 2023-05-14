@@ -159,7 +159,6 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::put("lingkup-pengawasan/{id}", "LingkupPengawasanController@update")->middleware('role:admin');
     Route::delete("lingkup-pengawasan/{id}", "LingkupPengawasanController@destroy")->middleware('role:admin');
 
-
     Route::get("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@index")->middleware('role:admin');
     Route::post("lingkup-pengawasan-bidang/gettable", "LingkupPengawasanBidangController@getTable")->middleware('role:admin');
     Route::get("lingkup-pengawasan-bidang/create", "LingkupPengawasanBidangController@create")->middleware('role:admin');
@@ -190,6 +189,7 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
 
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('role:admin,kapan');
     Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('role:admin,kapan');
+    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/download','TindakLanjutPengawasanRegularController@download')->middleware('role:admin,kapan');
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('role:admin,kapan');
     Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('role:admin,kapan');
 

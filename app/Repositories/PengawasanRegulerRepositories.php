@@ -2,11 +2,14 @@
 
 namespace App\Repositories;
 
-use App\ExportReportPengawasanRegulerHawasbid;
 use App\Helpers\CostumHelpers;
 use App\Helpers\DataTableHelper;
 use App\Helpers\VariableHelper;
+use App\ItemLingkupPengawasanModel;
+use App\LingkupPengawasanModel;
 use App\PengawasanRegulerModel;
+use App\Report\ExportExcelTindakLanjutPengawasanRegularReport;
+use App\Report\ExportReportPengawasanRegulerHawasbid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -44,11 +47,37 @@ class PengawasanRegulerRepositories
     }
 
     public function getByPeriode($periode_bulan, $periode_tahun){
-        return PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
-            ->where('periode_tahun', $periode_tahun)
-            ->where('sector_id',$this->sector->id)
-            ->orderBy("id","ASC")
-            ->get();
+//        return PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
+//            ->where('periode_tahun', $periode_tahun)
+//            ->where('sector_id',$this->sector->id)
+//            ->orderBy("id","ASC")
+//            ->get();
+        return ItemLingkupPengawasanModel::with('pengawasan_regular')
+            ->whereHas('pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun) {
+                $pengawasan_regular->where('periode_bulan', $periode_bulan)
+                    ->where('periode_tahun', $periode_tahun)
+                    ->where('sector_id', $this->sector->id);
+            })->get();
+    }
+    public function getPengawasanHawasbid($periode_bulan, $periode_tahun){
+        return LingkupPengawasanModel::with(['items' => function($items)  use($periode_bulan, $periode_tahun){
+            return $items->with('pengawasan_regular')
+                ->whereHas('pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun){
+                    $pengawasan_regular->where('periode_bulan',$periode_bulan)
+                        ->where('periode_tahun', $periode_tahun)
+                        ->where('sector_id', $this->sector->id);
+                return $pengawasan_regular;
+            });
+        }])
+        ->whereHas('items', function ($items) use($periode_bulan, $periode_tahun){
+            $items->whereHas('pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun){
+                $pengawasan_regular->where('periode_bulan',$periode_bulan)
+                    ->where('periode_tahun', $periode_tahun)
+                    ->where('sector_id', $this->sector->id);
+                return $pengawasan_regular;
+            });
+            return $items;
+        })->get();
     }
 
     public function getDataTable(Request $request){
@@ -311,15 +340,36 @@ class PengawasanRegulerRepositories
             $export->setSectorName($this->sector_alias);
             $export->setTemplateName($template_name);
             $export->setPeriode($request->periode_bulan,$request->periode_tahun);
-            if($temuanByPeriode){
-                if(isset($temuanByPeriode->last()->tanggal_rapat_hawasbid))
-                    $export->setTanggalRapat($temuanByPeriode->last()->tanggal_rapat_hawasbid);
-            }
             $pth_export_file =  $export->exportWord();
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'Berhasil data berhasil',
                 'path_download' => asset(Storage::url($pth_export_file))
+            ], 200);
+        }catch (\Exception $e){
+            if ($e->getCode() >= 400 && $e->getCode() < 500) {
+                return response()->json($e->getMessage(), $e->getCode());
+            }else return abort(500,$e->getMessage());
+        }
+    }
+
+    public function exportExcelTindakLanjutReport(Request $request){
+        try{
+            if ($this->sector == null)
+                throw new \Exception("Data tidak ditemukan", 400);
+            $periodeName = VariableHelper::getMonthName($request->periode_bulan)." ".$request->periode_tahun;
+            $export = new ExportExcelTindakLanjutPengawasanRegularReport();
+            $fname = time()."_tindaklanjut_pr_".$this->sector_category."_".$this->sector_alias."_".$request->periode_tahun.$request->periode_bulan;
+            $data = $this->getPengawasanHawasbid($request->periode_bulan, $request->periode_tahun);
+            $export->setPathSaveName($fname);
+            $export->setPeriode($periodeName);
+            $export->setData($data);
+            $export->run();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Berhasil data berhasil',
+                'path_download' => asset($export->getPathSaveLocation()."/".$fname.".xlsx")
             ], 200);
         }catch (\Exception $e){
             if ($e->getCode() >= 400 && $e->getCode() < 500) {
