@@ -116,7 +116,8 @@ class PengawasanRegulerController extends Controller
             'sebab'  => 'required',
             'akibat'  => 'required',
             'rekomendasi'  => 'required',
-            'tanggal_rapat_hawasbid'    => 'required'
+            'tanggal_rapat_hawasbid'    => 'required',
+            'title' => 'required'
         ], $this->getValidationMessage());
 
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
@@ -198,6 +199,7 @@ class PengawasanRegulerController extends Controller
             'sebab'  => 'required',
             'akibat'  => 'required',
             'rekomendasi'  => 'required',
+            'title' => 'required'
         ], $this->getValidationMessage());
 
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
@@ -247,7 +249,8 @@ class PengawasanRegulerController extends Controller
             'rekomendasi.required'  => 'Rekomendasi wajib diisi',
             'tanggal_rapat_hawasbid.required'   => 'Tanggal rapat hawasbid wajib diisi',
             'file-template.required'    => 'File template wajib ada',
-            'file-template.mimes'       => 'Jenis file template harus word(.docx)'
+            'file-template.mimes'       => 'Jenis file template harus word(.docx)',
+            'title.required'        => 'Judul wajib ada'
         ];
     }
 }

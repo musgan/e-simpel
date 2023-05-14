@@ -47,11 +47,6 @@ class PengawasanRegulerRepositories
     }
 
     public function getByPeriode($periode_bulan, $periode_tahun){
-//        return PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
-//            ->where('periode_tahun', $periode_tahun)
-//            ->where('sector_id',$this->sector->id)
-//            ->orderBy("id","ASC")
-//            ->get();
         return ItemLingkupPengawasanModel::with('pengawasan_regular')
             ->whereHas('pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun) {
                 $pengawasan_regular->where('periode_bulan', $periode_bulan)
@@ -167,6 +162,7 @@ class PengawasanRegulerRepositories
             $model->periode_bulan = $request->peride_bulan;
             $model->sector_id = $this->sector->id;
             $model->item_lingkup_pengawasan_id  = $request->item_lingkup_pengawasan_id;
+            $model->title = $request->title;
             $model->temuan = $request->temuan;
             $model->kriteria = $request->kriteria;
             $model->sebab = $request->sebab;

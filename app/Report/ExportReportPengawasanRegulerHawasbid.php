@@ -58,7 +58,7 @@ class ExportReportPengawasanRegulerHawasbid
 
         $templateProcessor = new TemplateProcessor(public_path(Storage::url($this->getFileTemplate())));
         $phpword = new PhpWord();
-        $this->setBlockKesesuaian($phpword->addSection(), $templateProcessor);
+        $this->setBlockKesesuaian($templateProcessor);
         $this->setBlockTemuan($templateProcessor);
 
         $this->setOtherBlockProperty($templateProcessor);
@@ -67,6 +67,15 @@ class ExportReportPengawasanRegulerHawasbid
         $templateProcessor->saveAs($pathToSave);
         return $pth_file_export;
     }
+    function setOtherBlockProperty($templateProcessor){
+//        set other property
+        $tgl_rapat = CostumHelpers::getDateDMY($this->tanggal_rapat);
+        $hari_tanggal_rapat = CostumHelpers::getDateDMY($this->tanggal_rapat, true);
+        $templateProcessor->setValue("periode",$this->periode);
+        $templateProcessor->setValue("tanggal_rapat",$tgl_rapat);
+        $templateProcessor->setValue("hari_tanggal_rapat",$hari_tanggal_rapat);
+    }
+
     function setBlockTemuan($templateProcessor){
         $templateProcessor->cloneBlock("temuan",$this->temuan->count(), true, true);
         $index_temuan = 1;
@@ -83,26 +92,21 @@ class ExportReportPengawasanRegulerHawasbid
             $index_temuan += 1;
         }
     }
-    function setOtherBlockProperty($templateProcessor){
-//        set other property
-        $tgl_rapat = CostumHelpers::getDateDMY($this->tanggal_rapat);
-        $hari_tanggal_rapat = CostumHelpers::getDateDMY($this->tanggal_rapat, true);
-        $templateProcessor->setValue("periode",$this->periode);
-        $templateProcessor->setValue("tanggal_rapat",$tgl_rapat);
-        $templateProcessor->setValue("hari_tanggal_rapat",$hari_tanggal_rapat);
-    }
 
-    function setBlockKesesuaian($section_kesesuaian,$templateProcessor){
-        $view_kesesuaian = $this->clearNonHtmlTag(view("template-word.lr-kesesuaian",[
-            'kesesuaian'    => $this->kesesuaian
-        ])->render());
-        ErpHtml::addHtml($section_kesesuaian, $view_kesesuaian, true, false);
-        $templateProcessor->cloneBlock("kesesuaian", count($section_kesesuaian->getElements()), true, true);
-        foreach ($section_kesesuaian->getElements() as $index=>$el){
-            $search_block = "kesesuaian_item#".($index+1);
-            if ($el == null)
-                $templateProcessor->deleteBlock($search_block);
-            else $templateProcessor->setComplexBlock($search_block, $el);
+
+    function setBlockKesesuaian($templateProcessor){
+        $templateProcessor->cloneBlock("kesesuaian",$this->kesesuaian->count(), true, true);
+        $index_kesesuaian = 1;
+        foreach ($this->kesesuaian as $lingkup_bidang){
+            $lingkup_temuan_pr = "lingkup_ kesesuaian_pengawasan_regular#".$index_kesesuaian;
+            $templateProcessor->setValue("lingkup_kesesuaian#".$index_kesesuaian,$lingkup_bidang->nama);
+            $templateProcessor->cloneBlock($lingkup_temuan_pr,$lingkup_bidang->kesesuaian_pengawasan_regular->count(), true, true);
+            $no_pr = 0;
+            foreach ($lingkup_bidang->kesesuaian_pengawasan_regular as $row_kesesuaian){
+                $no_pr += 1;
+                $templateProcessor->setValue("kesesuaian_item#".$index_kesesuaian."#".$no_pr,strip_tags($row_kesesuaian->uraian));
+            }
+            $index_kesesuaian += 1;
         }
     }
 

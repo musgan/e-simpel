@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Helpers\DataTableHelper;
+use App\ItemLingkupPengawasanModel;
 use App\KesesuaianPengawasanRegularModel;
 use App\LingkupPengawasanModel;
 use Illuminate\Http\Request;
@@ -91,10 +92,12 @@ class KesesuaianPengawasanRegulerRepositories
     }
 
     public function getByPeriode($periode_bulan, $periode_tahun){
-        return KesesuaianPengawasanRegularModel::where('sector_id', $this->sector->id)
-            ->where('periode_bulan', $periode_bulan)
-            ->where('periode_tahun',$periode_tahun)
-            ->first();
+        return ItemLingkupPengawasanModel::with('kesesuaian_pengawasan_regular')
+            ->whereHas('kesesuaian_pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun) {
+                $pengawasan_regular->where('periode_bulan', $periode_bulan)
+                    ->where('periode_tahun', $periode_tahun)
+                    ->where('sector_id', $this->sector->id);
+            })->get();
     }
 
     public function checkAvaibleData($periode_bulan, $periode_tahun){

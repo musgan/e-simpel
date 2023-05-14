@@ -26,6 +26,10 @@
             </div>
         </div>
 
+        <div class="form-group field-form">
+            <label>Judul</label>
+            <input type="text" name="title" class="form-control" value="{{isset($form)?$form->title:''}}" required>
+        </div>
 
         <div class="form-group field-form">
             <label>Temuan</label>
