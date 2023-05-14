@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\VariableHelper;
 use App\Repositories\KesesuaianPengawasanRegulerRepositories;
+use App\Repositories\LingkupPengawasanBidangRepositories;
 use App\Repositories\SectorRepositories;
 use Illuminate\Http\Request;
 
@@ -66,12 +67,14 @@ class KesesuaianPengawasanRegularController extends Controller
     public function create($sector_category, $sector_alias)
     {
         //
+        $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
         $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
         $this->data["path_url_pengawasan_bidang"] = $this->getPathUrlPengawasanBidang($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
+        $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
         return view($this->path_view."create", $this->data);
     }
 
@@ -86,7 +89,8 @@ class KesesuaianPengawasanRegularController extends Controller
         $this->validate($request, [
             'peride_bulan'  => 'required',
             'periode_tahun' => 'required',
-            'uraian_kesesuaian' => 'required'
+            'uraian_kesesuaian' => 'required',
+            'item_lingkup_pengawasan_id'    => 'required'
         ]);
         $repo = new KesesuaianPengawasanRegulerRepositories($sector_category, $sector_alias);
         return $repo->store($request);
@@ -108,6 +112,8 @@ class KesesuaianPengawasanRegularController extends Controller
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
         $this->data["path_url_pengawasan_bidang"] = $this->getPathUrlPengawasanBidang($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
+        $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
+        $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
         $this->data["form_detail"] = true;
         $this->data["form"] = $repo->getById($id);
         if($this->data["form"] == null)
@@ -125,6 +131,7 @@ class KesesuaianPengawasanRegularController extends Controller
     public function edit($sector_category, $sector_alias,$id)
     {
         //
+        $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
         $repo = new KesesuaianPengawasanRegulerRepositories($sector_category, $sector_alias);
         $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
         $this->data["menu"] = $sector_category;
@@ -132,6 +139,7 @@ class KesesuaianPengawasanRegularController extends Controller
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
         $this->data["path_url_pengawasan_bidang"] = $this->getPathUrlPengawasanBidang($sector_category, $sector_alias);
         $this->data["sector_selected"] = $sector_selected;
+        $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
         $this->data["form"] = $repo->getById($id);
         if($this->data["form"] == null)
             return redirect($this->data["path_url_pengawasan_bidang"]);
@@ -150,7 +158,7 @@ class KesesuaianPengawasanRegularController extends Controller
     {
         //
         $this->validate($request, [
-            'uraian_kesesuaian' => 'required'
+            'uraian_kesesuaian' => 'required',
         ]);
         $repo = new KesesuaianPengawasanRegulerRepositories($sector_category, $sector_alias);
         return $repo->update($id, $request);
@@ -173,7 +181,8 @@ class KesesuaianPengawasanRegularController extends Controller
         return [
             'peride_bulan.required' => 'Periode bulan wajib diisi',
             'periode_tahun.required'    => 'Periode tahun wajib diisi',
-            'uraian_kesesuaian.required'    => 'Uraian wajib diisi'
+            'uraian_kesesuaian.required'    => 'Uraian wajib diisi',
+            'item_lingkup_pengawasan_id.required'    => 'Lingkup pengawasan wajib ada'
         ];
     }
 }

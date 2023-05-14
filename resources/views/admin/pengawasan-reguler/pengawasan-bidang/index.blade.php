@@ -74,6 +74,7 @@
                     <tr>
                         <th rowspan="2">No</th>
                         <th colspan="2">Periode</th>
+                        <th rowspan="2">Lingkup Pengawasan</th>
                         <th rowspan="2">Uraian</th>
                         <th rowspan="2">@lang("form.label.created_at")</th>
                         <th rowspan="2">@lang("form.label.action")</th>
@@ -129,9 +130,10 @@
                 {data:"no",width: 50, orderable: false, filterable:false, className:"text-center", targets:0},
                 {data:"periode_bulan",name:"periode_bulan",width: 50, orderable: true, filterable:false, targets:1},
                 {data:"periode_tahun",name:"periode_tahun",width: 50, orderable: true, filterable:false, targets:2},
-                {data:"uraian",name:"uraian", orderable: true, filterable:true, targets:3},
-                {data:"created_at",name:"created_at",width: 120, orderable: true, filterable:false, targets:4},
-                {data:"action",width: 120, orderable: false, filterable:false, className:"text-center", targets:5},
+                {data:"lingkup_pengawasan",name:"lingkup_pengawasan", orderable: true, filterable:true, targets:3},
+                {data:"uraian",name:"uraian", orderable: true, filterable:true, targets:4},
+                {data:"created_at",name:"created_at",width: 120, orderable: true, filterable:false, targets:5},
+                {data:"action",width: 120, orderable: false, filterable:false, className:"text-center", targets:6},
             ],
             order : [[4,'desc']]
         })

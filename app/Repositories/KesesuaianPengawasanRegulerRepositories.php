@@ -54,11 +54,12 @@ class KesesuaianPengawasanRegulerRepositories
             $action .= $url_view;
             $action .= $url_edit;
             $action .= $url_delete;
-
+            $lingkup_pengawasan = $row->item_lingkup_pengawasan;
             $dataRow = [
                 "no"            => $no,
                 "periode_tahun"          => $row->periode_tahun,
                 "periode_bulan"          => $row->periode_bulan,
+                "lingkup_pengawasan"    => $lingkup_pengawasan?$lingkup_pengawasan->nama:"",
                 "uraian"          => str_limit(strip_tags($row->uraian), 300, ' ...'),
                 "created_at"    => date('d F Y',strtotime($row->created_at)),
                 "action"        => $action
@@ -106,12 +107,12 @@ class KesesuaianPengawasanRegulerRepositories
     public function store(Request $request){
         DB::beginTransaction();
         try {
-            $this->checkAvaibleData($request->peride_bulan, $request->periode_tahun);
             $model = new KesesuaianPengawasanRegularModel;
             $model->sector_id = $this->sector->id;
             $model->uraian = $request->uraian_kesesuaian;
             $model->periode_tahun = $request->periode_tahun;
             $model->periode_bulan = $request->peride_bulan;
+            $model->item_lingkup_pengawasan_id = $request->item_lingkup_pengawasan_id;
             $model->save();
 
             DB::commit();
