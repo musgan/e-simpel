@@ -47,4 +47,8 @@ class VariableHelper
             "NOTRESOLVED"
         ];
     }
+
+    public static function getTagToWordAllowed(){
+        return ["p","li","ol","li"];
+    }
 }

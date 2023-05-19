@@ -26,6 +26,12 @@ $user_level = Auth::user()->user_level;
             </div>
         </div>
         <div class="form-group">
+            <label>Keterangan</label>
+            <div class="summernote">
+                <textarea name="keterangan_tindak_lanjut" class="form-control editor" rows="5">{!! $form->keterangan_tindak_lanjut !!}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
             <label>evidence</label>
             <input type="file" id="files" class="form-control" name="files" multiple>
         </div>
