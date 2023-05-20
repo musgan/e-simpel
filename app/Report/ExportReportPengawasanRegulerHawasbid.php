@@ -97,15 +97,15 @@ class ExportReportPengawasanRegulerHawasbid
                 $tag_block = "#".$index_temuan."#".$no_pr;
 
                 $templateProcessor->setValue("title_temuan".$tag_block,strip_tags($row_pr->title));
-                $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($row_pr->temuan),
+                $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($row_pr->temuan),
                     "temuan_kondisi".$tag_block);
-                $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($row_pr->kriteria),
+                $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($row_pr->kriteria),
                     "temuan_kriteria".$tag_block);
-                $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($row_pr->sebab),
+                $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($row_pr->sebab),
                     "temuan_sebab".$tag_block);
-                $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($row_pr->akibat),
+                $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($row_pr->akibat),
                     "temuan_akibat".$tag_block);
-                $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($row_pr->rekomendasi),
+                $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($row_pr->rekomendasi),
                     "temuan_rekomendasi".$tag_block);
 
                 $this->setTanggalRapat($row_pr->tanggal_rapat_hawasbid);
@@ -119,11 +119,11 @@ class ExportReportPengawasanRegulerHawasbid
         $templateProcessor->cloneBlock("saran_block",count($saran), true,true);
 
         for($index = 1; $index <= count($kesimpulan); $index++){
-            $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($kesimpulan[($index - 1)]),
+            $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($kesimpulan[($index - 1)]),
                 "kesimpulan#".$index, true);
         }
         for($index = 1; $index <= count($saran); $index++){
-            $this->writeNodeToBlock($templateProcessor, $this->getNodeOfHtml($saran[($index - 1)]),
+            $this->writeNodeToBlock($templateProcessor, VariableHelper::getNodeOfHtml($saran[($index - 1)]),
                 "saran#".$index, true);
         }
     }
@@ -246,50 +246,6 @@ class ExportReportPengawasanRegulerHawasbid
             $index_kesesuaian += 1;
         }
     }
-
-    function getNodeOfHtml($html){
-        $html = html_entity_decode(strip_tags($html,"<p><ol><ul><li>"));
-        $content = [];
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->loadHTML($html);
-        foreach ($dom->getElementsByTagName('*') as $node){
-            if(in_array($node->nodeName, VariableHelper::getTagToWordAllowed())){
-                $item = [];
-                $parentNode = $node->parentNode;
-                $childNodes = $node->childNodes;
-                if($parentNode->tagName == "body" && in_array($node->tagName,["ol","ul"]) === false) {
-                    $item = [
-                        "nodeName" => $node->nodeName,
-                        "content" => $node->nodeValue
-                    ];
-                }else {
-                    if($parentNode->tagName == "body" && in_array($node->tagName,["ol","ul"])) {
-                        $item = [
-                            "nodeName" => $node->nodeName,
-                            "content" => $this->getChildNode($childNodes)
-                        ];
-                    }
-                }
-                if (count($item) > 0)
-                    array_push($content, $item);
-            }
-        }
-        return $content;
-    }
-    function getChildNode($nodes){
-        $content = [];
-        foreach ($nodes as $node){
-            $item = [
-                "nodeName" => $node->nodeName,
-                "content" => $node->nodeValue
-            ];
-            array_push($content,$item);
-        }
-        return $content;
-    }
-
-
 
     function clearNonHtmlTag($htmlCode){
         $clear = preg_replace("/[\n\r\t]/","",$htmlCode);

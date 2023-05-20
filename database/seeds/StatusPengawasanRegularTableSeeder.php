@@ -25,7 +25,7 @@ class StatusPengawasanRegularTableSeeder extends Seeder
                 'id' => 'WAITINGAPPROVALFROMADMIN',
                 'nama' => 'Menunggu persetujuan dari admin',
                 'text_color' => 'white',
-                'background_color' => '#f6c23e', #text-warning
+                'background_color' => '#4e73df', #text-primary
                 'icon' => '<i class="fa fa-clock-o" aria-hidden="true"></i>',
                 'urutan'    => 2
             ],
@@ -41,9 +41,25 @@ class StatusPengawasanRegularTableSeeder extends Seeder
                 'id' => 'NOTRESOLVED',
                 'nama' => 'Belum diselesaikan',
                 'text_color' => 'white',
+                'background_color' => '#f6c23e', #text-warning
+                'icon' => '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>',
+                'urutan'    => 4
+            ],
+            [
+                'id' => 'NOTRESOLVED',
+                'nama' => 'Belum diselesaikan',
+                'text_color' => 'white',
                 'background_color' => '#e74a3b', #text-warning
                 'icon' => '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>',
                 'urutan'    => 4
+            ],
+            [
+                'id' => 'NOTACTIONABLE',
+                'nama' => 'Tidak dapat ditindaklanjuti',
+                'text_color' => 'white',
+                'background_color' => '#e74a3b', #text-warning
+                'icon' => '<i class="fa fa-window-close" aria-hidden="true"></i>',
+                'urutan'    => 5
             ]
             ]);
     }

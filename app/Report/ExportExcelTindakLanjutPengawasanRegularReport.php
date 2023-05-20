@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Report;
+use App\Helpers\VariableHelper;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 class ExportExcelTindakLanjutPengawasanRegularReport
@@ -64,7 +65,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
             $cell->setValue('HAKIM PENGAWAS BIDANG PENGADILAN NEGERI KENDARI');
         });
         $sheet->cell('A3', function($cell) {
-            $cell->setValue('BULAN '.$this->periode);
+            $cell->setValue('BULAN '.strtoupper($this->periode));
         });
         $sheet->mergeCells('A1:I1');
         $sheet->mergeCells('A2:I2');
@@ -130,8 +131,10 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     function setLingkupPengawasan($sheet, $row){
         foreach ($this->data as $row_lingkup_pengawasan){
             $row += 1;
+            $sheet->mergeCells('B'.$row.':I'.$row);
             $sheet->cell('B'.$row, function ($cell) use($row_lingkup_pengawasan){
-                $cell->setValue($row_lingkup_pengawasan->nama);
+                $cell->setValue(strtoupper($row_lingkup_pengawasan->nama));
+                $cell->setFontWeight('bold');
             });
             $row = $this->setItemLingkupPengawasan($sheet, $row, $row_lingkup_pengawasan->items);
         }
@@ -156,29 +159,46 @@ class ExportExcelTindakLanjutPengawasanRegularReport
                 $cell->setValue($this->no);
             });
             $sheet->cell('C'.$row, function ($cell) use($row_item){
-                $cell->setValue(strip_tags($row_item->temuan));
+                if(!VariableHelper::isNullOrEmptyString($row_item->temuan)) {
+                    $content = VariableHelper::getNodeOfHtml($row_item->temuan);
+                    $cell->setValue(VariableHelper::getPlainTextOfHtml($content));
+                }
             });
             $sheet->cell('D'.$row, function ($cell) use($row_item){
-                $cell->setValue(strip_tags($row_item->rekomendasi));
+                if(!VariableHelper::isNullOrEmptyString($row_item->rekomendasi)) {
+                    $content = VariableHelper::getNodeOfHtml($row_item->rekomendasi);
+                    $cell->setValue(VariableHelper::getPlainTextOfHtml($content));
+                }
             });
             $sheet->cell('I'.$row, function ($cell) use($row_item){
-                $cell->setValue(strip_tags($row_item->uraian));
+                if(!VariableHelper::isNullOrEmptyString($row_item->uraian)) {
+                    $content = VariableHelper::getNodeOfHtml($row_item->uraian);
+                    $cell->setValue(VariableHelper::getPlainTextOfHtml($content));
+                }
             });
             if($row_item->status_pengawasan_regular_id == "APPROVED")
                 $sheet->cell('E'.$row, function ($cell){
                     $cell->setValue("√");
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
                 });
             else if($row_item->status_pengawasan_regular_id == "WAITINGAPPROVALFROMADMIN")
                 $sheet->cell('F'.$row, function ($cell){
                     $cell->setValue("√");
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
                 });
-            else if($row_item->status_pengawasan_regular_id == "SUBMITEDBYHAWASBID")
+            else if(in_array($row_item->status_pengawasan_regular_id, ["SUBMITEDBYHAWASBID","NOTRESOLVED"]))
                 $sheet->cell('G'.$row, function ($cell){
                     $cell->setValue("√");
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
                 });
-            else if($row_item->status_pengawasan_regular_id == "NOTRESOLVED")
+            else if($row_item->status_pengawasan_regular_id == "NOTACTIONABLE")
                 $sheet->cell('H'.$row, function ($cell){
                     $cell->setValue("√");
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
                 });
 
             $row += 1;
@@ -199,5 +219,18 @@ class ExportExcelTindakLanjutPengawasanRegularReport
                 )
             )
         );
+        $sheet->getStyle('A'.$start_row.':I'.$end_row)->getAlignment()->setWrapText(true);
+        $sheet->cell('A'.$start_row.':D'.$end_row, function ($cell){
+            $cell->setAlignment('left');
+            $cell->setValignment('top');
+        });
+        $sheet->cell('I'.$start_row.':I'.$end_row, function ($cell){
+            $cell->setAlignment('left');
+            $cell->setValignment('top');
+        });
+        $sheet->cell('A'.$start_row.':A'.$end_row, function ($cell){
+            $cell->setAlignment('center');
+            $cell->setValignment('top');
+        });
     }
 }
