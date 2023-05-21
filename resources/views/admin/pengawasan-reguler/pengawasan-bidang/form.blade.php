@@ -28,7 +28,7 @@
 
         <div class="form-group field-form">
             <label>Judul</label>
-            <input type="text" name="title" class="form-control" value="{{isset($form)?$form->title:''}}" required>
+            <input type="text" name="title" class="form-control" value="{{isset($form)?$form->title:''}}" {{($form_detail)?'disabled':''}} required>
         </div>
 
         <div class="form-group field-form">
