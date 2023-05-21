@@ -12,12 +12,17 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     private $periode = "";
     private $data;
     private $no = 0;
+    private $listIdTindakLanjut = [];
     public function setPathSaveName($path_save_name){
         $this->path_save_name = $path_save_name;
     }
 
     public function getPathSaveLocation(){
         return $this->path_save_location;
+    }
+
+    public function  getListIdTindakLanjut(){
+        return $this->listIdTindakLanjut;
     }
 
     public function setPeriode($periode){
@@ -154,6 +159,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     function setTemuan($sheet, $row, $data_list_temuan){
         $is_add = false;
         foreach($data_list_temuan as $row_item){
+            array_push($this->listIdTindakLanjut, $row_item->id);
             $this->no += 1;
             $sheet->cell('A'.$row, function ($cell){
                 $cell->setValue($this->no);

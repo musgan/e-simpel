@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class PengawasanRegulerRepositories
 {
@@ -324,6 +325,7 @@ class PengawasanRegulerRepositories
     public function exportReportWord(Request $request){
         $export = new ExportReportPengawasanRegulerHawasbid();
         $template_name = $this->getReportTemplateName();
+        $periode = $request->periode_tahun."-".$request->periode_bulan;
         try{
 
             $kesesuaianPengawasanRegulerRepo = new KesesuaianPengawasanRegulerRepositories($this->sector_category, $this->sector_alias);
@@ -337,10 +339,17 @@ class PengawasanRegulerRepositories
             $export->setTemplateName($template_name);
             $export->setPeriode($request->periode_bulan,$request->periode_tahun);
             $pth_export_file =  $export->exportWord();
+            $zip = new ZipArchive();
+            $zip_pth_location = Storage::url("public/temp_zip_download/".basename($pth_export_file,".docx").".zip");
+            $zip->open(public_path($zip_pth_location), ZipArchive::CREATE);
+            $zip->addFile(public_path(Storage::url($pth_export_file)),basename($pth_export_file));
+            $this->addDocumentationToZip($periode,$zip);
+            $zip->close();
+
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'Berhasil data berhasil',
-                'path_download' => asset(Storage::url($pth_export_file))
+                'path_download' => asset($zip_pth_location)
             ], 200);
         }catch (\Exception $e){
             if ($e->getCode() >= 400 && $e->getCode() < 500) {
@@ -349,10 +358,36 @@ class PengawasanRegulerRepositories
         }
     }
 
+    function addEvidenceToZip($listId,ZipArchive $zip){
+        $baseDir = "public/pengawasan-reguler/" . $this->sector_alias."/";
+        foreach ($listId as $id){
+            $dir = $baseDir.strval($id);
+            $listFiles = Storage::allFiles($dir);
+            foreach ($listFiles as $file){
+                $zip->addFile(public_path(Storage::url($file)), "evidence/".$id."_".basename($file));
+            }
+        }
+    }
+    function addDocumentationToZip($periode, ZipArchive $zip){
+        $perent_dir = "public/pengawasan-reguler/" . $this->sector_alias . "/dokumentasi-rapat/".$periode."/".$this->kategori;
+        foreach (Storage::directories($perent_dir) as $dir_time) {
+            $dir_time_segment = explode("/",$dir_time);
+            $time = array_pop($dir_time_segment);
+            foreach (Storage::directories($dir_time) as $dir_category){
+                $dir_category_secment = explode("/",$dir_category);
+                $kategori = array_pop($dir_category_secment);
+                foreach (Storage::allFiles($dir_category) as $file){
+                    $zip->addFile(public_path(Storage::url($file)),"documentations/$kategori/".$time."_".basename($file));
+                }
+            }
+        }
+    }
+
     public function exportExcelTindakLanjutReport(Request $request){
         try{
             if ($this->sector == null)
                 throw new \Exception("Data tidak ditemukan", 400);
+            $periode =  $request->periode_tahun."-".$request->periode_bulan;
             $periodeName = VariableHelper::getMonthName($request->periode_bulan)." ".$request->periode_tahun;
             $export = new ExportExcelTindakLanjutPengawasanRegularReport();
             $fname = time()."_tindaklanjut_pr_".$this->sector_category."_".$this->sector_alias."_".$request->periode_tahun.$request->periode_bulan;
@@ -362,10 +397,19 @@ class PengawasanRegulerRepositories
             $export->setData($data);
             $export->run();
 
+            $file_Excel_location = $export->getPathSaveLocation()."/".$fname.".xlsx";
+            $zip = new ZipArchive();
+            $zip_pth_location = Storage::url("public/temp_zip_download/".basename($file_Excel_location,".xlsx").".zip");
+            $zip->open(public_path($zip_pth_location), ZipArchive::CREATE);
+            $zip->addFile(public_path($file_Excel_location),basename($file_Excel_location));
+            $this->addDocumentationToZip($periode,$zip);
+            $this->addEvidenceToZip($export->getListIdTindakLanjut(),$zip);
+            $zip->close();
+
             return response()->json([
                 'status'    => 'success',
                 'message'   => 'Berhasil data berhasil',
-                'path_download' => asset($export->getPathSaveLocation()."/".$fname.".xlsx")
+                'path_download' => asset($zip_pth_location)
             ], 200);
         }catch (\Exception $e){
             if ($e->getCode() >= 400 && $e->getCode() < 500) {
