@@ -20,6 +20,10 @@
         ]
     })
 
+    $("#tampilkan_dokumentasi_tapat").on('click', function (){
+        table_dokumentasi.ajax.reload()
+    });
+
     $("#form-dokumentasi-rapat").on('submit',modal_dokumentasi_rapat, function(){
         const url = $(this).attr("action")
         const formData = new FormData();
