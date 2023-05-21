@@ -56,7 +56,11 @@ class KesesuaianPengawasanRegularController extends Controller
 
     public function getByPeriode($sector_category, $sector_alias, Request $request){
         $repo = new KesesuaianPengawasanRegulerRepositories($sector_category, $sector_alias);
-        return response()->json($repo->getByPeriode($request->periode_bulan, $request->periode_tahun));
+        $data = $repo->getByPeriode($request->periode_bulan, $request->periode_tahun);
+        $result = [
+            'uraian'    => view($this->path_view."view_uraian", compact('data'))->render()
+        ];
+        return response()->json($result);
     }
 
     /**
