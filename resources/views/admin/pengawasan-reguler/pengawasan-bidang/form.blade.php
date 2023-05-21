@@ -5,13 +5,13 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group field-form">
                     <label>Tanggal Rapat Hawasbid</label>
                     <input type="date" name="tanggal_rapat_hawasbid" class="form-control" value="{{isset($form)?$form->tanggal_rapat_hawasbid:''}}" required {{($form_detail)?'disabled':''}} />
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="form-group">
+                <div class="form-group field-form">
                     <label>Lingkup Pengawasan</label>
                     <select name="item_lingkup_pengawasan_id" class="form-control" required {{isset($form)?'disabled':''}}>
                         @foreach($lingkup_pengawasan_bidang as $row)

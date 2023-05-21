@@ -81,6 +81,7 @@
     .field-form .error{
       color: darkred;
       font-size: 12pt;
+      width: 100%;
     }
     /*.nav-item:active ul {
       display: block;

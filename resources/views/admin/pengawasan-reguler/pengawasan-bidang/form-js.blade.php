@@ -20,7 +20,7 @@
                 return false;
             },
             errorPlacement: function (error, e) {
-                console.log(error)
+                // console.log(error)
                 e.parents(".field-form").append(error);
             },
         });

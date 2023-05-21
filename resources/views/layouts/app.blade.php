@@ -12,6 +12,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        .error{
+            width: unset !important;
+        }
+    </style>
 
 </head>
 <body>
