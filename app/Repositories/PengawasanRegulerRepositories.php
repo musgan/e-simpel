@@ -22,6 +22,7 @@ class PengawasanRegulerRepositories
     private $sector_category, $sector_alias;
     private $sector;
     private $type = "pengawasan-regular";
+    private  $opsi_download = "";
     private $kategori = "hawasbid";
 
     public function __construct($sector_category, $sector_alias){
@@ -35,6 +36,10 @@ class PengawasanRegulerRepositories
     }
     public function setType($type){
         $this->type = $type;
+    }
+
+    public function setOpsiDownload($opsi_download){
+        $this->opsi_download = $opsi_download;
     }
 
     public function setKategori($kategori){
@@ -60,16 +65,29 @@ class PengawasanRegulerRepositories
             return $items->with('pengawasan_regular')
                 ->whereHas('pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun){
                     $pengawasan_regular->where('periode_bulan',$periode_bulan)
-                        ->where('periode_tahun', $periode_tahun)
-                        ->where('sector_id', $this->sector->id);
+                        ->where('periode_tahun', $periode_tahun);
+                    if($this->opsi_download == "current") {
+                        $pengawasan_regular->where('sector_id', $this->sector->id);
+                    }else{
+                        $pengawasan_regular->whereHas('sectors', function($sector){
+                            return $sector->where('category', $this->sector->category);
+                        });
+                    }
                 return $pengawasan_regular;
             });
         }])
         ->whereHas('items', function ($items) use($periode_bulan, $periode_tahun){
             $items->whereHas('pengawasan_regular', function ($pengawasan_regular) use($periode_bulan, $periode_tahun){
                 $pengawasan_regular->where('periode_bulan',$periode_bulan)
-                    ->where('periode_tahun', $periode_tahun)
-                    ->where('sector_id', $this->sector->id);
+                    ->where('periode_tahun', $periode_tahun);
+
+                if($this->opsi_download == "current") {
+                    $pengawasan_regular->where('sector_id', $this->sector->id);
+                }else{
+                    $pengawasan_regular->whereHas('sectors', function($sector){
+                        return $sector->where('category', $this->sector->category);
+                    });
+                }
                 return $pengawasan_regular;
             });
             return $items;

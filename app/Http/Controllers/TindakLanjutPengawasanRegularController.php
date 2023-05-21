@@ -164,12 +164,14 @@ class TindakLanjutPengawasanRegularController extends Controller
     public function download($sector_category, $sector_alias, Request $request){
         $this->validate($request, [
             'periode_bulan' => 'required',
-            'periode_tahun' => 'required'
+            'periode_tahun' => 'required',
+            'opsi_download' => 'required'
         ], $this->getValidationMessage());
 
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
         $repo->setType("tindak-lanjut");
         $repo->setKategori("tindak-lanjut");
+        $repo->setOpsiDownload($request->opsi_download);
         return $repo->exportExcelTindakLanjutReport($request);
     }
     function getValidationMessage(){

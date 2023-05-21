@@ -15,4 +15,7 @@ class PengawasanRegulerModel extends Model
     public function itemlingkupPengawasanregular(){
         return $this->hasOne("App\ItemLingkupPengawasanModel","id","item_lingkup_pengawasan_id");
     }
+    public function sectors(){
+        return $this->hasOne("App\Sector","id","sector_id");
+    }
 }

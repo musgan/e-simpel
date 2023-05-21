@@ -10,7 +10,7 @@
             </div>
             <form action="{{url($path_url.'/download')}}" id="modal-form-download" method="post">
                 {{ csrf_field() }}
-                <div class="modal-body">
+                <div class="modal-body pr-4 pl-4">
                     <div class="">
                         <label>Periode</label>
                         <div class="row">
@@ -35,6 +35,18 @@
                                     <input type="number" id="periode_tahun" class="form-control field_periode" name="periode_tahun" value="{{$periode_tahun}}" required {{isset($form)?'disabled':''}}>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Opsi Download</label>
+                        <div class="clearfix"/>
+                        <div class="form-check ">
+                            <input class="form-check-input" type="radio" name="opsi_download" style="transform:scale(1.5);" value="current" checked >
+                            <label class="form-check-label">Bidang ini saja</label>
+                        </div>
+                        <div class="form-check ">
+                            <input class="form-check-input" type="radio" name="opsi_download" style="transform:scale(1.5);" value="all">
+                            <label class="form-check-label">Semua {{isset($menu)?$menu:''}}</label>
                         </div>
                     </div>
                 </div>
