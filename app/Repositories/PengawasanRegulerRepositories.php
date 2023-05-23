@@ -163,13 +163,18 @@ class PengawasanRegulerRepositories
             ->join('status_pengawasan_regular','status_pengawasan_regular_id','=','status_pengawasan_regular.id')
             ->where('sector_id',$this->sector->id);
         if(count($params['searchByColumn']) >0){
-            foreach ($params['searchByColumn'] as $column)
-                $query->where($params,'like','%'.$params['searchQuery'].'%');
+            $query->where(function($q) use($params){
+                foreach ($params['searchByColumn'] as $column)
+                    $q->orWhere($column,'like','%'.$params['searchQuery'].'%');
+                return $q;
+            });
         }
         if(count($params['orders']) >0){
             foreach ($params['orders'] as $column)
                 $query->orderBy($column[0],$column[1]);
         }
+        $query->offset($params['start'])
+            ->limit($params['limit']);
         return $query->get();
     }
 
