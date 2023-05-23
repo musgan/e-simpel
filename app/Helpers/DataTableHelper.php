@@ -48,7 +48,7 @@ class DataTableHelper
     function getSearchByColumn(){
         $searchByColumn = array();
         foreach ($this->request->columns as $col){
-            if($col['searchable'] === true)
+            if($col['searchable'] === "true")
                 array_push($searchByColumn, $col['name']);
         }
         return $searchByColumn;

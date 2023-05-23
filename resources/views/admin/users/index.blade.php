@@ -6,19 +6,16 @@
 	<h1 class="h3 mb-0 text-gray-800">Pengguna</h1>
 </div>
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Pengguna</h6>
-    </div>
     <div class="card-body">
     	<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           	<thead>
 	            <tr>
-	              <!-- <th></th> -->
-	              <!-- <th>No</th> -->
-	              <th></th>
-	              <th>Nama</th>
-	              <th>Email</th>
-	              <th>Level</th>
+	              	<!-- <th></th> -->
+	              	<th>No</th>
+	              	<th>Nama</th>
+	              	<th>Email</th>
+	              	<th>Level</th>
+					<th></th>
 	            </tr>
           </thead>
       </table>
@@ -44,47 +41,39 @@
 
 <script type="text/javascript">
 	$(function() {
-	    table = $('#dataTable').DataTable({
+	    const table = $('#dataTable').DataTable({
 	        processing: true,
 	        serverSide: true,
-	        ajax: '{{url(session('role')."/users/data")}}',
+	        ajax: '{{url("/users/data")}}',
 	        columns: [
-	            {
-	                "orderable":      false,
-	                "searchable":     false,
-	                "data":           null,
-	                "defaultContent": '',
-	                "render" : function(data,type,row,meta) {
-	                    	return '<a class="delete btn btn-xs btn-danger" href="{{url(session('role').'/users/')}}/'+row.id+'">'+' <i class="fa fa-trash-o" aria-hidden="true"></i> '+'</a>' +
-	                    	' <a href="{{url(session('role').'/users/')}}/'+row.id+'/edit"class="edit btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> </a>';
-	                	}
-	            },
-	            { data: 'name', name: 'name' },
-	            { data: 'email', name: 'email' },
-	            { data: 'nama_level', name: 'user_levels.nama' }
+				{ data: 'no', orderable: false, searchable: false },
+	            { data: 'name', name: 'name', searchable: true, orderable: true },
+	            { data: 'email', name: 'email', searchable: true, orderable: true },
+	            { data: 'nama_level', name: 'user_levels.nama' , searchable: true, orderable: true},
+				{ data: 'action', orderable: false, searchable: false}
 	        ],
-	        drawCallback: function( settings ) {
-
-	            $(".delete").on('click',function(e){
-	                  e.preventDefault();
-	                  x = confirm("Yakin anda akan menghapus data ini");
-	                  if(x == true){
-	                     var link = $(this).attr('href');
-	                      var _token = '{{ csrf_token() }}';
-	                      fdata  = {
-	                        '_method' : 'delete',
-	                        '_token'  : _token
-	                      };
-	                      $.post(link,fdata,function(result){
-	                        alert(result['msg']);
-	                        if(result['status'] == 'success'){
-	                          table.ajax.url('{{url(session('role').'/users/data')}}').load();
-	                        }
-	                      });
-	                  }
-	            });
-	        }
+			order: [[1, 'asc']]
+	        {{--drawCallback: function( settings ) {--}}
 	    });
+
+		$(document).on('click',".btn-link-delete",function(e){
+			  e.preventDefault();
+			  if(confirm("Apakah anda ingin menghapus data ini ?")){
+				 var link = $(this).attr('href');
+				  var _token = '{{ csrf_token() }}';
+				  fdata  = {
+					'_method' : 'delete',
+					'_token'  : _token
+				  };
+				  $.post(link,fdata,function(result){
+						alert(result['msg']);
+						if(result['status'] == 'success'){
+						  	table.ajax.reload();
+						}
+				  });
+			  }
+		});
+
 	});
 </script>
 @endsection

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\UserRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Datatables;
 use App\User;
 use App\UserLevel;
 use App\UserLevelGroup;
@@ -59,11 +59,10 @@ class UserController extends Controller
         return view('admin.users.create',$send);
     }
 
-    public function data(){
-        // echo"x";
-        $user = User::select('users.id','users.name','users.email','user_levels.nama as nama_level')
-            ->join('user_levels','user_levels.id','=','user_level_id');
-        return Datatables::of($user)->make(true);
+    public function data(Request  $request){
+        $repo = new UserRepositories();
+        $repo->setBaseUrl("users");
+        return $repo->getDataTable($request);
     }
 
     /**
