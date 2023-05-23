@@ -79,14 +79,14 @@
             },
             "autoWidth": false,
             columnDefs: [
-                {data:"no",width: 50, orderable: false, filterable:false, className:"text-center", targets:0},
-                {data:"periode_bulan",name:"periode_bulan",width: 50, orderable: true, filterable:false, targets:1},
-                {data:"periode_tahun",name:"periode_tahun",width: 50, orderable: true, filterable:false, targets:2},
-                {data:"item_lingkup_pengawasan_nama",name:"item_lingkup_pengawasan_nama",width: 200, orderable: true, filterable:true, targets:3},
-                {data:"temuan",name:"temuan", orderable: true, filterable:true, targets:4},
-                {data:"status", className:"text-center",name:"status",width: 120, orderable: false, filterable:false, targets:5},
-                {data:"created_at",name:"created_at",width: 120, orderable: true, filterable:false, targets:6},
-                {data:"action",width: 120, orderable: false, filterable:false, className:"text-center", targets:7},
+                {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
+                {data:"periode_bulan",name:"periode_bulan",width: 50, orderable: true, searchable:false, targets:1},
+                {data:"periode_tahun",name:"periode_tahun",width: 50, orderable: true, searchable:false, targets:2},
+                {data:"item_lingkup_pengawasan_nama",name:"item_lingkup_pengawasan_nama",width: 200, orderable: true, searchable:false, targets:3},
+                {data:"temuan",name:"temuan", orderable: true, searchable:true, targets:4},
+                {data:"status", className:"text-center",name:"status",width: 120, orderable: false, searchable:false, targets:5},
+                {data:"created_at",name:"created_at",width: 120, orderable: true, searchable:false, targets:6},
+                {data:"action",width: 120, orderable: false, searchable:false, className:"text-center", targets:7},
             ],
             order : [[6,'desc']]
         })
