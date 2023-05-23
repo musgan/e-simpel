@@ -139,11 +139,9 @@
 
 	function upload(blob_image){
 		var fd = new FormData();
-		var file = new File([blob_image], "image.png", {type:"image/png"});
-		console.log(file)
-
 		fd.append('name', 'profil.jpg');
 		fd.append('data', blob_image);
+		fd.append('_token',"{{csrf_token()}}")
 		$.ajax({
 		    type: 'POST',
 		    url: "{{url(session('role').'/akun-saya/update-profil')}}",
