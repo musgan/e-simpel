@@ -30,6 +30,9 @@ class User extends Authenticatable
     public function user_level(){
         return $this->hasOne("App\UserLevel","id",'user_level_id');
     }
+    public function user_level_groups(){
+        return $this->hasMany("App\UserLevelGroup","user_id","id");
+    }
 
     protected $table = 'users';
 }

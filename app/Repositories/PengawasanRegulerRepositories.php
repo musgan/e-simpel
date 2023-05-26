@@ -46,6 +46,10 @@ class PengawasanRegulerRepositories
         $this->kategori = $kategori;
     }
 
+    public function isSectorInArray(Array $sectors){
+        return in_array($this->sector->id, $sectors);
+    }
+
     public function getById($id){
         return PengawasanRegulerModel::where('id',$id)
             ->where('sector_id', $this->sector->id)

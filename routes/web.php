@@ -20,8 +20,7 @@ Route::get('/token-failed', function () {
 
 Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::get('home', 'HomeController@index')
-		->name('home')
-		->middleware(['role:admin,mpn,hawasbid,kapan']);
+		->name('home');
 	Route::middleware(['role:admin,mpn,hawasbid,kapan'])->resource('akun-saya','MyAccountController',['except' => ['store','destroy','create','show','edit']]);
 	
 	Route::post('akun-saya/update-profil','MyAccountController@update_profil')
@@ -150,51 +149,51 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 });
 
 Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
-    Route::get("lingkup-pengawasan", "LingkupPengawasanController@index")->middleware('role:admin');
-    Route::get("lingkup-pengawasan/create", "LingkupPengawasanController@create")->middleware('role:admin');
-    Route::get("lingkup-pengawasan/{id}", "LingkupPengawasanController@show")->middleware('role:admin');
-    Route::post("lingkup-pengawasan", "LingkupPengawasanController@store")->middleware('role:admin');
-    Route::post("lingkup-pengawasan/gettable", "LingkupPengawasanController@getTable")->middleware('role:admin');
-    Route::get("lingkup-pengawasan/{id}/edit", "LingkupPengawasanController@edit")->middleware('role:admin');
-    Route::put("lingkup-pengawasan/{id}", "LingkupPengawasanController@update")->middleware('role:admin');
-    Route::delete("lingkup-pengawasan/{id}", "LingkupPengawasanController@destroy")->middleware('role:admin');
+    Route::get("lingkup-pengawasan", "LingkupPengawasanController@index")
+        ->middleware('can:master');
+    Route::get("lingkup-pengawasan/create", "LingkupPengawasanController@create")->middleware('can:master');
+    Route::get("lingkup-pengawasan/{id}", "LingkupPengawasanController@show")->middleware('can:master');
+    Route::post("lingkup-pengawasan", "LingkupPengawasanController@store")->middleware('can:master');
+    Route::post("lingkup-pengawasan/gettable", "LingkupPengawasanController@getTable")->middleware('can:master');
+    Route::get("lingkup-pengawasan/{id}/edit", "LingkupPengawasanController@edit")->middleware('can:master');
+    Route::put("lingkup-pengawasan/{id}", "LingkupPengawasanController@update")->middleware('can:master');
+    Route::delete("lingkup-pengawasan/{id}", "LingkupPengawasanController@destroy")->middleware('can:master');
 
-    Route::get("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@index")->middleware('role:admin');
-    Route::post("lingkup-pengawasan-bidang/gettable", "LingkupPengawasanBidangController@getTable")->middleware('role:admin');
-    Route::get("lingkup-pengawasan-bidang/create", "LingkupPengawasanBidangController@create")->middleware('role:admin');
-    Route::post("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@store")->middleware('role:admin');
-    Route::get("lingkup-pengawasan-bidang/{sector_id}/edit", "LingkupPengawasanBidangController@edit")->middleware('role:admin');
-    Route::put("lingkup-pengawasan-bidang/{sector_id}", "LingkupPengawasanBidangController@update")->middleware('role:admin');
+    Route::get("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@index")->middleware('can:master');
+    Route::post("lingkup-pengawasan-bidang/gettable", "LingkupPengawasanBidangController@getTable")->middleware('can:master');
+    Route::get("lingkup-pengawasan-bidang/create", "LingkupPengawasanBidangController@create")->middleware('can:master');
+    Route::post("lingkup-pengawasan-bidang", "LingkupPengawasanBidangController@store")->middleware('can:master');
+    Route::get("lingkup-pengawasan-bidang/{sector_id}/edit", "LingkupPengawasanBidangController@edit")->middleware('can:master');
+    Route::put("lingkup-pengawasan-bidang/{sector_id}", "LingkupPengawasanBidangController@update")->middleware('can:master');
 
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@index')->middleware('role:admin');
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/create','PengawasanRegulerController@create')->middleware('role:admin');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@store')->middleware('role:admin');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/gettable','PengawasanRegulerController@getTable')->middleware('role:admin');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/download','PengawasanRegulerController@download')->middleware('role:admin');
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}/edit','PengawasanRegulerController@edit')->middleware('role:admin');
-    Route::put('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@update')->middleware('role:admin');
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('role:admin');
-    Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('role:admin');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/uploadtemplate','PengawasanRegulerController@uploadTemplate')->middleware('role:admin');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@index')->middleware('can:master');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/create','PengawasanRegulerController@create')->middleware('can:master');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@store')->middleware('can:master');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/gettable','PengawasanRegulerController@getTable')->middleware('can:master');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/download','PengawasanRegulerController@download')->middleware('can:master');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}/edit','PengawasanRegulerController@edit')->middleware('can:master');
+    Route::put('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@update')->middleware('can:master');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('can:master');
+    Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('can:master');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/uploadtemplate','PengawasanRegulerController@uploadTemplate')->middleware('can:master');
 
     Route::get('kesesuaian/{sector_category}/{sector_alias}/create','KesesuaianPengawasanRegularController@create')->middleware('role:admin');
     Route::get('kesesuaian/{sector_category}/{sector_alias}/getbyperiode','KesesuaianPengawasanRegularController@getByPeriode')->middleware('role:admin');
     Route::post('kesesuaian/{sector_category}/{sector_alias}','KesesuaianPengawasanRegularController@store')->middleware('role:admin');
-    Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable')->middleware('role:admin');
+    Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable');//->middleware('can:pengawasan,sector_category,sector_alias');
     Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}/edit','KesesuaianPengawasanRegularController@edit')->middleware('role:admin');
     Route::put('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@update')->middleware('role:admin');
     Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@show')->middleware('role:admin');
     Route::delete('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@destroy')->middleware('role:admin');
 
-
-    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('role:admin,kapan');
-    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('role:admin,kapan');
-    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/download','TindakLanjutPengawasanRegularController@download')->middleware('role:admin,kapan');
-    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('role:admin,kapan');
-    Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('role:admin,kapan');
+    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
+    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
+    Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/download','TindakLanjutPengawasanRegularController@download')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
+    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('can:pengawasan-tl,sector_category,sector_alias');
+    Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('can:pengawasan-tl,sector_category,sector_alias');
 
     Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@store')->middleware('role:admin');
-    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}/gettable','DokumentasiRapatPengawasanRegularController@getTable')->middleware('role:admin');
+    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}/gettable','DokumentasiRapatPengawasanRegularController@getTable')->middleware('role:admin,kapan');
     Route::delete('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@destroy')->middleware('role:admin');
 
     Route::get('export-laporan','ExportLaporanPengawasanRegular@export');
