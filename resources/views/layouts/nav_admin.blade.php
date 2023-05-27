@@ -250,9 +250,6 @@ if(isset($root_menu))
   @endif
 
   <hr class="sidebar-divider d-none d-md-block">
-
-
-
   <li class="nav-item {{($menu == "cetak_laporan")?'active': ''}}">
     <a class="nav-link {{($menu == "cetak_laporan")?'': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapseCetakLaporan" aria-expanded="true" aria-controls="collapseCetakLaporan">
       <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
@@ -265,10 +262,7 @@ if(isset($root_menu))
       </div>
     </div>
     @endif
-
   </li>
-  
-
 
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">

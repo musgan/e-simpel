@@ -358,7 +358,7 @@ class PengawasanRegulerRepositories
         try{
 
             $kesesuaianPengawasanRegulerRepo = new KesesuaianPengawasanRegulerRepositories($this->sector_category, $this->sector_alias);
-            $kesesuaianByPeriode = $kesesuaianPengawasanRegulerRepo->getByPeriode($request->periode_bulan,$request->periode_tahun);
+            $kesesuaianByPeriode = $kesesuaianPengawasanRegulerRepo->getByPeriodeFromItem($request->periode_bulan,$request->periode_tahun);
             $temuanByPeriode = $this->getByPeriode($request->periode_bulan, $request->periode_tahun);
 
             $export->setKesesuaian($kesesuaianByPeriode);
