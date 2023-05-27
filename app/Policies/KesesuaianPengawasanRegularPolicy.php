@@ -6,15 +6,14 @@ use App\Repositories\PengawasanRegulerRepositories;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PengawasanTindaklanjutPolicy extends PengawasanPolicy
+class KesesuaianPengawasanRegularPolicy extends PengawasanPolicy
 {
-    public function view($user,$sector_category,$sector_alias){
-        $roleAllowed = ["admin","kapan","mpn"];
+    public function view($user, $sector_category,$sector_alias){
+        $roleAllowed = ["admin","hawasbid","kapan","mpn"];
         return $this->isAvaibleTorun($user,$sector_category,$sector_alias, $roleAllowed);
     }
-
-    public function action($user,$sector_category,$sector_alias){
-        $roleAllowed = ["admin","kapan"];
+    public function action($user, $sector_category,$sector_alias){
+        $roleAllowed = ["admin","hawasbid"];
         return $this->isAvaibleTorun($user,$sector_category,$sector_alias, $roleAllowed);
     }
 }

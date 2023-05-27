@@ -47,6 +47,8 @@ class PengawasanRegulerRepositories
     }
 
     public function isSectorInArray(Array $sectors){
+        if($this->sector == null)
+            return false;
         return in_array($this->sector->id, $sectors);
     }
 

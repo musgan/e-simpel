@@ -2,19 +2,18 @@
 
 namespace App\Policies;
 
-use App\Repositories\PengawasanRegulerRepositories;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PengawasanTindaklanjutPolicy extends PengawasanPolicy
+class DokumentasiRapatPolicy extends PengawasanPolicy
 {
     public function view($user,$sector_category,$sector_alias){
-        $roleAllowed = ["admin","kapan","mpn"];
+        $roleAllowed = ["admin","hawasbid","kapan","mpn"];
         return $this->isAvaibleTorun($user,$sector_category,$sector_alias, $roleAllowed);
     }
 
     public function action($user,$sector_category,$sector_alias){
-        $roleAllowed = ["admin","kapan"];
+        $roleAllowed = ["admin","hawasbid","kapan"];
         return $this->isAvaibleTorun($user,$sector_category,$sector_alias, $roleAllowed);
     }
 }

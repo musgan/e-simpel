@@ -26,13 +26,9 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::post('akun-saya/update-profil','MyAccountController@update_profil')
 		->middleware('role:admin,mpn,hawasbid,kapan');
 
-	Route::get('users/data','UserController@data')
-		->middleware('role:admin');
-	Route::middleware('role:admin')
-		->resource('users','UserController');
-	
-//	Route::middleware('role:admin')->resource('hawasbid_indikator','HawasbidIndikatorController');
-	
+	Route::get('users/data','UserController@data')->middleware('can:master');
+	Route::middleware('can:master')->resource('users','UserController');
+
 	Route::get('hawasbid_indikator','HawasbidIndikatorController@index')
 		->middleware('role:admin,mpn');
 	Route::get('hawasbid_indikator/{id}','HawasbidIndikatorController@show')
@@ -48,7 +44,7 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::delete('hawasbid_indikator/{id}','HawasbidIndikatorController@destroy')
 		->middleware('role:admin');
 	
-	Route::middleware('role:admin')->resource('setting_time_hawasbid','SettingTimeHawasbid');
+	Route::middleware('can:master')->resource('setting_time_hawasbid','SettingTimeHawasbid');
 	
 	
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index')
@@ -166,25 +162,25 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get("lingkup-pengawasan-bidang/{sector_id}/edit", "LingkupPengawasanBidangController@edit")->middleware('can:master');
     Route::put("lingkup-pengawasan-bidang/{sector_id}", "LingkupPengawasanBidangController@update")->middleware('can:master');
 
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@index')->middleware('can:master');
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/create','PengawasanRegulerController@create')->middleware('can:master');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@store')->middleware('can:master');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/gettable','PengawasanRegulerController@getTable')->middleware('can:master');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/download','PengawasanRegulerController@download')->middleware('can:master');
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}/edit','PengawasanRegulerController@edit')->middleware('can:master');
-    Route::put('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@update')->middleware('can:master');
-    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('can:master');
-    Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('can:master');
-    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/uploadtemplate','PengawasanRegulerController@uploadTemplate')->middleware('can:master');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@index')->middleware('can:pengawasan-hawasbid.view,sector_category,sector_alias');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/create','PengawasanRegulerController@create')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}','PengawasanRegulerController@store')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/gettable','PengawasanRegulerController@getTable')->middleware('can:pengawasan-hawasbid.view,sector_category,sector_alias');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/download','PengawasanRegulerController@download')->middleware('can:pengawasan-hawasbid.view,sector_category,sector_alias');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}/edit','PengawasanRegulerController@edit')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
+    Route::put('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@update')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
+    Route::get('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@show')->middleware('can:pengawasan-hawasbid.view,sector_category,sector_alias');
+    Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
+    Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/uploadtemplate','PengawasanRegulerController@uploadTemplate')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
 
     Route::get('kesesuaian/{sector_category}/{sector_alias}/create','KesesuaianPengawasanRegularController@create')->middleware('role:admin');
-    Route::get('kesesuaian/{sector_category}/{sector_alias}/getbyperiode','KesesuaianPengawasanRegularController@getByPeriode')->middleware('role:admin');
-    Route::post('kesesuaian/{sector_category}/{sector_alias}','KesesuaianPengawasanRegularController@store')->middleware('role:admin');
-    Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable');//->middleware('can:pengawasan,sector_category,sector_alias');
-    Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}/edit','KesesuaianPengawasanRegularController@edit')->middleware('role:admin');
-    Route::put('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@update')->middleware('role:admin');
-    Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@show')->middleware('role:admin');
-    Route::delete('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@destroy')->middleware('role:admin');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/getbyperiode','KesesuaianPengawasanRegularController@getByPeriode')->middleware('can:kesesuaian.view,sector_category,sector_alias');
+    Route::post('kesesuaian/{sector_category}/{sector_alias}','KesesuaianPengawasanRegularController@store')->middleware('can:kesesuaian,sector_category,sector_alias');
+    Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable')->middleware('can:kesesuaian.view,sector_category,sector_alias');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}/edit','KesesuaianPengawasanRegularController@edit')->middleware('can:kesesuaian,sector_category,sector_alias');
+    Route::put('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@update')->middleware('can:kesesuaian,sector_category,sector_alias');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@show')->middleware('can:kesesuaian.view,sector_category,sector_alias');
+    Route::delete('kesesuaian/{sector_category}/{sector_alias}/{id}','KesesuaianPengawasanRegularController@destroy')->middleware('can:kesesuaian,sector_category,sector_alias');
 
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
@@ -192,12 +188,9 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('can:pengawasan-tl,sector_category,sector_alias');
     Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('can:pengawasan-tl,sector_category,sector_alias');
 
-    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@store')->middleware('role:admin');
-    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}/gettable','DokumentasiRapatPengawasanRegularController@getTable')->middleware('role:admin,kapan');
-    Route::delete('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@destroy')->middleware('role:admin');
-
-    Route::get('export-laporan','ExportLaporanPengawasanRegular@export');
-    Route::get('export-laporan/export2','ExportLaporanPengawasanRegular@export2');
+    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@store')->middleware('can:dokumentasirapat.view,sector_category,sector_alias');
+    Route::post('dokumentasi-rapat/{sector_category}/{sector_alias}/gettable','DokumentasiRapatPengawasanRegularController@getTable')->middleware('can:dokumentasirapat.view,sector_category,sector_alias');
+    Route::delete('dokumentasi-rapat/{sector_category}/{sector_alias}','DokumentasiRapatPengawasanRegularController@destroy')->middleware('can:dokumentasirapat.view,sector_category,sector_alias');
 });
 
 Route::get('redev','RedirectLinkController@redev');// redirect evidence

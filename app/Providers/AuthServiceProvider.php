@@ -32,8 +32,15 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             return false;
         });
+
         Gate::define('pengawasan-tl.view',"App\Policies\PengawasanTindaklanjutPolicy@view");
         Gate::define('pengawasan-tl',"App\Policies\PengawasanTindaklanjutPolicy@action");
+        Gate::define('pengawasan-hawasbid.view',"App\Policies\PengawasanHawasbidPolicy@view");
+        Gate::define('pengawasan-hawasbid',"App\Policies\PengawasanHawasbidPolicy@action");
+        Gate::define('kesesuaian.view',"App\Policies\KesesuaianPengawasanRegularPolicy@view");
+        Gate::define('kesesuaian',"App\Policies\KesesuaianPengawasanRegularPolicy@action");
+        Gate::define('dokumentasirapat.view',"App\Policies\DokumentasiRapatPolicy@view");
+        Gate::define('dokumentasirapat',"App\Policies\DokumentasiRapatPolicy@action");
 
     }
 }
