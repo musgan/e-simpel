@@ -25,7 +25,8 @@ class KesesuaianPengawasanRegularController extends Controller
         "path_url"  => "",
         "path_view" => "admin.pengawasan-reguler.kesesuaian-pengawasan-bidang.",
         'root_menu' => 'pr_pengawas_bidang',
-        'form_detail' => false
+        'form_detail' => false,
+        'form_kesesuaian'   => true
     ];
 
     public function __construct()

@@ -13,7 +13,7 @@
             <div class="col-md-8">
                 <div class="form-group field-form">
                     <label>Lingkup Pengawasan</label>
-                    <select name="item_lingkup_pengawasan_id" class="form-control" required {{isset($form)?'disabled':''}}>
+                    <select name="item_lingkup_pengawasan_id" class="form-control" required {{($form_detail == true)?'disabled':''}}>
                         @foreach($lingkup_pengawasan_bidang as $row)
                             @php
                                 $item = $row->item;

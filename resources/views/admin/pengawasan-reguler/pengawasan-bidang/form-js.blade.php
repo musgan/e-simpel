@@ -5,9 +5,7 @@
             tabsize: 2,
             height: 250,
             toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
+                ['para', ['ul']],
             ]
         });
 

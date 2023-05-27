@@ -219,6 +219,9 @@ class PengawasanRegulerRepositories
         DB::beginTransaction();
         try {
             $model = $this->getById($id);
+            $model->periode_tahun = $request->periode_tahun;
+            $model->periode_bulan = $request->peride_bulan;
+            $model->item_lingkup_pengawasan_id  = $request->item_lingkup_pengawasan_id;
             $model->temuan = $request->temuan;
             $model->kriteria = $request->kriteria;
             $model->sebab = $request->sebab;

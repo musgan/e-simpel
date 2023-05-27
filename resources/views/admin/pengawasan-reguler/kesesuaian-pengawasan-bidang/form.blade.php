@@ -9,9 +9,10 @@ if(isset($form_detail))
         <h5>Form kesesuaian</h5>
     </div>
     <div class="card-body">
+        @if(isset($form_kesesuaian))
         <div class="form-group">
             <label>Lingkup Pengawasan</label>
-            <select name="item_lingkup_pengawasan_id" class="form-control" required {{isset($form)?'disabled':''}}>
+            <select id="field_lingkup_pengawasan" name="item_lingkup_pengawasan_id" class="form-control" required {{isset($form)?'disabled':''}}>
                 @foreach($lingkup_pengawasan_bidang as $row)
                     @php
                         $item = $row->item;
@@ -21,6 +22,8 @@ if(isset($form_detail))
                 @endforeach
             </select>
         </div>
+        @endif
+
         <div class="form-group">
             <label>Uraian</label>
             @if($detail)

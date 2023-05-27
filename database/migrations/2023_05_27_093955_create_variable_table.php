@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddKeteranganTindakLanjutToPengawasanRegularTable extends Migration
+class CreateVariableTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,13 @@ class AddKeteranganTindakLanjutToPengawasanRegularTable extends Migration
      */
     public function up()
     {
-        Schema::table('pengawasan_regular', function (Blueprint $table) {
+        Schema::create('variables', function (Blueprint $table) {
             //
-            $table->text("keterangan_tindak_lanjut")->nullable();
+            $table->string('key', 50);
+            $table->primary('key');
+            $table->text('keterangan');
+            $table->string('value');
+            $table->timestamps();
         });
     }
 
@@ -26,9 +30,6 @@ class AddKeteranganTindakLanjutToPengawasanRegularTable extends Migration
      */
     public function down()
     {
-        Schema::table('pengawasan_regular', function (Blueprint $table) {
-            //
-            $table->dropColumn('keterangan_tindak_lanjut');
-        });
+        Schema::dropIfExists('variables');
     }
 }

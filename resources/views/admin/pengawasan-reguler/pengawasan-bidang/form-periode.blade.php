@@ -10,7 +10,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Bulan</span>
                         </div>
-                        <select class="form-control field_periode" id="periode_bulan" name="peride_bulan" required {{isset($form)?'disabled':''}}>
+                        <select class="form-control field_periode" id="periode_bulan" name="peride_bulan" required {{($form_detail === true)?'disabled':''}}>
                             @foreach($dict_periode_of_month as $month_number => $month_name )
                                 <option value="{{$month_number}}" {{($periode_bulan == $month_number)?'selected': ''}}>{{$month_name}}</option>
                             @endforeach
@@ -23,7 +23,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Tahun</span>
                         </div>
-                        <input type="number" id="periode_tahun" class="form-control field_periode" name="periode_tahun" value="{{$periode_tahun}}" required {{isset($form)?'disabled':''}}>
+                        <input type="number" id="periode_tahun" class="form-control field_periode" name="periode_tahun" value="{{$periode_tahun}}" required {{($form_detail === true)?'disabled':''}}>
                     </div>
                 </div>
             </div>

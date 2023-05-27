@@ -65,14 +65,13 @@ if(isset($root_menu))
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item <?php if($sb == "users") echo 'active'?>" href="{{url('/users')}}">Pengguna</a>
           <a class="collapse-item <?php if($sb == "hawasbid_indikator") echo 'active'?>" href="{{url('/hawasbid_indikator')}}">Indikator</a>
-          @if($user->user_level_id == 1)
-            <a class="collapse-item <?php if($sb == "hawasbid_bidang") echo 'active'?>" href="{{url('/sector_hawasbid')}}">B. Penanggung Jawab</a>
-            <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url('/generate_indikator')}}">Generate Indikator</a>
-            <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url('/performa-hawasbid')}}">Performa Hawasbid</a>
-            <a class="collapse-item <?php if($sb == "setting_time_hawasbid") echo 'active'?>" href="{{url('/setting_time_hawasbid')}}">Setting Periode</a>
-            <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url('pr/lingkup-pengawasan')}}">L. Pengawasan</a>
-            <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url('pr/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
-          @endif
+          <a class="collapse-item <?php if($sb == "hawasbid_bidang") echo 'active'?>" href="{{url('/sector_hawasbid')}}">B. Penanggung Jawab</a>
+          <a class="collapse-item <?php if($sb == "generate_indikator") echo 'active'?>" href="{{url('/generate_indikator')}}">Generate Indikator</a>
+          <a class="collapse-item <?php if($sb == "performa_hawasbid") echo 'active'?>" href="{{url('/performa-hawasbid')}}">Performa Hawasbid</a>
+          <a class="collapse-item <?php if($sb == "setting_time_hawasbid") echo 'active'?>" href="{{url('/setting_time_hawasbid')}}">Setting Periode</a>
+          <a class="collapse-item <?php if($sb == "lingkup-pengawasan") echo 'active'?>" href="{{url('pr/lingkup-pengawasan')}}">L. Pengawasan</a>
+          <a class="collapse-item <?php if($sb == "lingkup-pengawasan-bidang") echo 'active'?>" href="{{url('pr/lingkup-pengawasan-bidang')}}">L. Pengawasan Bidang</a>
+          <a class="collapse-item <?php if($sb == "variables") echo 'active'?>" href="{{url('/variables')}}">Variabel</a>
         </div>
       </div>
     </li>
