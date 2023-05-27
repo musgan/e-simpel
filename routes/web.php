@@ -18,6 +18,9 @@ Route::get('/token-failed', function () {
     return view('token_failed');
 });
 
+Route::middleware(['auth','can:master'])->resource('variables','VariableController',['except' => ['store','destroy','create','show']]);
+Route::post('variables/gettable', 'VariableController@getTable')->middleware(['auth','can:master']);
+
 Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::get('home', 'HomeController@index')
 		->name('home');
@@ -45,8 +48,7 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 		->middleware('role:admin');
 	
 	Route::middleware('can:master')->resource('setting_time_hawasbid','SettingTimeHawasbid');
-	
-	
+
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index')
 		->middleware('role:admin,mpn,hawasbid');
 	Route::post('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store')

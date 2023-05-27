@@ -29,7 +29,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section("js")
@@ -43,7 +42,7 @@
             },
             "autoWidth": false,
             columnDefs: [
-                {data:"no",width: 50, orderable: false, filterable:false, className:"text-center", targets:0},
+                {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
                 {name: "nama", data:"nama",targets: 1},
                 {name: "created_at", data:"created_at",targets: 2},
                 {data:"action",orderable:false, searchable:false, className:"text-center", targets: 3},

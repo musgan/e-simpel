@@ -2,10 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\SectorRepositories;
+use App\Repositories\VariableRepositories;
 use Illuminate\Http\Request;
 
 class VariableController extends Controller
 {
+    private $path_view = "admin.variable.";
+    private $path_url = "variables";
+
+    private $data = [
+        "menu"  => "Master",
+        "sub_menu" => "variables",
+        "path_url"  => "variables",
+        "path_view" => "admin.variable."
+    ];
+    public function __construct()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $this->data["menu_sectors"] = SectorRepositories::getAllSectors();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,6 +30,13 @@ class VariableController extends Controller
     public function index()
     {
         //
+        return view($this->path_view."index", $this->data);
+    }
+
+    public function getTable(Request $request){
+        $repo = new VariableRepositories();
+        $repo->setBaseUrl($this->path_url);
+        return $repo->getDataTable($request);
     }
 
     /**
@@ -54,9 +77,10 @@ class VariableController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($key)
     {
-        //
+        $this->data['form'] = VariableRepositories::getByKey($key);
+        return view($this->path_view."edit", $this->data);
     }
 
     /**
@@ -69,6 +93,12 @@ class VariableController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, [
+            'value' => 'required',
+            'keterangan'    => 'required'
+        ], $this->getValidationMessage());
+        $repo = new VariableRepositories();
+        return $repo->update($id, $request);
     }
 
     /**
@@ -80,5 +110,12 @@ class VariableController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function getValidationMessage(){
+        return [
+            'value.required'    => 'Field nilai wajib ada',
+            'keterangan.required'    => 'Field keterangan wajib ada',
+        ];
     }
 }
