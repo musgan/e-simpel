@@ -54,9 +54,9 @@ if(isset($root_menu))
   @endif
 
   @if($user->user_level_id == 1 || $user->user_level_id == 2 || $user->user_level_id == 3)
-    <li class="nav-item <?php if($menu == "master") echo 'active'?>">
+    <li class="nav-item {{($menu == "master")?'active': ''}}">
 
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
+      <a class="nav-link {{($menu == "master")?'': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapseHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
         <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
         <span>Master</span>
       </a>
@@ -85,13 +85,10 @@ if(isset($root_menu))
     Pengawasan APM
   </div>
 
-
-
-
   @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2 || $user->user_level_id == 6 || $user->user_level_id == 7 )
   
-  <li class="nav-item {{($rm == 'pengawas_bidang')? 'active': ''}}">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePB" aria-expanded="true" aria-controls="collapsePB">
+  <li class="nav-item">
+    <a class="nav-link {{($rm == 'pengawas_bidang')? '': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapsePB" aria-expanded="true" aria-controls="collapsePB">
       <span>Pengawas Bidang</span></a>
     <ul  id="collapsePB" class="collapse {{($rm == 'pengawas_bidang')? 'show': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
@@ -99,7 +96,7 @@ if(isset($root_menu))
         <?php
         ?>
         <li class="nav-item {{($menu == ($row_cat) && $rm == 'pengawas_bidang')? 'active' : '' }} ">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
+          <a class="nav-link {{ ($menu == strtolower($row_cat) && $rm == 'pengawas_bidang') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsePB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
@@ -131,15 +128,15 @@ if(isset($root_menu))
 
   @if($user->user_level_id == 1 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 3  || $user->user_level_id == 2)
   
-  <li class="nav-item {{($rm == 'tindak_lanjut') ? 'active': ''}}">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTL" aria-expanded="true" aria-controls="collapseTL"><span>Tindak Lanjutan</span></a>
+  <li class="nav-item">
+    <a class="nav-link {{($rm == 'tindak_lanjut')? '': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapseTL" aria-expanded="true" aria-controls="collapseTL"><span>Tindak Lanjut</span></a>
     <ul  id="collapseTL" class="collapse {{($rm == 'tindak_lanjut') ? 'show': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2)
         <?php
         ?>
         <li class="nav-item {{ ($menu == strtolower($row_cat) && $rm == 'tindak_lanjut') ? 'active' : '' }}">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTL{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
+          <a class="nav-link {{ ($menu == strtolower($row_cat) && $rm == 'tindak_lanjut') ? '' : 'collapsed' }} " href="#" data-toggle="collapse" data-target="#collapseTL{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
@@ -177,16 +174,16 @@ if(isset($root_menu))
 
   @if($user->user_level_id == 1 || $user->user_level_id == 10 || $user->user_level_id == 3  || $user->user_level_id == 2 || $user->user_level_id == 6 || $user->user_level_id == 7 )
   
-  <li class="nav-item {{($rm == 'pr_pengawas_bidang')? 'active': ''}}">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB" aria-expanded="true" aria-controls="collapsePB">
+  <li class="nav-item">
+    <a class="nav-link {{($rm == 'pr_pengawas_bidang')? '': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB" aria-expanded="true" aria-controls="collapsePB">
       <span>Pengawas Bidang</span></a>
-    <ul  id="collapsePRegulerPB" class="collapse {{($rm == 'pr_pengawas_bidang')? 'active': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <ul  id="collapsePRegulerPB" class="collapse {{($rm == 'pr_pengawas_bidang')? 'show': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2 )
         <?php
         ?>
         <li class="nav-item {{($menu == strtolower($row_cat) && $rm == 'pr_pengawas_bidang')? 'active' : '' }} ">
-          <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
+          <a class="nav-link {{ ($menu == strtolower($row_cat) && $rm == 'pr_pengawas_bidang') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsePRegulerPB{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
@@ -217,15 +214,15 @@ if(isset($root_menu))
 
 
   @if($user->user_level_id == 1 || $user->user_level_id == 4 || $user->user_level_id == 5 || $user->user_level_id == 3  || $user->user_level_id == 2)
-  <li class="nav-item {{($rm == 'pr_tindak_lanjut') ? 'active': ''}}">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL" aria-expanded="true" aria-controls="collapsePRegulerTL"><span>Tindak Lanjutan</span></a>
-    <ul  id="collapsePRegulerTL" class="collapse {{($rm == 'pr_tindak_lanjut')? 'active': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <li class="nav-item">
+    <a class="nav-link {{($rm == 'pr_tindak_lanjut')? '': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL" aria-expanded="true" aria-controls="collapsePRegulerTL"><span>Tindak Lanjut</span></a>
+    <ul  id="collapsePRegulerTL" class="collapse {{($rm == 'pr_tindak_lanjut')? 'show': ''}}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       @foreach($category_hawasbid as $row_cat)
         @if(in_array($row_cat, $sector_category) || $user->user_level_id == 1 || $user->user_level_id == 3  || $user->user_level_id == 2)
         <?php
         ?>
         <li class="nav-item {{ ($menu == $row_cat && $rm == 'pr_tindak_lanjut') ? 'active' : '' }}">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
+          <a class="nav-link {{ ($menu == strtolower($row_cat) && $rm == 'pr_tindak_lanjut') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsePRegulerTL{{$row_cat}}" aria-expanded="true" aria-controls="collapsePB{{$row_cat}}">
             <span>{{$row_cat}}</span>
           </a>
 
@@ -256,8 +253,8 @@ if(isset($root_menu))
 
 
 
-  <li class="nav-item <?php if($menu == "cetak_laporan") echo 'active'?>">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCetakLaporan" aria-expanded="true" aria-controls="collapseCetakLaporan">
+  <li class="nav-item {{($menu == "cetak_laporan")?'active': ''}}">
+    <a class="nav-link {{($menu == "cetak_laporan")?'': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapseCetakLaporan" aria-expanded="true" aria-controls="collapseCetakLaporan">
       <!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
       <span>Cetak Laporan</span>
     </a>
