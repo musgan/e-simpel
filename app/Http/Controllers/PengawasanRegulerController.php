@@ -194,6 +194,9 @@ class PengawasanRegulerController extends Controller
     {
         //
         $this->validate($request, [
+            'peride_bulan'  => 'required',
+            'periode_tahun'  => 'required',
+            'item_lingkup_pengawasan_id'  => 'required',
             'temuan'  => 'required',
             'kriteria'  => 'required',
             'sebab'  => 'required',
