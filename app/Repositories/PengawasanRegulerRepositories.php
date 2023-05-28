@@ -173,7 +173,7 @@ class PengawasanRegulerRepositories
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
         $dataTable = array();
-        $no = 1;
+        $no = $params['start']+1;
         foreach ($resultData as $row){
             $action = "";
             if($this->type == "pengawasan-regular") {

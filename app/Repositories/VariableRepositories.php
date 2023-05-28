@@ -33,7 +33,7 @@ class VariableRepositories
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
         $dataTable = array();
-        $no = 1;
+        $no = $params['start']+1;
         foreach ($resultData as $row){
             $action = "";
             $url_edit = '<a href="'.url($this->base_url."/".$row->key.'/edit').'" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">'.__('form.button.edit.icon').'</a>';

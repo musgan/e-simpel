@@ -41,7 +41,7 @@ class LingkupPengawasanRepositories
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
         $dataTable = array();
-        $no = 1;
+        $no = $params['start']+1;
         foreach ($resultData as $row){
             $action = "";
             $url_view = '<a href="'.url($this->base_url."/".$row->id).'" class="btn btn-sm btn-flat btn-success mr-1 ml-1">'.__('form.button.view.icon').'</a>';
