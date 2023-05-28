@@ -34,13 +34,15 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 
 	Route::get('hawasbid_indikator','HawasbidIndikatorController@index')
 		->middleware('role:admin,mpn');
+    Route::get('hawasbid_indikator/create','HawasbidIndikatorController@create')
+        ->middleware('role:admin');
 	Route::get('hawasbid_indikator/{id}','HawasbidIndikatorController@show')
 		->middleware('role:admin,mpn,hawasbid');
-	Route::get('hawasbid_indikator/create','HawasbidIndikatorController@create')
-		->middleware('role:admin');
 	Route::post('hawasbid_indikator','HawasbidIndikatorController@post')
 		->middleware('role:admin');
-	Route::get('hawasbid_indikator/{id}/edit','HawasbidIndikatorController@edit')
+    Route::post('hawasbid_indikator/gettable','HawasbidIndikatorController@getTable')
+        ->middleware('role:admin,mpn');
+    Route::get('hawasbid_indikator/{id}/edit','HawasbidIndikatorController@edit')
 		->middleware('role:admin');
 	Route::put('hawasbid_indikator/{id}','HawasbidIndikatorController@update')
 		->middleware('role:admin');
@@ -48,7 +50,6 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 		->middleware('role:admin');
 	
 	Route::middleware('can:master')->resource('setting_time_hawasbid','SettingTimeHawasbid');
-
 	Route::get('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index')
 		->middleware('role:admin,mpn,hawasbid');
 	Route::post('pengawas-bidang/kepaniteraan/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store')
