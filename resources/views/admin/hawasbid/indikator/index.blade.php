@@ -44,22 +44,18 @@ if($user->user_level_id == 1){
     </div>
     <div class="card-body">
       
-      <div class="row col-md-12" style="margin-bottom: 20px;">
-        <form class="form" action="{{ url(session('role').'/hawasbid_indikator') }}" method="">
+      <div class="col-md-12" style="margin-bottom: 20px;">
+        <form class="form" action="{{ url('/hawasbid_indikator') }}" method="">
           <div class="row">
-            <div class="form-group mx-sm-3 mb-3">
-              {{Form::select('evidence',[0 => 'Tidak Ada Evidence',1 => 'Ada Evidence'],null,['class'  => 'form-control', 'placeholder'  => '- Pilih Evidence -'])}}  
+            <div class="form-group col-sm-4 mb-3">
+              {{Form::select('evidence',[0 => 'Tidak Ada Evidence',1 => 'Ada Evidence'],null,['class'  => 'form-control', 'placeholder'  => '- Pilih Evidence -','id'  => 'f_evidence'])}}
             </div>
-            <div class="form-group mx-sm-3 mb-3">
-              {{Form::select('periode_bulan',$periode_bulan,$bulan,['class'=>'form-control','placeholder'  => '- Periode Bulan -'])}}
-            </div>
-            
-            <div class="form-group mx-sm-3 mb-3">
-              {{Form::input('number','periode_tahun',$tahun,['class'=>'form-control','placeholder'  => 'Periode Tahun'])}}
+            <div class="form-group col-sm-4 mb-3">
+              {{Form::select('periode_bulan',$periode_bulan,$bulan,['class'=>'form-control','placeholder'  => '- Periode Bulan -','id'  => 'f_periode_bulan'])}}
             </div>
             
-            <div class="form-group mx-sm-3 mb-3">
-              {{Form::text('search',null,['class'  => 'form-control', 'placeholder'  => 'search'])}}
+            <div class="form-group col-sm-4 mb-3">
+              {{Form::input('number','periode_tahun',$tahun,['class'=>'form-control','placeholder'  => 'Periode Tahun','id'  => 'f_periode_tahun'])}}
             </div>
           </div>
           <button type="submit" class="btn btn-primary mb-3">Tampilkan</button>
@@ -70,79 +66,26 @@ if($user->user_level_id == 1){
     </div>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">INDIKATOR</h6>
-    </div>
+<div class="card mb-4">
     <div class="card-body">
 
-    	<table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+    	<table class="table table-hover" id="dataTable">
           	<thead>
 	            <tr>
-	              <!-- <th></th> -->
-	              <!-- <th>No</th> -->
-	              <th>No</th> 
-                <th>Periode (PJ)</th>     
-	              <th>Indikator</th>
-                <th width="150px">Bidang Terkait</th>
-                <th width="120px;"></th>          
-              </tr> 
+                    <th>No</th>
+                    <th>Periode (PJ)</th>
+	                <th>Indikator</th>
+                    <th >Bidang Terkait</th>
+                    <th></th>
+                </tr>
           </thead>
           <tbody>
-            @if($secretariats->total() == 0) 
-            <tr>
-              <!-- <th></th> -->
-              <!-- <th>No</th> -->
-              <th colspan="4"><center>DATA TIDAK ADA</center></th>          
-            </tr> 
-            @endif            
-          	<?php
-          	$start_num = ($secretariats->currentPage() - 1) * 15;
-            $start_num += 1;
-          	?>
-          	@foreach($secretariats as $row)
-          	<tr>
-              <td>{{$start_num++}}</td>
-              <td>{!! CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun !!} <br>
-                <strong>{!! $row->nama !!}</strong></td>
-              
-              <td>{!! $row->indikator !!}</td>
-              <td>{{array_key_exists($row->id,$bidang_terkait) ? implode(", ",$bidang_terkait[$row->id]) : '' }}</td>
-
-              <td>
-                {{date_format(date_create($row->created_at),"d M Y")}}
-                
-                @if($action == 1)
-                <form class="delete" action="{{url(session('role').'/hawasbid_indikator'.'/'.$row->id)}}" method="post">
-
-                  <a href="{{url(session('role').'/hawasbid_indikator'.'/'.$row->id)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-folder-open" aria-hidden="true"></i> open</a>
-
-                  <a href="{{url(session('role').'/hawasbid_indikator/'.$row->id.'/edit/')}}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a>
-                  {{ csrf_field() }}
-                  <input type="hidden" name="_method" value="delete" />
-                  <button class="btn btn-sm btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i> Hapus</button>
-
-                </form>
-
-                @else
-
-                <a href="{{url(session('role').'/hawasbid_indikator'.'/'.$row->id)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-folder-open" aria-hidden="true"></i> open</a>
-
-                @endif
-              </td>
-
-            </tr>
-            @endforeach
           </tbody>
       </table>
-      <div style="float: right; padding: 0px 20px">
-      {{ $secretariats->render("pagination::bootstrap-4") }}
-      </div>
     </div>
 </div>
 
 <div class="card shadow mb-4">
-
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">SUMMARY</h6>
     </div>
@@ -221,15 +164,28 @@ if($user->user_level_id == 1){
       $('input[name="date_end"]').val(picker.endDate.format('YYYY-MM-DD'))
   });
 
-  $(".delete").submit(function(){
-    var conf = confirm("yakin, anda menghapus file ini ?");
-    
-    if(conf)
-      return true;
-
-    return false;
+  const table = $("#dataTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+          url: "{{url("hawasbid_indikator/gettable")}}",
+          method: "post",
+          data: {
+              "periode_bulan"   : $("#f_periode_bulan").val(),
+              "periode_tahun"   : $("#f_periode_tahun").val(),
+              "evidence"        : $("#f_evidence").val()
+          }
+      },
+      "autoWidth": false,
+      columnDefs: [
+          {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
+          {data:"periode", searchable: false,width: 100, orderable:false,targets: 1},
+          {name: "indikator", data:"indikator",targets: 2},
+          {name: "sector", data: "sector",width: 100, className:"text-wrap" ,data:"sector",searchable: true, orderable: false,targets: 3},
+          {data:"action",width: 150,orderable:false, searchable:false, className:"text-center", targets: 4},
+      ],
+      order : [[2,'asc']]
   });
-
 </script>
 
 @endsection

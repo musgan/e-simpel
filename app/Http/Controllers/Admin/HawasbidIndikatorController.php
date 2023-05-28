@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\HawasbidIndikatorRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -66,63 +67,6 @@ class HawasbidIndikatorController extends Controller
             $periode_tahun = $request->get('periode_tahun');
         if(isset($_GET['periode_bulan']))
             $periode_bulan = $request->get('periode_bulan');
-        
-        $secretariats = DB::table('secretariats')
-            ->select('secretariats.id','indikator','periode_tahun',"periode_bulan","secretariats.created_at","secretariats.updated_at", "sectors.nama"
-        );
-        $secretariats = $secretariats->leftJoin('sectors','sector_id','=','sectors.id');
-
-        
-        if($search != ""){
-            $secretariats = $secretariats->where('indikator','like','%'.$search.'%');
-        }
-
-        if($periode_bulan != ""){
-            $secretariats = $secretariats->where('periode_bulan',$periode_bulan);
-        }
-        if($periode_tahun != ""){
-            $secretariats = $secretariats->where('periode_tahun',$periode_tahun);
-        }
-
-        $secretariats = $secretariats
-            ->orderBy('periode_tahun','DESC')
-            ->orderBy('periode_bulan','DESC')
-            ->orderBy('sectors.nama','ASC')
-            ->orderBy('secretariats.indikator','ASC');
-
-        if($evidence != ""){
-            $secretariats = $secretariats->join('indikator_sectors','secretariat_id','=','secretariats.id')
-                ->where('evidence',$evidence);
-                // ->groupBy('secretariats.id','indikator','periode_tahun','periode_bulan','secretariats.created_at','secretariats.updated_at');
-        }
-
-        $secretariats = $secretariats->paginate(15);
-        
-        $secretariats->withPath('?periode_tahun='.$periode_tahun.'&periode_bulan='.$periode_bulan.'&search='.$search.'&evidence='.$evidence);
-
-        $secretariats_id = [];
-        foreach ($secretariats as $row) {
-            # code...
-            array_push($secretariats_id, $row->id);
-        }
-        $bidang_terkait_query = DB::table('indikator_sectors')
-            ->whereIn('secretariat_id',$secretariats_id)
-            ->join('sectors','sectors.id','=','sector_id')
-            ->select('secretariat_id','nama')
-            ->get();
-
-
-        $bidang_terkait = array();
-        foreach ($bidang_terkait_query as $row) {
-            # code...
-            if(array_key_exists($row->secretariat_id, $bidang_terkait)){
-                array_push($bidang_terkait[$row->secretariat_id], $row->nama);
-            
-            }else{
-
-                $bidang_terkait[$row->secretariat_id] = array($row->nama);
-            }
-        }
 
         $summary =  DB::table('secretariats')
             ->select('sectors.id',"sectors.nama",DB::raw("COUNT(sectors.id) as total_indikator"))
@@ -142,15 +86,18 @@ class HawasbidIndikatorController extends Controller
             'menu_sectors'      => $this->sectors,
             'sub_menu'          => "hawasbid_indikator",
             'periode_bulan'     => $this->bulan,
-            'secretariats'      => $secretariats,
-            'search'            => $search,
             'evidence'          => $evidence,
-            'bidang_terkait'    => $bidang_terkait,
             'bulan'             => $periode_bulan,
             'tahun'             => $periode_tahun,
             'summary'           => $summary
         ];
         return view('admin.hawasbid.indikator.index',$send);
+    }
+
+    public function getTable(Request  $request){
+        $repo = new HawasbidIndikatorRepositories();
+        $repo->setBaseUrl("hawasbid_indikator");
+        return $repo->getDataTable($request);
     }
 
 
