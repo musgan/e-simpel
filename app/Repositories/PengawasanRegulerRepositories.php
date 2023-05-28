@@ -10,6 +10,7 @@ use App\LingkupPengawasanModel;
 use App\PengawasanRegulerModel;
 use App\Report\ExportExcelTindakLanjutPengawasanRegularReport;
 use App\Report\ExportReportPengawasanRegulerHawasbid;
+use App\Variable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +57,54 @@ class PengawasanRegulerRepositories
         return PengawasanRegulerModel::where('id',$id)
             ->where('sector_id', $this->sector->id)
             ->first();
+    }
+    public function getTanggalTindakLanjut($periode_bulan, $periode_tahun){
+        $tanggal = date('Y-m-d');
+        $query = PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
+            ->where('periode_tahun', $periode_tahun)
+            ->whereNotNull('tanggal_tindak_lanjut')
+            ->orderBy('tanggal_tindak_lanjut','DESC')
+            ->first();
+
+        if($query)
+            $tanggal = $query->tanggal_tindak_lanjut;
+
+        return $tanggal;
+    }
+    public function getNamaPenanggungJawab(){
+        $nama = "";
+        $code = "";
+        if($this->sector_category == "kesekretariatan")
+            $code = "EMPLOYEEKESEKTARIATANNAME";
+        else if($this->sector_category == "kepaniteraan") $code = "EMPLOYEEKEPANITERAANNAME";
+        $query = VariableRepositories::getByKey($code);
+        if($query)
+            $nama = $query->value;
+        return $nama;
+    }
+    public function getNipPenganggungJawab(){
+        $nip = "";
+        $code = "";
+        if($this->sector_category == "kesekretariatan")
+            $code = "EMPLOYEEKESEKTARIATANNIP";
+        else if($this->sector_category == "kepaniteraan") $code = "EMPLOYEEKEPANITERAANNIP";
+
+        $query = VariableRepositories::getByKey($code);
+        if($query)
+            $nip = $query->value;
+        return $nip;
+    }
+
+    public function getJabatanByKategory(){
+        $jabatan = "";
+        $code = "";
+        if($this->sector_category == "kesekretariatan")
+            $code = "KESEKTARIATANPOSITIONNAME";
+        else if($this->sector_category == "kepaniteraan") $code = "KEPANITERAANPOSITIONNAME";
+        $query = VariableRepositories::getByKey($code);
+        if($query)
+            $jabatan = $query->value;
+        return $jabatan;
     }
 
     public function getByPeriode($periode_bulan, $periode_tahun){
@@ -272,6 +321,7 @@ class PengawasanRegulerRepositories
 
                 $model->uraian = $request->uraian;
                 $model->total_evidence = $total_files;
+                $model->tanggal_tindak_lanjut = $request->tanggal_tindak_lanjut;
                 if(count($files) > 0 && $request->uraian !== null && $model->status_pengawasan_regular_id == "SUBMITEDBYHAWASBID")
                     $model->status_pengawasan_regular_id = "WAITINGAPPROVALFROMADMIN";
 
@@ -424,9 +474,18 @@ class PengawasanRegulerRepositories
             $export = new ExportExcelTindakLanjutPengawasanRegularReport();
             $fname = time()."_tindaklanjut_pr_".$this->sector_category."_".$this->sector_alias."_".$request->periode_tahun.$request->periode_bulan;
             $data = $this->getPengawasanHawasbid($request->periode_bulan, $request->periode_tahun);
+            $tglTindakLanjut = $this->getTanggalTindakLanjut($request->periode_bulan, $request->periode_tahun);
+            $namaPenanggungJawab = $this->getNamaPenanggungJawab();
+            $nipPenanggungJawab = $this->getNipPenganggungJawab();
+            $jabatan = $this->getJabatanByKategory();
+
             $export->setPathSaveName($fname);
             $export->setPeriode($periodeName);
             $export->setData($data);
+            $export->setTglTindakLanjut($tglTindakLanjut);
+            $export->setNipPenganggungJawab($nipPenanggungJawab);
+            $export->setNamaPenganggungJawab($namaPenanggungJawab);
+            $export->setJabatanPenganggungJawab($jabatan);
             $export->run();
 
             $file_Excel_location = $export->getPathSaveLocation()."/".$fname.".xlsx";

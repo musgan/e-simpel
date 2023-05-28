@@ -18,7 +18,10 @@ $user_level = Auth::user()->user_level;
                 </select>
             </div>
         @endif
-
+        <div class="form-group">
+            <label>Tanggal tindak lanjut</label>
+            <input type="date" class="form-control" name="tanggal_tindak_lanjut" value="{!! $form->tanggal_tindak_lanjut !!}" required />
+        </div>
         <div class="form-group">
             <label>Uraian</label>
             <div class="summernote">

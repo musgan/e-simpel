@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Report;
+use App\Helpers\CostumHelpers;
 use App\Helpers\VariableHelper;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Writers\CellWriter;
+
 class ExportExcelTindakLanjutPengawasanRegularReport
 {
     private $path_save_name = "tindaklanjut_pr";
@@ -11,8 +15,28 @@ class ExportExcelTindakLanjutPengawasanRegularReport
 
     private $periode = "";
     private $data;
+    private $tgl_tindak_lanjut;
+    private $nama_penanggung_jawab;
+    private $nip_penanggung_jawab;
+    private $jabatan_penanggung_jawab;
+
     private $no = 0;
     private $listIdTindakLanjut = [];
+
+    public function setTglTindakLanjut($tgl_tindak_lanjut){
+        $this->tgl_tindak_lanjut = $tgl_tindak_lanjut;
+    }
+    public function setNamaPenganggungJawab($nama_penanggung_jawab){
+        $this->nama_penanggung_jawab = $nama_penanggung_jawab;
+    }
+    public function setNipPenganggungJawab($nip_penanggung_jawab){
+        $this->nip_penanggung_jawab = $nip_penanggung_jawab;
+    }
+
+    public function setJabatanPenganggungJawab($jabatan_penanggung_jawab){
+        $this->jabatan_penanggung_jawab = $jabatan_penanggung_jawab;
+    }
+
     public function setPathSaveName($path_save_name){
         $this->path_save_name = $path_save_name;
     }
@@ -36,20 +60,17 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     public function run(){
 
         Excel::create($this->path_save_name, function($excel) {
-
             $excel->sheet('tindak lanjut', function($sheet) {
-
                 $this->setHeader($sheet);
                 $rowColumnHeader = $this->setColumnHeader($sheet);
                 $last_row_table = $this->setLingkupPengawasan($sheet, $rowColumnHeader);
-
+                $this->setFooter($sheet, $last_row_table);
                 $this->setWidthColumn($sheet);
                 $this->setStyleTable($sheet, $rowColumnHeader, $last_row_table);
             });
-
         })->save('xlsx', $this->path_save_location);
     }
-    public function setWidthColumn($sheet){
+    public function setWidthColumn(LaravelExcelWorksheet $sheet){
         $sheet->setWidth(array(
             'A' =>  7,
             'B' =>  33,
@@ -62,7 +83,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
             'I' => 23,
         ));
     }
-    function setHeader($sheet){
+    function setHeader(LaravelExcelWorksheet $sheet){
         $sheet->cell('A1', function($cell) {
             $cell->setValue('TINDAK LANJUT HASIL PENGAWASAN');
         });
@@ -80,7 +101,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
             $cells->setFontWeight('bold');
         });
     }
-    function setColumnHeader($sheet){
+    function setColumnHeader(LaravelExcelWorksheet $sheet){
         $row = 6;
         $add_row1 = $row+1;
         $sheet->cell('A'.$row, function ($cell){
@@ -133,7 +154,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
         return $add_row1;
     }
 
-    function setLingkupPengawasan($sheet, $row){
+    function setLingkupPengawasan(LaravelExcelWorksheet $sheet, $row){
         foreach ($this->data as $row_lingkup_pengawasan){
             $row += 1;
             $sheet->mergeCells('B'.$row.':I'.$row);
@@ -145,7 +166,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
         }
         return $row;
     }
-    function setItemLingkupPengawasan($sheet, $row, $data_list_lingkup_pengawasan){
+    function setItemLingkupPengawasan(LaravelExcelWorksheet $sheet, $row, $data_list_lingkup_pengawasan){
         foreach ($data_list_lingkup_pengawasan as $row_item){
             $row += 1;
             $barisTemuanAwal = $row;
@@ -156,7 +177,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
         }
         return $row;
     }
-    function setTemuan($sheet, $row, $data_list_temuan){
+    function setTemuan(LaravelExcelWorksheet $sheet, $row, $data_list_temuan){
         $is_add = false;
         foreach($data_list_temuan as $row_item){
             array_push($this->listIdTindakLanjut, $row_item->id);
@@ -213,7 +234,33 @@ class ExportExcelTindakLanjutPengawasanRegularReport
         if ($is_add) $row-=1;
         return $row;
     }
+    function setFooter(LaravelExcelWorksheet $sheet, $row){
+        $row+= 2;
+        $sheet->cell("H".$row, function (CellWriter $cell){
+            $cell->setValue("Kendari, ".CostumHelpers::getDateDMY($this->tgl_tindak_lanjut));
+        });
+        $row+= 2;
+        $sheet->mergeCells("F".$row.":G".$row);
+        $sheet->cell("F".$row, function (CellWriter $cell){
+            $cell->setValue("Mengetahui,");
+            $cell->setAlignment("center");
+        });
+        $row+= 2;
+        $sheet->mergeCells("E".$row.":I".$row);
+        $sheet->cell("E".$row, function (CellWriter $cell){
+            $cell->setValue($this->jabatan_penanggung_jawab);
+            $cell->setFontWeight(true);
+            $cell->setAlignment("center");
+        });
+        $row+= 5;
+        $sheet->mergeCells("E".$row.":I".$row);
+        $sheet->cell("E".$row, function (CellWriter $cell){
+            $cell->setValue($this->nama_penanggung_jawab);
+            $cell->setFontWeight(true);
+            $cell->setAlignment("center");
+        });
 
+    }
     function setStyleTable($sheet, $start_row, $end_row){
         $allColumnsTable = 'A'.($start_row-1).':I'.$end_row;
         $sheet->getStyle($allColumnsTable)->applyFromArray(

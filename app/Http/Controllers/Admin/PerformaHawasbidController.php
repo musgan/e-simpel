@@ -122,7 +122,7 @@ class PerformaHawasbidController extends Controller
         $periode = SettingPeriodHawasbid::where('periode_bulan', $periode_bulan)
             ->where('periode_tahun', $periode_tahun)
             ->first();
-        if (count($periode) > 0) {
+        if ($periode) {
             # code...
             // dd($periode);
             // getting total evidence each sectors
