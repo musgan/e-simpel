@@ -14,7 +14,7 @@ if($user->user_level_id == 1){
 ?>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">Hawasbid</h1>
+<h1 class="h3 mb-0 text-gray-800">Indikator Hawasbid</h1>
 </div>
 
  @if ($errors->any())
@@ -39,11 +39,7 @@ if($user->user_level_id == 1){
   @endif
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">FILTER DATA</h6>
-    </div>
     <div class="card-body">
-      
       <div class="col-md-12" style="margin-bottom: 20px;">
         <form class="form" action="{{ url('/hawasbid_indikator') }}" method="">
           <div class="row">
@@ -58,7 +54,7 @@ if($user->user_level_id == 1){
               {{Form::input('number','periode_tahun',$tahun,['class'=>'form-control','placeholder'  => 'Periode Tahun','id'  => 'f_periode_tahun'])}}
             </div>
           </div>
-          <button type="submit" class="btn btn-primary mb-3">Tampilkan</button>
+          <button type="submit" class="btn btn-primary mb-3">Filter</button>
 
         </form>
       </div>

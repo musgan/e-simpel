@@ -6,9 +6,9 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
 <h1 class="h3 mb-0 text-gray-800">
 	<a href="{{url(session('role').'/setting_time_hawasbid')}}" 
-	class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a> 
+	class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
 
-	SETTING PERIODE HAWASBID</h1>
+	Setting Periode</h1>
 </div>
 
 <div class="row">

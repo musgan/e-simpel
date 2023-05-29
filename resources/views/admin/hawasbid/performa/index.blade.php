@@ -4,13 +4,10 @@
 @section('content')
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-	<h1 class="h3 mb-0 text-gray-800">HAWASBID</h1>
+	<h1 class="h3 mb-0 text-gray-800">Performa Hawasbid</h1>
 </div>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Generate Data</h6>
-    </div>
     <div class="card-body">
     	{{Form::open(['url'	=> url(session('role').'/performa-hawasbid'),
     		'class'	=> '',
@@ -27,7 +24,7 @@
     			{{Form::input('number','periode_tahun',null,['class'	=> 'form-control', 'min'	=> 2018, 'required'	=> 'required', 'id'	=> 'periode_tahun'])}}
     		</div>
     		<div class="form-group col-md-12">
-    			<a href="#" id="tampilkan" class="btn btn-success">Tampilkan</a>
+    			<a href="#" id="tampilkan" class="btn btn-success">Filter</a>
     			<button type="submit" class="btn btn-primary">Generate</button>
     			
     		</div>
@@ -38,9 +35,6 @@
 
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Performa Hawasbid</h6>
-    </div>
     <div class="card-body">
     	<h3>Periode {{(isset($indikator_periode)) ? $indikator_periode : ' Belum Ditentukan'}}</h3>
     	<table class="table table-hover table-striped  text-center" id="dataTable" width="100%" cellspacing="0">

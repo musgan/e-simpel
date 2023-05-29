@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">SETTING PERIODE HAWASBID</h1>
+<h1 class="h3 mb-0 text-gray-800">Setting Periode</h1>
 </div>
 
 <div class="row">
@@ -55,9 +55,6 @@
 
 		
 		<div class="card shadow mb-4">
-		    <div class="card-header py-3">
-		      <h6 class="m-0 font-weight-bold text-primary">TABEL PERIODE HAWASBID</h6>
-		    </div>
 		    <div class="card-body">
 		    	<table class="table table-hover">
 		    		<thead>

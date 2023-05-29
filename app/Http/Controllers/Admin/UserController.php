@@ -28,7 +28,7 @@ class UserController extends Controller
     {
         //
         $send = [
-            'menu'              => 'Master',
+            'menu'     => 'Master',
             'sub_menu' => 'users',
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors
@@ -46,7 +46,8 @@ class UserController extends Controller
         //
         $selected_sector = [];
         $send = [
-            'menu' => 'users',
+            'menu'     => 'Master',
+            'sub_menu' => 'users',
             'title' => 'Pengguna',
             'user_levels'   => UserLevel::orderBy('id','ASC')->pluck('nama','id'),
             'sectors'   => Sector::orderBy('sectors.category','ASC')
@@ -144,8 +145,8 @@ class UserController extends Controller
         // echo implode(" ", $selected_sector);
         
         $send = [
-            'menu' => 'users',
-            'title' => 'Pengguna',
+            'menu'     => 'Master',
+            'sub_menu' => 'users',
             'send'  => $viewdata,
             'user_levels'   => UserLevel::orderBy('id','ASC')->pluck('nama','id'),
             'sectors'   => Sector::orderBy('sectors.category','ASC')
