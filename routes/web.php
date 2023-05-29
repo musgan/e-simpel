@@ -70,6 +70,19 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::delete('pengawas-bidang/{sub_menu_category}/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file')
 		->middleware('role:admin,hawasbid');
 
+    Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}','TindakLanjutanController@index')
+        ->middleware('role:admin,kapan,mpn');
+    Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}/edit','TindakLanjutanController@edit')
+        ->middleware('role:admin,kapan,mpn');
+    Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}','TindakLanjutanController@show')
+        ->middleware('role:admin,kapan,mpn');
+    Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence')
+        ->middleware('role:admin,kapan');
+    Route::put('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}','TindakLanjutanController@update')
+        ->middleware('role:admin,kapan');
+    Route::delete('tindak-lanjutan/{sub_menu_category}/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file')
+        ->middleware('role:admin,kapan');
+
 	Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index')
 		->middleware('role:admin,mpn,kapan');
 	Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store')

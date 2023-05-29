@@ -46,7 +46,7 @@ class TindakLanjutanController extends Controller
         ];
     }
 
-    public function index($submenu, Request $request)
+    public function index($submenu_category,$submenu, Request $request)
     {
         $search = "";
         $periode_bulan = "";
@@ -141,7 +141,7 @@ class TindakLanjutanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($submenu)
+    public function create($submenu_category, $submenu)
     {
         //
         $user = Auth::user();
@@ -163,7 +163,7 @@ class TindakLanjutanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($submenu, Request $request)
+    public function store($submenu_category, $submenu, Request $request)
     {
 
         //
@@ -209,7 +209,7 @@ class TindakLanjutanController extends Controller
         // return redirect(url(session('role').'/kepaniteraan/'.$submenu.'/'.$id))->with('status','Berhasil Menambah Data');
     }
 
-    private function validateAction($indikator_sector_id){
+    private function validateAction($submenu_category, $indikator_sector_id){
         $user = Auth::user();
         $action = 0;
 
@@ -224,7 +224,7 @@ class TindakLanjutanController extends Controller
         return $action;
     }
 
-    public function upload_evidence($submenu, $id, Request $request)
+    public function upload_evidence($submenu_category, $submenu, $id, Request $request)
     {
         //
 
@@ -271,7 +271,7 @@ class TindakLanjutanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($submenu,$id)
+    public function show($submenu_category, $submenu,$id)
     {
         //
         $sector = Sector::where('alias',$submenu)->first();
@@ -303,7 +303,7 @@ class TindakLanjutanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($submenu,$id)
+    public function edit($submenu_category, $submenu,$id)
     {
         //
         if($this->validateAction($id) == 0){
@@ -337,7 +337,7 @@ class TindakLanjutanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($submenu,Request $request, $id)
+    public function update($submenu_category, $submenu,Request $request, $id)
     {
         //
         $this->validate($request,[
@@ -365,7 +365,7 @@ class TindakLanjutanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($submenu, $id)
+    public function destroy($submenu_category, $submenu, $id)
     {
         //
 
@@ -383,7 +383,7 @@ class TindakLanjutanController extends Controller
 
     
 
-    public function destroy_file($submenu, $id, Request $request)
+    public function destroy_file($submenu_category, $submenu, $id, Request $request)
     {
         //
         if($this->validateAction($id) == 0){
