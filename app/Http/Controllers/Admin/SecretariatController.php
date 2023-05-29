@@ -46,7 +46,7 @@ class SecretariatController extends Controller
         ];
     }
 
-    public function index($submenu, Request $request)
+    public function index($submenu_category, $submenu, Request $request)
     {
         $search = "";
         $periode_bulan = date("m");
@@ -96,9 +96,6 @@ class SecretariatController extends Controller
         $secretariats = $secretariats->paginate(15);
         $secretariats->withPath('?search='.$search.'&evidence='.$evidence.'&periode_bulan='.$periode_bulan.'&periode_tahun='.$periode_tahun);
 
-
-
-
         $send = [
             'menu' => $sector->category,
             'title' => 'Pengguna',
@@ -120,7 +117,7 @@ class SecretariatController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($submenu)
+    public function create($submenu_category, $submenu)
     {
         //
 
@@ -143,7 +140,7 @@ class SecretariatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($submenu, Request $request)
+    public function store($submenu_category, $submenu, Request $request)
     {
 
         //
@@ -191,7 +188,7 @@ class SecretariatController extends Controller
         
     }
 
-    public function upload_evidence($submenu, $id, Request $request)
+    public function upload_evidence($submenu_category, $submenu, $id, Request $request)
     {
         //
         $sector = DB::table('sectors')->where('alias', $submenu)->first();
@@ -234,7 +231,7 @@ class SecretariatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($submenu,$id)
+    public function show($submenu_category, $submenu,$id)
     {
         //
         $sector = Sector::where('alias',$submenu)->first();
@@ -266,7 +263,7 @@ class SecretariatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($submenu,$id)
+    public function edit($submenu_category, $submenu,$id)
     {
         //
         $user = Auth::user();
@@ -296,7 +293,7 @@ class SecretariatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update($submenu,Request $request, $id)
+    public function update($submenu_category, $submenu,Request $request, $id)
     {
         //
         $this->validate($request,[
@@ -321,7 +318,7 @@ class SecretariatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($submenu, $id)
+    public function destroy($submenu_category, $submenu, $id)
     {
         //
 
@@ -339,7 +336,7 @@ class SecretariatController extends Controller
 
     
 
-    public function destroy_file($submenu, $id, Request $request)
+    public function destroy_file($submenu_category, $submenu, $id, Request $request)
     {
         //
         $sector = DB::table('sectors')->where('alias', $submenu)->first();

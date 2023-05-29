@@ -39,7 +39,7 @@ class DokumentasiRapatController extends Controller
 
     }
 
-    public function index($submenu, Request $request){
+    public function index($submenu_category, $submenu, Request $request){
     	$tahun = "";
     	$bulan = "";
 
@@ -75,7 +75,7 @@ class DokumentasiRapatController extends Controller
         return view('admin.kepaniteraan.dokumentasi_rapat.index',$send);
     }
 
-    public function store($submenu, Request $request){
+    public function store($submenu_category, $submenu, Request $request){
     	$this->validate($request,[
     		'bulan'	=> 'required',
     		'tahun'	=> 'required',
@@ -132,7 +132,6 @@ class DokumentasiRapatController extends Controller
     	return redirect(url()->current().'?periode_bulan='.$request->bulan.'&periode_tahun='.$tahun)->with('status','Berhasil Menambah dokumentasi');
     }
 
-
     public function checkfileName($file_name, $pth){
         if(Storage::exists($pth.$file_name)) {
             $path_parts = pathinfo($pth.$file_name);
@@ -147,8 +146,7 @@ class DokumentasiRapatController extends Controller
         return $file_name;
     }
 
-
-    public function destroy($submenu, Request $request){
+    public function destroy($submenu_category, $submenu, Request $request){
 
     	$this->validate($request,[
     		'bulan'	=> 'required',

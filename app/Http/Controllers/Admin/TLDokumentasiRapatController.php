@@ -39,12 +39,9 @@ class TLDokumentasiRapatController extends Controller
 
     }
 
-    public function index($submenu, Request $request){
+    public function index($submenu_category, $submenu, Request $request){
     	$tahun = "";
     	$bulan = "";
-
-        
-
 
     	$user = \Auth::user();
         
@@ -78,7 +75,7 @@ class TLDokumentasiRapatController extends Controller
         return view('admin.tindak_lanjutan.dokumentasi_rapat.index',$send);
     }
 
-    public function store($submenu, Request $request){
+    public function store($submenu_category, $submenu, Request $request){
     	$this->validate($request,[
     		'bulan'	=> 'required',
     		'tahun'	=> 'required',
@@ -152,7 +149,7 @@ class TLDokumentasiRapatController extends Controller
     }
 
 
-    public function destroy($submenu, Request $request){
+    public function destroy($submenu_category, $submenu, Request $request){
 
     	$this->validate($request,[
     		'bulan'	=> 'required',
