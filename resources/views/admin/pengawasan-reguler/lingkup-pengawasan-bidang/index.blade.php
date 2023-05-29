@@ -43,11 +43,11 @@
             },
             "autoWidth": false,
             columnDefs: [
-                {data:"no",width: 50, orderable: false, filterable:false, className:"text-center", targets:0},
-                {name: "sector_nama", data:"sector_nama", targets: 1},
-                {name: "lingkup_pengawasan_nama", data:"lingkup_pengawasan_nama", targets: 2},
-                {name: "item_lingkup_pengawasan_nama", data:"item_lingkup_pengawasan_nama", targets: 3},
-                {name: "created_at", data:"created_at", targets: 4},
+                {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
+                {name: "sectors.nama", data:"sector_nama", targets: 1},
+                {name: "lingkup_pengawasan.nama", data:"lingkup_pengawasan_nama", targets: 2},
+                {name: "item_lingkup_pengawasan.nama", data:"item_lingkup_pengawasan_nama", targets: 3},
+                {name: "id", data:"created_at",searchable: false, targets: 4},
                 {name: "action",orderable:false, searchable:false, data:"action",className:"text-center", targets: 5},
             ],
             order : [[1,'asc']]
