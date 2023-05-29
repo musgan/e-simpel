@@ -40,7 +40,7 @@ if($user->user_level_id == 1){
 
 <div class="card shadow mb-4">
     <div class="card-body">
-      <div class="col-md-12" style="margin-bottom: 20px;">
+
         <form class="form" action="{{ url('/hawasbid_indikator') }}" method="">
           <div class="row">
             <div class="form-group col-sm-4 mb-3">
@@ -49,7 +49,7 @@ if($user->user_level_id == 1){
             <div class="form-group col-sm-4 mb-3">
               {{Form::select('periode_bulan',$periode_bulan,$bulan,['class'=>'form-control','placeholder'  => '- Periode Bulan -','id'  => 'f_periode_bulan'])}}
             </div>
-            
+
             <div class="form-group col-sm-4 mb-3">
               {{Form::input('number','periode_tahun',$tahun,['class'=>'form-control','placeholder'  => 'Periode Tahun','id'  => 'f_periode_tahun'])}}
             </div>
@@ -57,11 +57,11 @@ if($user->user_level_id == 1){
           <button type="submit" class="btn btn-primary mb-3">Filter</button>
 
         </form>
-      </div>
-
     </div>
 </div>
-
+<div class="form-group text-right">
+    <a class="btn btn-primary btn-flat mr-2 mb-1" href="{{url("hawasbid_indikator/create")}}" >@lang("form.button.add.show")</a>
+</div>
 <div class="card mb-4">
     <div class="card-body">
 
@@ -119,16 +119,6 @@ if($user->user_level_id == 1){
       </div>
     </div>
 </div>
-
-@if($action == 1)
-<div class="div-add">
-	<form action="{{url(session('role').'/hawasbid_indikator'.'/create')}}">
-		<button class="btn floatbtn btn-primary"><i class="fa fa fa-plus" aria-hidden="true"></i></button>
-	</form>
-</div>
-
-@endif
-
 
 @endsection
 
