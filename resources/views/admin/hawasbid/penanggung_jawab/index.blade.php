@@ -9,7 +9,7 @@
 </div>
 <div class="card shadow mb-4">
     <div class="card-body">
-    	<table class="table table-hover">
+    	<table class="table table-hover" id="dataTable">
     		<thead>
 	    		<tr>
 	    			<th>No</th>
@@ -36,15 +36,13 @@
     				<td>{!! $row->penanggung_jawab !!}</td>
     				<td>{{ $row->nip}}</td>
     				<td>
-    					<a href="{{url(session('role').'/sector_hawasbid/'.$row->id.'/edit')}}" class="btn btn-primary btn-flat btn-sm">
-    						<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+    					<a href="{{url(session('role').'/sector_hawasbid/'.$row->id.'/edit')}}" class="btn btn-warning btn-flat btn-sm">
+    						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
     					</a>
     				</td>
     			</tr>
     			@endforeach
     		</tbody>
-    			
-    		</tr>
     	</table>
     </div>
 </div>

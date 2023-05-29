@@ -36,7 +36,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-body">
-    	<h3>Periode {{(isset($indikator_periode)) ? $indikator_periode : ' Belum Ditentukan'}}</h3>
+    	<h4 class="mb-5">Periode {{(isset($indikator_periode)) ? $indikator_periode : ' Belum Ditentukan'}}</h4>
     	<table class="table table-hover table-striped  text-center" id="dataTable" width="100%" cellspacing="0">
           	<thead>
 	            <tr>
@@ -82,7 +82,10 @@
 		def_link += "?periode_bulan="+periode_bulan+"&periode_tahun="+periode_tahun
 
 		window.location.href = def_link;
-
 	});
+
+	$("#dataTable").DataTable({
+		ordering: false
+	})
 </script>
 @endsection

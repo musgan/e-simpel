@@ -56,7 +56,7 @@
 		
 		<div class="card shadow mb-4">
 		    <div class="card-body">
-		    	<table class="table table-hover">
+		    	<table class="table table-hover" id="dataTable">
 		    		<thead>
 		    			<th>Nama Periode</th>
 		    			<th>Periode <br> Input Dokumen</th>
@@ -79,12 +79,12 @@
 				    		<td>
 				    			<form class="delete" action="{{url(session('role').'/setting_time_hawasbid'.'/'.$row->id)}}" method="post">
 
-				                  <a href="{{url(session('role').'/setting_time_hawasbid/'.$row->id.'/edit/')}}" class="btn btn-primary btn-flat btn-sm" style="margin-bottom: 10px"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a>
+				                  <a href="{{url('/setting_time_hawasbid/'.$row->id.'/edit/')}}" class="btn btn-warning btn-flat btn-sm mb-3"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 				                  {{ csrf_field() }}
 				                  <br>
 				                  
 				                  <input type="hidden" name="_method" value="delete" />
-				                  <button class="btn btn-sm btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i> Hapus</button>
+				                  <button class="btn btn-flat btn-sm btn-danger"> <i class="fa fa-times" aria-hidden="true"></i></button>
 
 				                </form>
 				    		</td>
@@ -116,7 +116,9 @@ $(".delete").submit(function(){
       return true;
 
     return false;
-  });
+});
+
+$("#dataTable").DataTable()
 
 </script>
 
