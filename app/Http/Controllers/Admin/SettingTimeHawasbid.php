@@ -62,6 +62,14 @@ class SettingTimeHawasbid extends Controller
     public function create()
     {
         //
+        $send = [
+            'menu'              => 'Master',
+            'title'             => 'SETTING PERIODE HAWASBID',
+            'sub_menu'          => "setting_time_hawasbid",
+            'periode_bulan'     => $this->bulan,
+            'menu_sectors'      => $this->sectors,
+        ];
+        return view('admin.hawasbid.setting_time.create', $send);
     }
 
     /**
