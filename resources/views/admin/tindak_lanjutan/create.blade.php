@@ -6,10 +6,6 @@
 <h1 class="h3 mb-0 text-gray-800">{{ucfirst($sector->category)}}</h1>
 </div>
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">{{strtoupper($sector->nama)}} <i class="fas fa-fw fa-chevron-right"></i> Create</h6>
-    </div>
-
     <div class="card-body">
     	@if ($errors->any())
 	        <div class="row">

@@ -26,6 +26,9 @@ class SecretariatRepositories
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
     }
+    public function setKategori($kategori){
+        $this->kategori = $kategori;
+    }
 
     public function setBaseUrl($base_url){
         $this->base_url = $base_url;

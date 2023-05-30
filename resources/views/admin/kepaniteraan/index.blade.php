@@ -53,8 +53,6 @@
         </thead>
         <tbody></tbody>
     </table>
-    <div style="float: right; padding: 0px 20px">
-    </div>
   </div>
 </div>
 

@@ -78,6 +78,8 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
         ->middleware('role:admin,kapan,mpn');
     Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}','TindakLanjutanController@show')
         ->middleware('role:admin,kapan,mpn');
+    Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/gettable','TindakLanjutanController@getTable')
+        ->middleware('role:admin,kapan,mpn');
     Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence')
         ->middleware('role:admin,kapan');
     Route::put('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}','TindakLanjutanController@update')

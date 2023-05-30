@@ -9,123 +9,48 @@ $user  = \Auth::user();
 ?>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">{{ucfirst($sector->category)}}</h1>
+    <h1 class="h3 mb-0 text-gray-800">{{$sector->nama}}</h1>
 </div>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3"  style="background-color: #{{$sector->base_color}}">
-      <h6 class="m-0 font-weight-bold"  style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">Filter Data</h6>
-    </div>
     <div class="card-body">
-      <div class="col-md-12" style="margin-bottom: 20px;">
-          <form class="form" action="{{ url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu) }}" method="">
-            <div class="row">
-             
+      <form class="form" action="{{ url('/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu) }}" method="">
+        <div class="row">
 
-              <div class="form-group mx-sm-3 mb-3">
-                {{Form::select('periode_bulan',$periode_bulan,null,['class'  => 'form-control', 'placeholder'  => '- Periode Bulan -'])}}  
-              </div>
 
-              <div class="form-group mx-sm-3 mb-3">
-                {{Form::input('number','periode_tahun',null,['class'  => 'form-control', 'placeholder'  => 'Periode Tahun','min'  => 2018])}}  
-              </div>
-              
-              <div class="form-group mx-sm-3 mb-3">
-                {{Form::text('search',null,['class'  => 'form-control', 'placeholder'  => 'search'])}}  
-              </div>
-            </div>
+          <div class="form-group col-md-6 mb-3">
+            {{Form::select('periode_bulan',$periode_bulan,$bulan,['id'=>'f_periode_bulan' ,'class'  => 'form-control'])}}
+          </div>
 
-            <button type="submit" class="btn btn-primary mb-3">Tampilkan</button>
-          </form>
-        </div> 
+          <div class="form-group col-md-6 mb-3">
+            {{Form::input('number','periode_tahun',$tahun,['id'=>'f_periode_tahun' ,'class'  => 'form-control', 'placeholder'  => 'Periode Tahun','min'  => 2018])}}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success mb-3">Filter</button>
+      </form>
     </div>
   </div>
 
 @include('admin.tindak_lanjutan.tabs_option',['tab_select' => 1])
 
 <div class="card shadow mb-4">
-  <div class="card-header py-3" style="background-color: #{{$sector->base_color}}">
-    <h6 class="m-0 font-weight-bold"  style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">{{($sector->nama)}}</h6>
-  </div>
   <div class="card-body">
-
-    <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+      <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
           <thead>
-            <tr>
-              <!-- <th></th> -->
-              <!-- <th>No</th> -->
+          <tr>
               <th>No</th>
               <th>Periode</th>
-              <th>Bidang</th>
-              <th width="300px">Indikator</th>
-              <th width="300px">Uraian</th>
-              <th>Evidence</th>    
-              <th width="120px;"></th>          
-            </tr> 
-        </thead>
-        <tbody>
-          @if($secretariats->total() == 0) 
-          <tr>
-            <!-- <th></th> -->
-            <!-- <th>No</th> -->
-            <th colspan="6"><center>DATA TIDAK ADA</center></th>          
-          </tr> 
-          @endif            
-          <?php
-          $start_num = ($secretariats->currentPage() - 1) * 15;
-          $start_num += 1;
-          $periode_check = array();
-          // $start_num = 0;
-          ?>
-          @foreach($secretariats as $row)
-
-          <?php
-            $edit = 0;
-            $key = $row->periode_bulan."-".$row->periode_tahun;
-            if(array_key_exists($key, $periode_check)){
-              $edit = $periode_check[$key];
-            }else{
-              $edit = CostumHelper::checkActionTindakLanjut($user->user_level_id, $row->periode_bulan, $row->periode_tahun);
-              $periode_check[$key] = $edit;
-            }
-          ?>
-          
-          <tr>
-            <td>{{$start_num++}}</td>
-            <td>{{CostumHelper::getNameMonth($row->periode_bulan).' '.$row->periode_tahun}}</td>
-            <td>{{$row->nama}}</td>
-            <td>{!! $row->indikator !!}</td>
-            <td>{!! $row->uraian !!}</td>
-            <td>@if($row->evidence == 1) ada @else tidak ada @endif</td>
-            <td>
-              <p>
-                {{date_format(date_create($row->created_at),"d M Y")}}
-              </p>
-
-              <a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu.'/'.$row->id)}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-folder-open" aria-hidden="true"></i> open</a>
-              
-              @if($edit == 1)
-                <a href="{{url(session('role').'/tindak-lanjutan/'.strtolower($sector->category).'/'.$sub_menu).'/'.$row->id.'/edit'}}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> uraian</a>
-              @endif
-            
-            </td>
+              <th>Indikator</th>
+              <th>Uraian</th>
+              <th>Evidence</th>
+              <th>Tanggal dibuat</th>
+              <th></th>
           </tr>
-          @endforeach
-        </tbody>
-    </table>
-    <div style="float: right; padding: 0px 20px">
-    {{ $secretariats->render("pagination::bootstrap-4") }}
-    </div>
+          </thead>
+          <tbody></tbody>
+      </table>
   </div>
 </div>
-
-<!-- <div class="div-add">
-	<form action="{{url(session('role').'/'.strtolower($sector->category).'/'.$sub_menu.'/create')}}">
-		<button class="btn floatbtn btn-primary"><i class="fa fa fa-plus" aria-hidden="true"></i></button>
-	</form>
-</div> -->
-
-
 @endsection
 
 @section('css')
@@ -163,6 +88,30 @@ $user  = \Auth::user();
       return true;
 
     return false;
+  });
+
+  const table = $("#dataTable").DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+          url: "{{url($path_url."/gettable")}}",
+          method: "post",
+          data: {
+              "periode_bulan"   : $("#f_periode_bulan").val(),
+              "periode_tahun"   : $("#f_periode_tahun").val()
+          }
+      },
+      "autoWidth": false,
+      columnDefs: [
+          {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
+          {data:"periode", searchable: false,width: 100, orderable:false,targets: 1},
+          {name: "indikator", data:"indikator",targets: 2, width: 350},
+          {name: "uraian", data: "uraian", className:"text-wrap" ,searchable: false, orderable: false,targets: 3},
+          {name: "evidence", data: "evidence",width: 50, className:"text-wrap" ,searchable: false, orderable: false,targets: 4},
+          {name: "id", data: "created_at",width: 100, searchable: false, orderable: false,targets: 5},
+          {data:"action",width: 80,orderable:false, searchable:false, className:"text-center", targets: 6},
+      ],
+      order : [[5,'asc']]
   });
 
 </script>

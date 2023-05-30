@@ -1,28 +1,25 @@
-<div class="row">
-    <div class="col-md-8">
-        <h5>{{"Bidang terkait adalah ".$send->bidang}}</h5>
-    </div>
-    <div class="form-group  col-md-8{{ $errors->has('indikator') ? 'has-error' : ''}}">
-        {!! Form::label('indikator', 'Indikator', ['class' => 'control-label']) !!}
-        
-        <div class="">
-            {!! Form::textarea('indikator', null, ['class' => 'form-control','readonly'  => 'readonly','rows'  => 5]) !!}
-            {!! $errors->first('indikator', '<p class="help-block">:message</p>') !!}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="form-group">
+            <label>Bidang terkait</label>
+            <div class="form-control h-auto" readonly="">{{$send->bidang}}</div>
         </div>
-    </div>
+        <div class="form-group  {{ $errors->has('indikator') ? 'has-error' : ''}}">
+            {!! Form::label('indikator', 'Indikator', ['class' => 'control-label']) !!}
 
-    <div class="form-group  col-md-8 {{ $errors->has('uraian') ? 'has-error' : ''}}">
-        {!! Form::label('uraian', 'Uraian', ['class' => 'control-label']) !!}
-        
-        <div class="">
-            {!! Form::textarea('uraian', null, ['class' => 'form-control','rows'  => 5,'required'   => 'required']) !!}
-            {!! $errors->first('uraian', '<p class="help-block">:message</p>') !!}
+            <div class="">
+                {!! Form::textarea('indikator', null, ['class' => 'form-control','readonly'  => 'readonly','rows'  => 5]) !!}
+                {!! $errors->first('indikator', '<p class="help-block">:message</p>') !!}
+            </div>
         </div>
-    </div>
 
-    <div class="form-group col-md-8">
-        <div class="">
-            <button type="submit" class="btn btn-primary btn-md btn-flat"><i class="fa fa-floppy-o" aria-hidden="true"></i> {!! isset($submitButtonText) ? $submitButtonText : 'Create' !!}</button>
+        <div class="form-group  {{ $errors->has('uraian') ? 'has-error' : ''}}">
+            {!! Form::label('uraian', 'Uraian', ['class' => 'control-label']) !!}
+
+            <div class="">
+                {!! Form::textarea('uraian', null, ['class' => 'form-control','rows'  => 5,'required'   => 'required']) !!}
+                {!! $errors->first('uraian', '<p class="help-block">:message</p>') !!}
+            </div>
         </div>
     </div>
 </div>

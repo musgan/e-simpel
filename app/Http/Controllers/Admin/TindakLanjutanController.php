@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\SecretariatRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -49,8 +50,8 @@ class TindakLanjutanController extends Controller
     public function index($submenu_category,$submenu, Request $request)
     {
         $search = "";
-        $periode_bulan = "";
-        $periode_tahun  = "";
+        $periode_bulan = date('m');
+        $periode_tahun  = date('Y');
         $evidence = "";
 
         $full_url = url()->full();
@@ -121,7 +122,6 @@ class TindakLanjutanController extends Controller
         $secretariats = $secretariats->paginate(15);
         $secretariats->withPath('?search='.$search.'&periode_bulan='.$periode_bulan.'&periode_tahun='.$periode_tahun);
 
-
         $send = [
             'menu' => $sector->category,
             'title' => 'Pengguna',
@@ -131,9 +131,19 @@ class TindakLanjutanController extends Controller
             'sector'    => $sector,
             'secretariats'  => $secretariats,
             'search'      => $search,
-            'periode_bulan' => $this->bulan
+            'periode_bulan' => $this->bulan,
+            'bulan' => $periode_bulan,
+            'tahun' => $periode_tahun,
+            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
         ];
         return view('admin.tindak_lanjutan.index',$send);
+    }
+
+    public function getTable($submenu_category, $submenu, Request $request){
+        $repo = new SecretariatRepositories($submenu_category, $submenu);
+        $repo->setKategori("tindak-lanjut");
+        $repo->setBaseUrl(implode("/",['tindak-lanjutan',$submenu_category,$submenu]));
+        return $repo->getDataTable($request);
     }
 
     /**
@@ -152,7 +162,8 @@ class TindakLanjutanController extends Controller
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'root_menu' => 'tindak_lanjut',
-            'sector'    => $sector
+            'sector'    => $sector,
+            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
         ];
         return view('admin.tindak_lanjutan.create',$send);
     }
@@ -292,7 +303,8 @@ class TindakLanjutanController extends Controller
             'root_menu' => 'tindak_lanjut',
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'secretariat'   => $secretariat
+            'secretariat'   => $secretariat,
+            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
         ];
         return view('admin.tindak_lanjutan.show',$send);
     }
@@ -325,7 +337,8 @@ class TindakLanjutanController extends Controller
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'send'   => $secretariat
+            'send'   => $secretariat,
+            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
         ];
         return view('admin.tindak_lanjutan.edit',$send);
     }
