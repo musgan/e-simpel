@@ -5,7 +5,7 @@
     <section class="justify-content-between mb-4">
         <div class="row">
             <div class="col-sm-6">
-                <h1 class="h3 mb-0 text-gray-800"><a href="{{url($path_url)}}" class="mr-2  text-decoration-none"><i class="fa fa-chevron-left" aria-hidden="true"></i> Lingkup Pengawasan</a></h1>
+                <h1 class="h3 mb-0 text-gray-800"><a href="{{url($path_url)}}" class="text-decoration-none"><i class="mr-2 fa fa-chevron-left" aria-hidden="true"></i> Lingkup Pengawasan</a></h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">

@@ -12,4 +12,7 @@ class IndikatorSector extends Model
     public function sector(){
         return $this->hasOne("App\Sector","id","sector_id");
     }
+    public function secretariat(){
+        return $this->hasOne("App\Secretariat","id","secretariat_id");
+    }
 }

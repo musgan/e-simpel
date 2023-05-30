@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\SecretariatRepositories;
+use App\Repositories\SectorRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -107,9 +109,16 @@ class SecretariatController extends Controller
             'search'      => $search,
             'periode_bulan' => $this->bulan,
             'bulan' => $periode_bulan,
-            'tahun' => $periode_tahun
+            'tahun' => $periode_tahun,
+            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
         ];
         return view('admin.kepaniteraan.index',$send);
+    }
+
+    public function getTable($submenu_category, $submenu, Request $request){
+        $repo = new SecretariatRepositories($submenu_category, $submenu);
+        $repo->setBaseUrl(implode("/",['pengawas-bidang',$submenu_category,$submenu]));
+        return $repo->getDataTable($request);
     }
 
     /**
@@ -129,7 +138,8 @@ class SecretariatController extends Controller
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'root_menu' => 'pengawas_bidang',
-            'sector'    => $sector
+            'sector'    => $sector,
+            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
         ];
         return view('admin.kepaniteraan.create',$send);
     }
@@ -252,7 +262,8 @@ class SecretariatController extends Controller
             'root_menu' => 'pengawas_bidang',
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'secretariat'   => $secretariat
+            'secretariat'   => $secretariat,
+            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
         ];
         return view('admin.kepaniteraan.show',$send);
     }
@@ -281,7 +292,8 @@ class SecretariatController extends Controller
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'send'   => $secretariat
+            'send'   => $secretariat,
+            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
         ];
         return view('admin.kepaniteraan.edit',$send);
     }

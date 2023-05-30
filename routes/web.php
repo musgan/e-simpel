@@ -63,7 +63,9 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 		->middleware('role:admin,hawasbid');
 	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@show')
 		->middleware('role:admin,mpn,hawasbid');
-	Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence')
+    Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/gettable','SecretariatController@getTable')
+        ->middleware('role:admin,hawasbid');
+    Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence')
 		->middleware('role:admin,hawasbid');
 	Route::put('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@update')
 		->middleware('role:admin,hawasbid');

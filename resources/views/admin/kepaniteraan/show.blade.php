@@ -8,116 +8,111 @@ $user = \Auth::user();
 $action = CostumHelper::checkActionHawasbid($user->user_level_id, $secretariat->periode_bulan, $secretariat->periode_tahun);
 
 ?>
-
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">{{ucfirst($sector->category)}}</h1>
-</div>
-
-<div class="action-btn btn-back">
-  	
-  	<a href="{{
-
-  	((session('backlink_hawasbid'.$sub_menu))) ? session('backlink_hawasbid'.$sub_menu) :
-	url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu)
-
-  	}}" class="btn btn-info btn-flat btn-sm"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
-
-  	@if($action == 1)
-  	<a href="{{url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu).'/'.$secretariat->id.'/edit'}}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Uraian</a>
+<section class="justify-content-between mb-4">
+	<div class="row">
+		<div class="col-sm-6">
+			<h1 class="h3 mb-0 text-gray-800"><a href="{{url($path_url)}}" class="text-decoration-none"><i class="mr-2 fa fa-chevron-left" aria-hidden="true"></i>{{$sector->nama}}</a></h1>
+		</div>
+		<div class="col-sm-6">
+			<ol class="breadcrumb float-sm-right">
+				<li class="breadcrumb-item"><a href="#">{{$sector->nama}}</a></li>
+				<li class="breadcrumb-item active">@lang('form.button.view.text')</li>
+			</ol>
+		</div>
+	</div>
+</section>
+<div class="text-right form-group mb-3">
+	@if($action == 1)
+		<a href="{{url('/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu).'/'.$secretariat->id.'/edit'}}" class="btn btn-warning btn-flat btn-md"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Uraian</a>
 	@endif
-
-
 </div>
 
-<div class="row">
-	
-	<div class="col-md-8">
-		
-		<div class="card shadow mb-4">
-		    <div class="card-header py-3" style="background-color: #{{$sector->base_color}}">
-		      <h6 class="m-0 font-weight-bold" style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">{{($sector->nama)}} <i class="fas fa-fw fa-chevron-right"></i> Show</h6>
-		    </div>
-		    <div class="card-body">
-		    	
-    			<p>Penanggung Jawab Bidang <b>{{$sector->nama}} </b></p>
-    			<p> Terkait Bidang <b>{{$secretariat->nama}}</b></p>
-    			<p> Periode <b>{{CostumHelper::getNameMonth($secretariat->periode_bulan)}}  {{$secretariat->periode_tahun}}</b></p>
-
-    			<h5>Indikator</h5>
-		    	<p>{!! $secretariat->indikator !!}</p>
-
-		    	<h5>Uraian</h5>
-		    	@if($secretariat->uraian)
-		    	<p>{!! str_replace("\n","</p><p>",$secretariat->uraian)  !!}</p>
-		    	@else
-		    	<p>TIDAK ADA</p>
-		    	@endif
-
-
-		    	<h4>Evidence</h4>
-		    	<?php
-		    		$directory = "public/evidence/".$sub_menu."/".$secretariat->id;
-		    		$files = Storage::allFiles($directory);
-		    	?>
-		    	<p>{!! count($files) !!} file</p>
-		    	<ol class="evidence">
-		    		@foreach($files as $val)
-		    		<li>
-		    			<?php
-		    			$val_ = str_replace("public/", "storage/", $val);
-		    			?>
-				    	<a class="" href="{{asset($val_)}}">{!! basename($val_) !!}</a>
-				    	
-				    	@if($action == 1)
-				    	<form class="delete_file" action="{{url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu.'/delete_file/'.$secretariat->id.'?file='.$val)}}" method="post">
-				    		<input type="hidden" name="_method" value="delete" />
-				    		<button class="btn btn-danger btn-sm">Hapus</button>
-					        {{ csrf_field() }}
-					    </form>
-					    @endif
-
-				    </li>
-				    @endforeach
-				</ol>
+<div class="card mb-4">
+	<div class="card-body">
+		<div class="row">
+			<div class="form-group col-md-6">
+				<label>Periode</label>
+				<div class="form-control h-auto" readonly >{{CostumHelper::getNameMonth($secretariat->periode_bulan)}}  {{$secretariat->periode_tahun}}</div>
+			</div>
+			<div class="form-group col-md-6">
+				<label>Penanggung Jawab Bidang</label>
+				<div class="form-control h-auto" readonly >{{$sector->nama}}</div>
 			</div>
 		</div>
 
-	</div>
+		<div class="form-group">
+			<label>Terkait Bidang</label>
+			<div class="form-control h-auto" readonly >{{$secretariat->nama}}</div>
+		</div>
 
-	@if($action == 1)
-	<div class="col-md-4">
+		<div class="form-group">
+			<label>Indikator</label>
+			<div class="form-control h-auto" readonly >{!! $secretariat->indikator !!}</div>
+		</div>
+		<div class="form-group">
+			<label>Uraian</label>
+			<div class="form-control h-auto" readonly >{!! ($secretariat->uraian)?str_replace("\n","<br />",$secretariat->uraian):'Tidak ada'  !!}</div>
+		</div>
+		<div class="form-group">
+			<label>Evidence</label>
+			<?php
+			$directory = "public/evidence/".$sub_menu."/".$secretariat->id;
+			$files = Storage::allFiles($directory);
+			?>
+			<p>{!! count($files) !!} file</p>
+			<ol class="evidence">
+				@foreach($files as $val)
+					<li>
+							<?php
+							$val_ = str_replace("public/", "storage/", $val);
+							?>
+						<a class="" href="{{asset($val_)}}">{!! basename($val_) !!}</a>
 
-		<div class="card shadow mb-4">
-		    <div class="card-header py-3">
-		      <h6 class="m-0 font-weight-bold text-primary">Upload Evidence</h6>
-		    </div>
-		    <div class="card-body">
-		    	<h4>Upload Evidence FIles</h4>
-    			{!! Form::open(['url' => session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu.'/upload_evidence/'.$secretariat->id, 'class' => 'form-horizontal', 'files' => true]) !!}
+						@if($action == 1)
+							<form class="delete_file" action="{{url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu.'/delete_file/'.$secretariat->id.'?file='.$val)}}" method="post">
+								<input type="hidden" name="_method" value="delete" />
+								<button class="btn btn-danger btn-sm">Hapus</button>
+								{{ csrf_field() }}
+							</form>
+						@endif
 
-    			<div class="form-group {{ $errors->has('evidence') ? 'has-error' : ''}}">
-				    {!! Form::label('evidence', 'Evidence (pilih beberapa file)', ['class' => 'col-md-12 control-label']) !!}
-				    
-				    <div class="col-md-12">
-				        {!! Form::file('evidence[]',['multiple' => 'multiple']) !!}
-				        {!! $errors->first('evidence', '<p class="help-block">:message</p>') !!}
-				    </div>
-				</div>
-
-				<div class="form-group">
-				    <div class="col-md-12">
-				        <button type="submit" class="btn btn-primary btn-md btn-flat">Upload</button>
-				    </div>
-				</div>
-			   
-			    {!! Form::close() !!}
-		    </div>
+					</li>
+				@endforeach
+			</ol>
 		</div>
 	</div>
-	@endif
-
-
 </div>
+
+
+@if($action == 1)
+	<div class="card mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Upload Evidence</h6>
+		</div>
+		<div class="card-body">
+			<h4>Upload Evidence FIles</h4>
+			{!! Form::open(['url' => session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu.'/upload_evidence/'.$secretariat->id, 'class' => 'form-horizontal', 'files' => true]) !!}
+
+			<div class="form-group {{ $errors->has('evidence') ? 'has-error' : ''}}">
+				{!! Form::label('evidence', 'Evidence (pilih beberapa file)', ['class' => 'col-md-12 control-label']) !!}
+
+				<div class="col-md-12">
+					{!! Form::file('evidence[]',['multiple' => 'multiple']) !!}
+					{!! $errors->first('evidence', '<p class="help-block">:message</p>') !!}
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-md-12">
+					<button type="submit" class="btn btn-primary btn-md btn-flat">Upload</button>
+				</div>
+			</div>
+
+			{!! Form::close() !!}
+		</div>
+	</div>
+@endif
+
 
 @endsection
 

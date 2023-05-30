@@ -10,29 +10,25 @@
 ?>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-<h1 class="h3 mb-0 text-gray-800">{{ucfirst($sector->category)}}</h1>
+<h1 class="h3 mb-0 text-gray-800">{{ucfirst($sector->category)}} - {{$sector->nama}}</h1>
 </div>
 
-<div class="card shadow mb-4" >
-    <div class="card-header py-3" style="background-color: #{{$sector->base_color}}">
-      <h6 class="m-0 font-weight-bold " style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">Filter Data</h6>
-    </div>
+<div class="card mb-4" >
+
     <div class="card-body"  >
       <div class="col-md-12" style="margin-bottom: 20px;">
           <form class="form" action="{{ url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu.'/dokumentasi_rapat') }}" method="">
             <label class="control-label">Periode</label>
             <div class="row">
-              <div class="form-group mx-sm-3 mb-3">
+              <div class="form-group col-md-6 mb-3">
                 {{Form::select('periode_bulan',$periode_bulan,null,['class'  => 'form-control', 'placeholder'  => '- Periode Bulan -'])}}  
               </div>
 
-              <div class="form-group mx-sm-3 mb-3">
+              <div class="form-group col-md-6 mb-3">
                 {{Form::input('number','periode_tahun',null,['class'  => 'form-control', 'placeholder'  => 'Periode Tahun','min'  => 2018])}}  
               </div>
-
             </div>
-
-            <button type="submit" class="btn btn-primary mb-3">Tampilkan</button>
+            <button type="submit" class="btn btn-success mb-3">Filter</button>
           </form>
         </div> 
     </div>
@@ -51,10 +47,8 @@
 </div>
 <div class="row">
 <div class="col-md-7">
-  <div class="card shadow mb-4">
-    <div class="card-header py-3" style="background-color: #{{$sector->base_color}}">
-      <h6 class="m-0 font-weight-bold" style="color: {{CostumHelper::getContrastColor('#'.$sector->base_color)}}">{{($sector->nama)}}</h6>
-    </div>
+  <div class="card mb-4">
+
     <div class="card-body">
       
       @if($tahun == "" || $bulan == "")

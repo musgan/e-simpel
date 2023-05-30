@@ -209,7 +209,7 @@ class TindakLanjutanController extends Controller
         // return redirect(url(session('role').'/kepaniteraan/'.$submenu.'/'.$id))->with('status','Berhasil Menambah Data');
     }
 
-    private function validateAction($submenu_category, $indikator_sector_id){
+    private function validateAction($indikator_sector_id){
         $user = Auth::user();
         $action = 0;
 
