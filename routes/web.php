@@ -48,13 +48,14 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 		->middleware('role:admin');
 	Route::delete('hawasbid_indikator/{id}','HawasbidIndikatorController@destroy')
 		->middleware('role:admin');
-	
-	Route::middleware('can:master')->resource('setting_time_hawasbid','SettingTimeHawasbid');
-	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@index')
-		->middleware('role:admin,mpn,hawasbid');
+
+    Route::middleware('can:master')->resource('setting_time_hawasbid','SettingTimeHawasbid');
+
 	Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store')
 		->middleware('role:admin,hawasbid');
-	Route::delete('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy')
+    Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat/gettable','DokumentasiRapatController@getTable')
+        ->middleware('role:admin,hawasbid');
+    Route::delete('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy')
 		->middleware('role:admin,hawasbid');
 
 	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}','SecretariatController@index')

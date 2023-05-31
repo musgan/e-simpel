@@ -57,60 +57,20 @@ class SecretariatController extends Controller
 
         $full_url = url()->full();
         $request->session()->put('backlink_hawasbid'.$submenu, $full_url);
-        
-        
-        if(isset($_GET['search']))
-            $search = $request->get('search');
 
-        if(isset($_GET['evidence']))
-            $evidence = $request->get('evidence');
-
-        if(isset($_GET['periode_bulan']))
-            $periode_bulan = $request->get('periode_bulan');
-
-        if(isset($_GET['periode_tahun']))
-            $periode_tahun = $request->get('periode_tahun');
-        
         $sector = Sector::where('alias',$submenu)->first();
-
-        $secretariats = DB::table('indikator_sectors')
-        ->join('secretariats','secretariats.id','=','secretariat_id')
-        ->join('sectors','sectors.id','indikator_sectors.sector_id')
-        ->where('secretariats.sector_id',$sector->id)
-        ->select('indikator_sectors.id','indikator','periode_tahun','periode_bulan','evidence','indikator_sectors.updated_at','sectors.nama','indikator_sectors.uraian');
-        
-        if($search != ""){
-            $secretariats = $secretariats->where('indikator','like','%'.$search.'%');
-        }
-
-        if($evidence != ""){
-            $secretariats = $secretariats->where('evidence',$evidence);
-        }
-        
-        $secretariats = $secretariats->orderBy('secretariats.periode_tahun','DESC')
-            ->orderBy('periode_bulan','DESC');
-
-        if($periode_bulan != "")
-            $secretariats = $secretariats->where('periode_bulan',$periode_bulan);
-        if($periode_tahun != "")
-            $secretariats = $secretariats->where('periode_tahun',$periode_tahun);
-
-        $secretariats = $secretariats->paginate(15);
-        $secretariats->withPath('?search='.$search.'&evidence='.$evidence.'&periode_bulan='.$periode_bulan.'&periode_tahun='.$periode_tahun);
 
         $send = [
             'menu' => $sector->category,
-            'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'root_menu' => 'pengawas_bidang',
             'sector'    => $sector,
-            'secretariats'  => $secretariats,
-            'search'      => $search,
             'periode_bulan' => $this->bulan,
             'bulan' => $periode_bulan,
             'tahun' => $periode_tahun,
-            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
+            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu]),
+            'path_dokumentasi_rapat_url' => implode("/",['pengawas-bidang',$submenu_category,$submenu,"dokumentasi_rapat"])
         ];
         return view('admin.kepaniteraan.index',$send);
     }

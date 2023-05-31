@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\DokumentasiRapatPengawasanAPMReporitories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -75,13 +76,27 @@ class DokumentasiRapatController extends Controller
         return view('admin.kepaniteraan.dokumentasi_rapat.index',$send);
     }
 
+    public function getTable($submenu_category, $submenu, Request $request){
+        $repo = new DokumentasiRapatPengawasanAPMReporitories($submenu_category, $submenu);
+        if($request->kategori_dokumentasi)
+            $repo->setKategori($request->kategori_dokumentasi);
+        $pth = "";
+        if($repo->getKategori() == "hawasbid")
+            $pth = "pengawas-bidang";
+        else
+            $pth = "tindak-lanjutan";
+        $repo->setBaseUrl(implode("/",[$pth,$submenu_category, $submenu,"dokumentasi_rapat"]));
+
+        return $repo->getDataTableArray($request);
+    }
+
     public function store($submenu_category, $submenu, Request $request){
     	$this->validate($request,[
-    		'bulan'	=> 'required',
-    		'tahun'	=> 'required',
+    		'periode_bulan'	=> 'required',
+    		'periode_tahun'	=> 'required',
     	]);
-    	$bulan = $request->bulan;
-    	$tahun = $request->tahun;
+    	$bulan = $request->periode_bulan;
+    	$tahun = $request->periode_tahun;
         $user = \Auth::user();
 
         $action = \CostumHelper::checkActionHawasbid($user->user_level_id, $bulan, $tahun);
@@ -128,8 +143,8 @@ class DokumentasiRapatController extends Controller
     			$file->storeAs($pth,$fname);
     		}
     	}
-
-    	return redirect(url()->current().'?periode_bulan='.$request->bulan.'&periode_tahun='.$tahun)->with('status','Berhasil Menambah dokumentasi');
+        $redirect = url(implode("/",["pengawas-bidang",$submenu_category, $submenu]));
+    	return redirect($redirect.'?periode_bulan='.$bulan.'&periode_tahun='.$tahun)->with('status','Berhasil Menambah dokumentasi');
     }
 
     public function checkfileName($file_name, $pth){
@@ -175,7 +190,8 @@ class DokumentasiRapatController extends Controller
     	if($user_levels->alias == $explode_pth[5] || $user_levels->id == 1){
     		Storage::delete($pth);
     	}
+        $redirect = url(implode("/",["pengawas-bidang",$submenu_category, $submenu]));
 
-    	return redirect(url()->current().'?periode_bulan='.$request->bulan.'&periode_tahun='.$tahun)->with('status','Berhasil menghapus data');
+    	return redirect($redirect.'?periode_bulan='.$request->bulan.'&periode_tahun='.$tahun)->with('status','Berhasil menghapus data dokumentasi rapat');
     }
 }
