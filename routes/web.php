@@ -88,12 +88,12 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
     Route::delete('tindak-lanjutan/{sub_menu_category}/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file')
         ->middleware('role:admin,kapan');
 
-	Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@index')
-		->middleware('role:admin,mpn,kapan');
-	Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@store')
-		->middleware('role:admin,kapan');
-	Route::delete('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','TLDokumentasiRapatController@destroy')
-		->middleware('role:admin,kapan');
+    Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store')
+        ->middleware('role:admin,kapan');
+    Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat/gettable','DokumentasiRapatController@getTable')
+        ->middleware('role:admin,kapan');
+    Route::delete('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy')
+        ->middleware('role:admin,kapan');
 
 	Route::get('laporan/hawasbid','ReportHawasbid@index')
 		->middleware('role:admin,mpn,hawasbid,kapan');

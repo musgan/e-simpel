@@ -33,11 +33,8 @@
       </form>
     </div>
   </div>
-  @if (session('status'))
-    <div class="alert alert-success mb-3">
-      {{ session('status') }}
-    </div>
-  @endif
+
+  @include("message")
 
   <div class="form-group text-right mb-3">
     <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
@@ -93,7 +90,7 @@
 @section('js')
   @include("admin.dokumentasi-rapat.modal-form",[
       'dict_periode_of_month'   => $periode_bulan
-])
+      ])
   <script type="text/javascript" src="{{asset('js/moment.min.js')}}"></script>
   <script type="text/javascript" src="{{asset('js/daterangepicker.min.js')}}"></script>
   <script type="text/javascript">

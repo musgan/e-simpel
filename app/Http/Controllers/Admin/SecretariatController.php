@@ -3,20 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Repositories\IndikatorSectorRepositories;
-use App\Repositories\SecretariatRepositories;
-use App\Repositories\SectorRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\Auth;
 use App\Sector;
-use App\UserLevel;
-use App\UserLevelGroup;
-use App\Secretariat;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use App\IndikatorSector; 
-use DB;
 
 class SecretariatController extends Controller
 {
@@ -89,20 +78,7 @@ class SecretariatController extends Controller
      */
     public function create($submenu_category, $submenu)
     {
-        //
 
-        $user = Auth::user();
-        $sector = Sector::where('alias',$submenu)->first();
-        $send = [
-            'menu' => $sector->category,
-            'title' => 'Pengguna',
-            'menu_sectors'   => $this->sectors,
-            'sub_menu'  => $submenu,
-            'root_menu' => 'pengawas_bidang',
-            'sector'    => $sector,
-            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
-        ];
-        return view('admin.kepaniteraan.create',$send);
     }
 
     /**
@@ -114,49 +90,6 @@ class SecretariatController extends Controller
     public function store($submenu_category, $submenu, Request $request)
     {
 
-        //
-        // $this->validate($request,[
-        //     'indikator' => 'required'
-        // ]);
-        // $evidence = 0;
-        // if($request->file('evidence')){
-        //     $evidence = 1;
-        // }
-
-        // $user = Auth::user();
-        
-        // $sector = Sector::where('alias',$submenu)->first();
-        // $id = date('YmdHis').rand(1111,9999);
-        // $send = new Secretariat;
-        // $send->id = $id;
-        // $send->user_level_id = $this->user_levels;
-        // $send->sector_id = $sector->id;
-        // $send->evidence = $evidence;
-        // $send->indikator = $request->indikator;
-
-        // if($request->uraian){
-        //     $send->uraian = $request->uraian;
-        // }
-
-        // $send->save();
-
-        // if($evidence == 1){
-            
-        //     $tot_file  = 0;
-        //     foreach($request->evidence as $file){
-
-        //         $fname = $file->getClientOriginalName();
-        //         $pth ="public/evidence/".$submenu."/".$id."/";
-        //         $fname = $this->checkfileName($fname, $pth);
-
-        //         $file->storeAs($pth, $fname);
-        //         $tot_file += 1;
-        //     }
-        // }
-
-        // return redirect(url(session('role').'/kepaniteraan/'.$submenu.'/'.$id))->with('status','Berhasil Menambah Data');
-
-        
     }
 
     /**
@@ -258,41 +191,5 @@ class SecretariatController extends Controller
      */
     public function destroy($submenu_category, $submenu, $id)
     {
-        //
-
-        // $directory = "public/evidence/".$submenu."/".$id;
-        // Storage::deleteDirectory($directory);
-
-        // $sector = Sector::where('alias',$submenu)->first();
-
-        // Secretariat::where('id',$id)
-        //     ->where('sector_id',$sector->id)
-        //     ->delete();
-
-        // return redirect(url(session('role').'/kepaniteraan/'.$submenu));
-    }
-
-    
-
-    public function destroy_file($submenu_category, $submenu, $id, Request $request)
-    {
-        //
-        $sector = DB::table('sectors')->where('alias', $submenu)->first();
-
-        $file = $request->get('file');
-        Storage::delete($file);
-
-        $directory = "public/evidence/".$submenu."/".$id;
-        $files = Storage::allFiles($directory);
-
-        if(count($files) == 0){
-            DB::table('indikator_sectors')
-                ->where('id',$id)
-                ->update([
-                    'evidence'  => 0
-                ]);
-        }
-
-        return redirect(url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$submenu.'/'.$id));
     }
 }

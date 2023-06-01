@@ -22,11 +22,6 @@ $terkait_bidang = $secretariat->indikator_sectors->pluck('sector.nama')->toArray
 		</div>
 	</div>
 </section>
-<div class="text-right form-group mb-3">
-	@if($action == 1)
-		<a href="{{url('/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu).'/'.$indikator_sector->id.'/edit'}}" class="btn btn-warning btn-flat btn-md"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Uraian</a>
-	@endif
-</div>
 
 <div class="card mb-4">
 	<div class="card-body">

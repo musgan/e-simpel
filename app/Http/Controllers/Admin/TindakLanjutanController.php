@@ -2,19 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Repositories\SecretariatRepositories;
+use App\Repositories\IndikatorSectorRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Support\Facades\Auth;
 use App\Sector;
-use App\UserLevel;
-use App\UserLevelGroup;
-use App\Secretariat;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use App\indikatorSector;
-use DB;
 
 class TindakLanjutanController extends Controller
 {
@@ -54,9 +45,6 @@ class TindakLanjutanController extends Controller
         $periode_tahun  = date('Y');
         $evidence = "";
 
-        $full_url = url()->full();
-        $request->session()->put('backlink_tl'.$submenu, $full_url);
-        
         if(isset($_GET['search']))
             $search = $request->get('search');
 
@@ -71,56 +59,6 @@ class TindakLanjutanController extends Controller
         $sector = Sector::where('alias',$submenu)->first();
 
 
-        $secretariats = DB::table('indikator_sectors')
-                ->join('secretariats','secretariats.id','=','secretariat_id')
-                ->join('sectors','sectors.id','indikator_sectors.sector_id')
-                ->where('secretariats.sector_id',$sector->id)
-                ->select('indikator_sectors.id','indikator','periode_tahun','periode_bulan','evidence','secretariats.created_at','sectors.nama', 'indikator_sectors.uraian');
-
-        $secretariats = $secretariats->where(function($q){
-            $q->where('status_tindakan',1)
-                ->orWhere('evidence',0);
-
-            // if(date('d') < 16 && date('d') > 4){
-            //     $m = date('m');
-            //     $y = date('Y');
-            //     $treshold_date = $y."-".$m."-05";
-            //     $treshold_d =  strtotime($treshold_date." -1 month");
-
-                
-            //     $q->orWhere(function($qq) use($treshold_d){
-
-            //         $qq->where('periode_tahun',date('Y',$treshold_d))
-            //         ->where('periode_bulan',date('m', $treshold_d))
-            //         ->Where('evidence',0);
-            //     });
-            // }
-            
-        });
-        $treshold_time = strtotime('-2 month');
-        if(date('d') > 4){
-            $treshold_time = strtotime('-1 month');
-        }
-
-        $secretariats->whereDate(DB::raw('CONCAT(periode_tahun,"-",periode_bulan,"-01")'),"<=",date('Y-m-01',$treshold_time));
-        
-
-        if($search != ""){
-            $secretariats = $secretariats->where('indikator','like','%'.$search.'%');
-        }
-
-        
-        $secretariats = $secretariats->orderBy('secretariats.updated_at','DESC');
-        if($periode_bulan != "")
-            $secretariats = $secretariats->where('periode_bulan',$periode_bulan);
-        if($periode_tahun != "")
-            $secretariats = $secretariats->where('periode_tahun',$periode_tahun);
-
-        $secretariats = $secretariats->orderBy('periode_tahun','DESC')
-            ->orderBy('periode_bulan','DESC');
-
-        $secretariats = $secretariats->paginate(15);
-        $secretariats->withPath('?search='.$search.'&periode_bulan='.$periode_bulan.'&periode_tahun='.$periode_tahun);
 
         $send = [
             'menu' => $sector->category,
@@ -129,18 +67,18 @@ class TindakLanjutanController extends Controller
             'sub_menu'  => $submenu,
             'root_menu' => 'tindak_lanjut',
             'sector'    => $sector,
-            'secretariats'  => $secretariats,
             'search'      => $search,
             'periode_bulan' => $this->bulan,
             'bulan' => $periode_bulan,
             'tahun' => $periode_tahun,
-            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
+            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu]),
+            'path_dokumentasi_rapat_url'    => implode("/",['tindak-lanjutan',$submenu_category,$submenu,"dokumentasi_rapat"])
         ];
         return view('admin.tindak_lanjutan.index',$send);
     }
 
     public function getTable($submenu_category, $submenu, Request $request){
-        $repo = new SecretariatRepositories($submenu_category, $submenu);
+        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
         $repo->setKategori("tindak-lanjut");
         $repo->setBaseUrl(implode("/",['tindak-lanjutan',$submenu_category,$submenu]));
         return $repo->getDataTable($request);
@@ -153,19 +91,6 @@ class TindakLanjutanController extends Controller
      */
     public function create($submenu_category, $submenu)
     {
-        //
-        $user = Auth::user();
-        $sector = Sector::where('alias',$submenu)->first();
-        $send = [
-            'menu' => $sector->category,
-            'title' => 'Pengguna',
-            'menu_sectors'   => $this->sectors,
-            'sub_menu'  => $submenu,
-            'root_menu' => 'tindak_lanjut',
-            'sector'    => $sector,
-            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
-        ];
-        return view('admin.tindak_lanjutan.create',$send);
     }
 
     /**
@@ -177,103 +102,7 @@ class TindakLanjutanController extends Controller
     public function store($submenu_category, $submenu, Request $request)
     {
 
-        //
-        // $this->validate($request,[
-        //     'indikator' => 'required'
-        // ]);
-        // $evidence = 0;
-        // if($request->file('evidence')){
-        //     $evidence = 1;
-        // }
 
-        // $user = Auth::user();
-        
-        // $sector = Sector::where('alias',$submenu)->first();
-        // $id = date('YmdHis').rand(1111,9999);
-        // $send = new Secretariat;
-        // $send->id = $id;
-        // $send->user_level_id = $this->user_levels;
-        // $send->sector_id = $sector->id;
-        // $send->evidence = $evidence;
-        // $send->indikator = $request->indikator;
-
-        // if($request->uraian){
-        //     $send->uraian = $request->uraian;
-        // }
-
-        // $send->save();
-
-        // if($evidence == 1){
-            
-        //     $tot_file  = 0;
-        //     foreach($request->evidence as $file){
-
-        //         $fname = $file->getClientOriginalName();
-        //         $pth ="public/evidence/".$submenu."/".$id."/";
-        //         $fname = $this->checkfileName($fname, $pth);
-
-        //         $file->storeAs($pth, $fname);
-        //         $tot_file += 1;
-        //     }
-        // }
-
-        // return redirect(url(session('role').'/kepaniteraan/'.$submenu.'/'.$id))->with('status','Berhasil Menambah Data');
-    }
-
-    private function validateAction($indikator_sector_id){
-        $user = Auth::user();
-        $action = 0;
-
-        $secretariat = DB::table('indikator_sectors')
-            ->join('secretariats','secretariats.id','=','secretariat_id')
-            ->where('indikator_sectors.id',$indikator_sector_id)
-            ->select('periode_bulan','periode_tahun')->first();
-
-        if($secretariat)
-            $action = \CostumHelper::checkActionTindakLanjut($user->user_level_id, $secretariat->periode_bulan, $secretariat->periode_tahun);
-
-        return $action;
-    }
-
-    public function upload_evidence($submenu_category, $submenu, $id, Request $request)
-    {
-        //
-
-        if($this->validateAction($id) == 0){
-            return redirect(session('role').'/home');
-        }
-
-
-        if($request->file('evidence')){
-            $directory = "public/evidence/".$submenu."/".$id;
-            foreach($request->evidence as $file){
-                $fname = $file->getClientOriginalName();
-                $pth =   $directory."/";
-                $fname = $this->checkfileName($fname, $pth);
-                
-                $file->storeAs($pth,$fname);
-            }
-            $files = Storage::allFiles($directory);
-
-            if(count($files) > 0){
-                DB::table('indikator_sectors')
-                    ->where('id',$id)
-                    ->update([
-                        'evidence'  => 1
-                    ]);
-            }
-
-        }
-        return redirect(url(session('role').'/tindak-lanjutan/kepaniteraan/'.$submenu.'/'.$id));
-    }
-
-    public function checkfileName($file_name, $pth){
-        if(Storage::exists($pth.$file_name)) {
-            $path_parts = pathinfo($pth.$file_name);
-
-            $file_name = $this->checkfileName($path_parts['filename']."_copy.".$path_parts['extension'], $pth);
-        }
-        return $file_name;
     }
 
     /**
@@ -285,28 +114,26 @@ class TindakLanjutanController extends Controller
     public function show($submenu_category, $submenu,$id)
     {
         //
-        $sector = Sector::where('alias',$submenu)->first();
-        $secretariat = DB::table('indikator_sectors')->where('indikator_sectors.id',$id)
-            ->join('secretariats','secretariats.id','=','secretariat_id')
-            ->join('sectors','sectors.id','=','indikator_sectors.sector_id')
-            ->where('secretariats.sector_id',$sector->id)
-            ->select('indikator_sectors.id','indikator','uraian','evidence','nama','periode_bulan','periode_tahun')
-            ->first();
-        // dd($secretariat);
-        
-        if($secretariat == null)
-            return redirect(url(session('role').'/home'));
+        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+
+        $sector = $repo->getSector();
+        $indikator_sector = $repo->getById($id);
+
+        if($indikator_sector == null)
+            return redirect(url('home'));
         $send = [
             'menu' => $sector->category,
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,
-            'root_menu' => 'tindak_lanjut',
+            'root_menu' => 'pengawas_bidang',
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'secretariat'   => $secretariat,
-            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
+            'indikator_sector'  => $indikator_sector,
+            'secretariat'   => $indikator_sector->secretariat,
+            'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
+            'path_url'  => implode("/",['tindak-lanjutan',$submenu_category,$submenu])
         ];
-        return view('admin.tindak_lanjutan.show',$send);
+        return view('admin.kepaniteraan.show',$send);
     }
 
     /**
@@ -318,27 +145,21 @@ class TindakLanjutanController extends Controller
     public function edit($submenu_category, $submenu,$id)
     {
         //
-        if($this->validateAction($id) == 0){
-            return redirect(session('role').'/home');
-        }
-        
-        $user = Auth::user();
-        $sector = Sector::where('alias',$submenu)->first();
-        $secretariat = DB::table('indikator_sectors')->where('indikator_sectors.id',$id)
-            ->join('secretariats','secretariats.id','secretariat_id')
-            ->join('sectors','sectors.id','indikator_sectors.sector_id')
-            ->select('indikator_sectors.id','uraian','periode_tahun','periode_bulan','indikator','nama as bidang')
-            ->first();
+        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+        $indikator_sector = $repo->getById($id);
+        $sector = $repo->getSector();
 
         $send = [
-            'root_menu' => 'tindak_lanjut',
+            'root_menu' => 'pengawas_bidang',
             'menu' => $sector->category,
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'send'   => $secretariat,
-            'path_url'  => implode("/",["tindak-lanjutan",$submenu_category, $submenu])
+            'indikator_sector'  => $indikator_sector,
+            'secretariat'   => $indikator_sector->secretariat,
+            'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
+            'path_url'  => implode("/",['tindak-lanjutan',$submenu_category,$submenu])
         ];
         return view('admin.tindak_lanjutan.edit',$send);
     }
@@ -356,19 +177,22 @@ class TindakLanjutanController extends Controller
         $this->validate($request,[
             'uraian'    => 'required'
         ]);
-
-        if($this->validateAction($id) == 0){
-            return redirect(session('role').'/home');
+        $redirect = implode("/",["tindak-lanjutan",$submenu_category,$submenu,$id,"edit"]);
+        $flash = [
+            'status'    => 'success',
+            'message'   => 'Update data berhasil'
+        ];
+        try {
+            $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+            $repo->updateUraian($id,$request);
+        }catch (\Exception $e){
+            $flash['status']    = "error";
+            $flash['message']   = "Update data gagal ".$e->getMessage();
+            if ($e->getCode() == 400){
+                $flash['message']   = $e->getMessage();
+            }
         }
-        
-
-        $send = indikatorSector::where('id',$id)->first();
-        $send->uraian = $request->uraian;
-        $send->status_tindakan = 1;
-        
-        $send->save();
-
-        return redirect(url(session('role').'/tindak-lanjutan/kepaniteraan/'.$submenu.'/'.$id));
+        return redirect(url($redirect))->with($flash);
 
     }
 
@@ -380,43 +204,6 @@ class TindakLanjutanController extends Controller
      */
     public function destroy($submenu_category, $submenu, $id)
     {
-        //
 
-        // $directory = "public/evidence/".$submenu."/".$id;
-        // Storage::deleteDirectory($directory);
-
-        // $sector = Sector::where('alias',$submenu)->first();
-
-        // Secretariat::where('id',$id)
-        //     ->where('sector_id',$sector->id)
-        //     ->delete();
-
-        // return redirect(url(session('role').'/kepaniteraan/'.$submenu));
-    }
-
-    
-
-    public function destroy_file($submenu_category, $submenu, $id, Request $request)
-    {
-        //
-        if($this->validateAction($id) == 0){
-            return redirect(session('role').'/home');
-        }
-
-        $file = $request->get('file');
-        Storage::delete($file);
-
-        $directory = "public/evidence/".$submenu."/".$id;
-        $files = Storage::allFiles($directory);
-
-        if(count($files) == 0){
-            DB::table('indikator_sectors')
-                ->where('id',$id)
-                ->update([
-                    'evidence'  => 0
-                ]);
-        }
-
-        return redirect(url(session('role').'/tindak-lanjutan/kepaniteraan/'.$submenu.'/'.$id));
     }
 }

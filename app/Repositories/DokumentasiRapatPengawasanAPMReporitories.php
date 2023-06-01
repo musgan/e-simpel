@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\CostumHelpers;
 use App\Helpers\DataTableHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,9 @@ class DokumentasiRapatPengawasanAPMReporitories
         $this->base_url = $base_url;
     }
     public function setKategori($kategori){
+        if(!in_array($kategori,["hawasbid","tindak-lanjut"]))
+            throw new \Exception("proses data gagal");
+
         $this->kategori = $kategori;
     }
     public function getKategori(){
@@ -58,6 +62,7 @@ class DokumentasiRapatPengawasanAPMReporitories
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <input type="hidden" name="bulan" value="' . $request->periode_bulan . '">
+                            <input type="hidden" name="kategori" value="' . $this->kategori . '">
                             <input type="hidden" name="tahun" value="' . $request->periode_tahun . '">
                             <input type="hidden" name="path" value="' . $file . '" />
                             <button type="submit" class="btn btn-flat btn-sm btn-danger">' . __('form.button.delete.icon') . '</button>
@@ -83,4 +88,29 @@ class DokumentasiRapatPengawasanAPMReporitories
         }
     }
 
+    function saveEvidenceToStorage($prefix,$periode,$files){
+        $pth = implode("/", ["public/evidence", $this->sector_alias, "/dokumentasi_rapat/", $periode, $this->kategori]);
+        $prefix_date = date('Ymd');
+        if($files){
+            $prefix_file = $prefix_date.'_'.$prefix.'_';
+            foreach ($files as $file) {
+                # code...
+                $fname = $prefix_file.$file->getClientOriginalName();
+                $fname = CostumHelpers::checkfileName($fname, $pth);
+                $file->storeAs($pth,$fname);
+            }
+        }
+    }
+    public function store(Request $request){
+        $bulan = $request->periode_bulan;
+        $tahun = $request->periode_tahun;
+        $periode = implode("-",[$tahun,$bulan]);
+        $this->saveEvidenceToStorage("notulen",$periode,$request->notulensi);
+        $this->saveEvidenceToStorage("absensi",$periode,$request->absensi);
+        $this->saveEvidenceToStorage("foto",$periode,$request->foto);
+
+    }
+    public function delete(Request  $request){
+        Storage::delete($request->path);
+    }
 }

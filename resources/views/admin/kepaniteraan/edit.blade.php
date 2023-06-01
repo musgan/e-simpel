@@ -34,7 +34,7 @@
 @include("message")
 {!! Form::model(null, [
 	  'method' =>'PUT',
-	  'url' => [session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu, $indikator_sector->id],
+	  'url' => [$path_url, $indikator_sector->id],
 	  'class' => 'form-horizontal',
 	  'files' => true
   ]) !!}

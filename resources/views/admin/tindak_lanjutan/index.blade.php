@@ -31,7 +31,9 @@ $user  = \Auth::user();
     </div>
   </div>
 
-@include('admin.tindak_lanjutan.tabs_option',['tab_select' => 1])
+<div class="form-group text-right mb-3">
+    <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
+</div>
 
 <div class="card shadow mb-4">
   <div class="card-body">
@@ -51,6 +53,25 @@ $user  = \Auth::user();
       </table>
   </div>
 </div>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <h5>Dokumentasi Rapat</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover table-striped" id="tableDokumentasiRapat">
+            <thead>
+            <tr>
+                <th>Nama Dokumen</th>
+                <th>Jenis Dokumen</th>
+                <th>Tanggal Dibuat</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 @endsection
 
 @section('css')
@@ -63,9 +84,11 @@ $user  = \Auth::user();
 @endsection
 
 @section('js')
+    @include("admin.dokumentasi-rapat.modal-form",[
+      'dict_periode_of_month'   => $periode_bulan
+      ])
 <script type="text/javascript" src="{{asset('js/moment.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/daterangepicker.min.js')}}"></script>
-
 <script type="text/javascript">
 
   $('#date').daterangepicker({
@@ -81,14 +104,11 @@ $user  = \Auth::user();
       $('input[name="date_end"]').val(picker.endDate.format('YYYY-MM-DD'))
   });
 
-  $(".delete").submit(function(){
-    var conf = confirm("yakin, anda menghapus file ini ?");
-    
-    if(conf)
-      return true;
-
-    return false;
-  });
+  $(document).on('submit', ".delete", function (e){
+      if(confirm("apakah anda ingin menghapus data ini ?"))
+          return true;
+      return false;
+  })
 
   const table = $("#dataTable").DataTable({
       processing: true,
@@ -113,6 +133,39 @@ $user  = \Auth::user();
       ],
       order : [[5,'asc']]
   });
+
+  const tableDokumentasiRapat = $("#tableDokumentasiRapat").DataTable({
+      processing: true,
+      // serverSide: true,
+      ajax: {
+          url: "{{url($path_dokumentasi_rapat_url."/gettable")}}",
+          method: "post",
+          data: {
+              "periode_bulan": $("#f_periode_bulan").val(),
+              "periode_tahun": $("#f_periode_tahun").val(),
+              "kategori_dokumentasi": "tindak-lanjut"
+          }
+      },
+      ordering : false,
+      autoWidth: false,
+      columnDefs: [
+          {data:"file",  targets:0},
+          {data:"category",  targets:1},
+          {data:"created_at",  targets:2},
+          {data:"action",width: 80, className:"text-center", targets:3},
+      ]
+  });
+  $("#btn-form-dokumentasi-rapat").on('click', function(){
+      const modal_dokumentasi_rapat = $("#modal-form-dokumentasi-rapat")
+      const  form_dokumentasi_rapat = $("#form-dokumentasi-rapat")
+      modal_dokumentasi_rapat.modal()
+      const action_dokumentasi_rapat = "{{url($path_dokumentasi_rapat_url)}}"
+      form_dokumentasi_rapat.attr('action',action_dokumentasi_rapat)
+      $("#notulensi",modal_dokumentasi_rapat).val(null)
+      $("#absensi",modal_dokumentasi_rapat).val(null)
+      $("#foto",modal_dokumentasi_rapat).val(null)
+      $("#kategori_dokumentasi",modal_dokumentasi_rapat).val("tindak-lanjut")
+  })
 
 </script>
 
