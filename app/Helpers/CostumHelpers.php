@@ -162,18 +162,18 @@ public static function checkActionHawasbid($user_level_id, $periode_bulan, $peri
             foreach ($files as $file) {
                 $fname = $file->getClientOriginalName();
                 $pth = $dir . "/";
-                $fname = $this->checkfileName($fname, $pth);
+                $fname = self::checkfileName($fname, $pth);
 
                 $file->storeAs($pth, $fname);
             }
         }
     }
 
-    public function checkfileName($file_name, $pth){
+    public static function checkfileName($file_name, $pth){
         if(Storage::exists($pth.$file_name)) {
             $path_parts = pathinfo($pth.$file_name);
 
-            $file_name = $this->checkfileName($path_parts['filename']."_copy.".$path_parts['extension'], $pth);
+            $file_name = self::checkfileName($path_parts['filename']."_copy.".$path_parts['extension'], $pth);
         }
         return $file_name;
     }

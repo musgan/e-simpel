@@ -143,7 +143,7 @@
 
     const tableDokumentasiRapat = $("#tableDokumentasiRapat").DataTable({
       processing: true,
-      serverSide: true,
+      // serverSide: true,
       ajax: {
         url: "{{url($path_dokumentasi_rapat_url."/gettable")}}",
         method: "post",
@@ -154,7 +154,6 @@
         }
       },
       ordering : false,
-      searching: false,
       autoWidth: false,
       columnDefs: [
         {data:"file",  targets:0},

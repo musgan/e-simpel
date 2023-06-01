@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\IndikatorSectorRepositories;
 use App\Repositories\SecretariatRepositories;
 use App\Repositories\SectorRepositories;
 use Illuminate\Http\Request;
@@ -76,7 +77,7 @@ class SecretariatController extends Controller
     }
 
     public function getTable($submenu_category, $submenu, Request $request){
-        $repo = new SecretariatRepositories($submenu_category, $submenu);
+        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
         $repo->setBaseUrl(implode("/",['pengawas-bidang',$submenu_category,$submenu]));
         return $repo->getDataTable($request);
     }
@@ -158,43 +159,6 @@ class SecretariatController extends Controller
         
     }
 
-    public function upload_evidence($submenu_category, $submenu, $id, Request $request)
-    {
-        //
-        $sector = DB::table('sectors')->where('alias', $submenu)->first();
-        if($request->file('evidence')){
-            foreach($request->evidence as $file){
-                $fname = $file->getClientOriginalName();
-                $pth ="public/evidence/".$submenu."/".$id."/";
-                $fname = $this->checkfileName($fname, $pth);
-                
-                $file->storeAs($pth,$fname);
-            }
-
-            $directory = "public/evidence/".$submenu."/".$id;
-            $files = Storage::allFiles($directory);
-
-            if(count($files) > 0){
-                DB::table('indikator_sectors')
-                    ->where('id',$id)
-                    ->update([
-                        'evidence'  => 1
-                    ]);
-            }
-
-        }
-        return redirect(url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$submenu.'/'.$id));
-    }
-
-    public function checkfileName($file_name, $pth){
-        if(Storage::exists($pth.$file_name)) {
-            $path_parts = pathinfo($pth.$file_name);
-
-            $file_name = $this->checkfileName($path_parts['filename']."_copy.".$path_parts['extension'], $pth);
-        }
-        return $file_name;
-    }
-
     /**
      * Display the specified resource.
      *
@@ -204,17 +168,14 @@ class SecretariatController extends Controller
     public function show($submenu_category, $submenu,$id)
     {
         //
-        $sector = Sector::where('alias',$submenu)->first();
-        $secretariat = DB::table('indikator_sectors')->where('indikator_sectors.id',$id)
-            ->join('secretariats','secretariats.id','=','secretariat_id')
-            ->join('sectors','sectors.id','=','indikator_sectors.sector_id')
-            ->where('secretariats.sector_id',$sector->id)
-            ->select('indikator_sectors.id','indikator','uraian','evidence','nama','periode_bulan','periode_tahun')
-            ->first();
+        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+
+        $sector = $repo->getSector();
+        $indikator_sector = $repo->getById($id);
         // dd($secretariat);
         
-        if($secretariat == null)
-            return redirect(url(session('role').'/home'));
+        if($indikator_sector == null)
+            return redirect(url('home'));
         $send = [
             'menu' => $sector->category,
             'title' => 'Pengguna',
@@ -222,7 +183,9 @@ class SecretariatController extends Controller
             'root_menu' => 'pengawas_bidang',
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'secretariat'   => $secretariat,
+            'indikator_sector'  => $indikator_sector,
+            'secretariat'   => $indikator_sector->secretariat,
+            'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
             'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
         ];
         return view('admin.kepaniteraan.show',$send);
@@ -237,13 +200,9 @@ class SecretariatController extends Controller
     public function edit($submenu_category, $submenu,$id)
     {
         //
-        $user = Auth::user();
-        $sector = Sector::where('alias',$submenu)->first();
-        $secretariat = DB::table('indikator_sectors')->where('indikator_sectors.id',$id)
-            ->join('secretariats','secretariats.id','secretariat_id')
-            ->join('sectors','sectors.id','indikator_sectors.sector_id')
-            ->select('indikator_sectors.id','uraian','indikator','nama as bidang')
-            ->first();
+        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+        $indikator_sector = $repo->getById($id);
+        $sector = $repo->getSector();
 
         $send = [
             'root_menu' => 'pengawas_bidang',
@@ -252,7 +211,9 @@ class SecretariatController extends Controller
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,
             'sector'    => $sector,
-            'send'   => $secretariat,
+            'indikator_sector'  => $indikator_sector,
+            'secretariat'   => $indikator_sector->secretariat,
+            'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
             'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
         ];
         return view('admin.kepaniteraan.edit',$send);
@@ -271,17 +232,22 @@ class SecretariatController extends Controller
         $this->validate($request,[
             'uraian'    => 'required'
         ]);
-
-        $sector = DB::table('sectors')->where('alias', $submenu)->first();
-        
-
-        $send = IndikatorSector::where('id',$id)->first();
-        $send->uraian = $request->uraian;
-        
-        $send->save();
-
-        return redirect(url(session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$submenu.'/'.$id));
-
+        $redirect = implode("/",["pengawas-bidang",$submenu_category,$submenu,$id,"edit"]);
+        $flash = [
+            'status'    => 'success',
+            'message'   => 'Update data berhasil'
+        ];
+        try {
+            $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+            $repo->updateUraian($id,$request);
+        }catch (\Exception $e){
+            $flash['status']    = "error";
+            $flash['message']   = "Update data gagal ".$e->getMessage();
+            if ($e->getCode() == 400){
+                $flash['message']   = $e->getMessage();
+            }
+        }
+        return redirect(url($redirect))->with($flash);
     }
 
     /**

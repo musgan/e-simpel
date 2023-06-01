@@ -31,15 +31,10 @@
 		</div>
 	</div>
 @endif
-@if (session('status'))
-	<div class="alert alert-success">
-		{{ session('status') }}
-	</div>
-@endif
-
-{!! Form::model($send, [
+@include("message")
+{!! Form::model(null, [
 	  'method' =>'PUT',
-	  'url' => [session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu, $send->id],
+	  'url' => [session('role').'/pengawas-bidang/'.strtolower($sector->category).'/'.$sub_menu, $indikator_sector->id],
 	  'class' => 'form-horizontal',
 	  'files' => true
   ]) !!}
