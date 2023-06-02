@@ -170,23 +170,43 @@ class PengawasanRegulerRepositories
         return $query->count();
     }
 
+    function checkAvaibleToAction($periode_bulan, $periode_tahun){
+        try{
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
+                $periode_tahun,
+                $periode_bulan);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
+                $periode_tahun,
+                $periode_bulan);
+        }catch (\Exception $e){
+            return false;
+        }
+        return true;
+    }
+
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
         $dataTable = array();
         $no = $params['start']+1;
+        $hasAction = [];
         foreach ($resultData as $row){
             $action = "";
-            if($this->type == "pengawasan-regular") {
-                $url_view = '<a href="' . url($this->base_url . "/" . $row->id) . '" class="btn btn-sm btn-flat btn-success mr-1 ml-1">' . __('form.button.view.icon') . '</a>';
-                $url_edit = '<a href="' . url($this->base_url . "/" . $row->id . '/edit') . '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
-                $url_delete = '<a href="' . url($this->base_url . "/" . $row->id) . '" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">' . __('form.button.delete.icon') . '</a>';
+            $periode = implode("-",[$row->periode_bulan,$row->periode_tahun]);
+            $url_view = '<a href="' . url($this->base_url . "/" . $row->id) . '" class="btn btn-sm btn-flat btn-success mr-1 ml-1">' . __('form.button.view.icon') . '</a>';
+            $url_edit = '<a href="' . url($this->base_url . "/" . $row->id . '/edit') . '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
+            $url_delete = '<a href="' . url($this->base_url . "/" . $row->id) . '" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">' . __('form.button.delete.icon') . '</a>';
 
-                $action .= $url_view;
+            $action .= $url_view;
+
+            if(!array_key_exists($periode, $hasAction))
+                $hasAction[$periode] = $this->checkAvaibleToAction($row->periode_bulan, $row->periode_tahun);
+
+            if($this->type == "pengawasan-regular" && $hasAction[$periode]) {
                 $action .= $url_edit;
                 $action .= $url_delete;
-            }else
-                $action = '<a href="' . url($this->base_url . "/" . $row->id . '/edit') . '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
-
+            }else if($this->type == "tindak-lanjut" && $hasAction[$periode]){
+                $action = '<a href="' . url(implode("/",[$this->base_url, $row->id,"edit"])). '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
+            }
             $status = '<h5><span class="badge" style="padding: 5px;background-color: '.$row->background_color.'; color: '.$row->text_color.'" data-toggle="tooltip" data-placement="top" title="'.$row->status_pengawasan_regular_nama.'">'.$row->icon.'</span></h5>';
 
 
@@ -236,6 +256,10 @@ class PengawasanRegulerRepositories
     public function store(Request  $request){
         DB::beginTransaction();
         try {
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
+                $request->periode_tahun,
+                $request->periode_bulan);
+
             $model = new PengawasanRegulerModel;
             $model->periode_tahun = $request->periode_tahun;
             $model->periode_bulan = $request->peride_bulan;
@@ -267,6 +291,10 @@ class PengawasanRegulerRepositories
     public function update($id, Request  $request){
         DB::beginTransaction();
         try {
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
+                $request->periode_tahun,
+                $request->periode_bulan);
+
             $model = $this->getById($id);
             $model->periode_tahun = $request->periode_tahun;
             $model->periode_bulan = $request->peride_bulan;
@@ -304,6 +332,9 @@ class PengawasanRegulerRepositories
                 if ($model == null)
                     throw new \Exception("Gagal memperbaharui data",400);
 
+                SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate("tindak-lanjut",
+                    $model->periode_tahun,
+                    $model->periode_bulan);
 
                 $dir = "public/pengawasan-reguler/" . $this->sector_alias."/".$model->id;
                 $files = $request->file('files');
@@ -311,13 +342,14 @@ class PengawasanRegulerRepositories
 
                 $files = Storage::allFiles($dir);
                 $total_files = count($files);
-                if($request->uncheckedfiles != null)
-                    foreach ($request->uncheckedfiles as $file){
-                        if(in_array($file,$files)){
+                if($request->uncheckedfiles != null) {
+                    foreach ($request->uncheckedfiles as $file) {
+                        if (in_array($file, $files)) {
                             Storage::delete($file);
                             $total_files -= 1;
                         }
                     }
+                }
 
                 $model->uraian = $request->uraian;
                 $model->total_evidence = $total_files;
@@ -353,9 +385,13 @@ class PengawasanRegulerRepositories
     public function delete($id){
         DB::beginTransaction();
         try {
-            PengawasanRegulerModel::where('id',$id)
-                ->where('sector_id', $this->sector->id)
-                ->delete();
+            $model = PengawasanRegulerModel::where('id',$id)
+                ->where('sector_id', $this->sector->id);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
+                $model->periode_tahun,
+                $model->periode_bulan);
+
+            $model->delete();
             DB::commit();
             return response()->json([
                 'status'    => 'success',

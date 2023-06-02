@@ -18,6 +18,7 @@
     <div class="form-group text-right">
         <button type="button" id="btndownload" class="btn btn-primary btn-flat text-center pt-2 pb-2">@lang('form.button.download.show')</button>
     </div>
+    @include("message")
     <div class="card mb-3">
         <div class="card-body">
             <ol>

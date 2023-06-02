@@ -29,6 +29,18 @@ class DokumentasiRapatPengawasanRegulerRepositories
 
     public function getDataTableArray(Request  $request){
         $dtbHelper = new DataTableHelper($request);
+        $hasAction = true;
+        try{
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
+                $request->periode_tahun,
+                $request->periode_bulan);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
+                $request->periode_tahun,
+                $request->periode_bulan);
+        }catch (\Exception $e){
+            $hasAction = false;
+        }
+
         try {
             if($request->periode_bulan == null || $request->periode_tahun == null)
                 throw new \Exception("Anda harus memilih periode",400);
@@ -56,7 +68,9 @@ class DokumentasiRapatPengawasanRegulerRepositories
                             <input type="hidden" name="category" value="'.$kategori.'">
                             <button type="submit" class="btn btn-flat btn-sm btn-danger">'.__('form.button.delete.icon').'</button>
                         </form>';
-                        $action .= $url_delete;
+
+                        if($hasAction)
+                            $action .= $url_delete;
 
                         $row  = [
                             "created_at"   =>  date('d F Y',$time),

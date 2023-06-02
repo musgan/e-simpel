@@ -7,6 +7,7 @@ use App\Repositories\LingkupPengawasanBidangRepositories;
 use App\Repositories\LingkupPengawasanRepositories;
 use App\Repositories\PengawasanRegulerRepositories;
 use App\Repositories\SectorRepositories;
+use App\Repositories\SettingPeriodeRepositories;
 use App\Repositories\StatusPengawasanRegularRepositories;
 use Illuminate\Http\Request;
 
@@ -162,25 +163,37 @@ class PengawasanRegulerController extends Controller
     public function edit($sector_category, $sector_alias,$id)
     {
         //
-        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
-        $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
-        $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
-        if($sector_selected == null)
-            return redirect(url("/home"));
-        $this->data["menu"] = $sector_category;
-        $this->data["sub_menu"] = $sector_alias;
-        $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
-        $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
-        $this->data["sector_selected"] = $sector_selected;
-        $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
-        $this->data['form'] = $repo->getById($id);
+        try{
+            $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+            $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
+            $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+            if($sector_selected == null)
+                return redirect(url("/home"));
+            $this->data["menu"] = $sector_category;
+            $this->data["sub_menu"] = $sector_alias;
+            $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+            $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
+            $this->data["sector_selected"] = $sector_selected;
+            $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($sector_selected->id);
+            $this->data['form'] = $repo->getById($id);
 
-        if($this->data['form'] == null)
-            return redirect(url("/home"));
-        $this->data['periode_tahun'] = $this->data['form']->periode_tahun;
-        $this->data['periode_bulan']    = $this->data['form']->periode_bulan;
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
+                $this->data["form"]->periode_tahun,
+                $this->data["form"]->periode_bulan);
 
-        return view($this->path_view."edit", $this->data);
+            if($this->data['form'] == null)
+                return redirect(url("/home"));
+            $this->data['periode_tahun'] = $this->data['form']->periode_tahun;
+            $this->data['periode_bulan']    = $this->data['form']->periode_bulan;
+
+            return view($this->path_view."edit", $this->data);
+        }catch (\Exception $e){
+            $redirect = implode("/",[$this->path_url,$sector_category, $sector_alias]);
+            return redirect(url($redirect))->with([
+                'status'    => 'error',
+                'message'   => $e->getMessage()
+            ]);
+        }
     }
 
     /**

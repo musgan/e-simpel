@@ -42,19 +42,38 @@ class KesesuaianPengawasanRegulerRepositories
         return $query->count();
     }
 
+    function checkAvaibleToAction($periode_bulan, $periode_tahun){
+        try{
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate('hawasbid',
+                $periode_tahun,
+                $periode_bulan);
+        }catch (\Exception $e){
+            return false;
+        }
+        return true;
+    }
+
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
         $dataTable = array();
         $no = $params['start']+1;
+        $hasAction = [];
         foreach ($resultData as $row){
             $action = "";
+            $periode = implode("-",[$row->periode_bulan,$row->periode_tahun]);
+            if(!array_key_exists($periode, $hasAction))
+                $hasAction[$periode] = $this->checkAvaibleToAction($row->periode_bulan, $row->periode_tahun);
+
             $url_view = '<a href="'.url($this->base_url."/".$row->id).'" class="btn btn-sm btn-flat btn-success mr-1 ml-1">'.__('form.button.view.icon').'</a>';
             $url_edit = '<a href="'.url($this->base_url."/".$row->id.'/edit').'" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">'.__('form.button.edit.icon').'</a>';
             $url_delete = '<a href="'.url($this->base_url."/".$row->id).'" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">'.__('form.button.delete.icon').'</a>';
 
             $action .= $url_view;
-            $action .= $url_edit;
-            $action .= $url_delete;
+            if($hasAction[$periode]) {
+                $action .= $url_edit;
+                $action .= $url_delete;
+            }
+
             $lingkup_pengawasan = $row->item_lingkup_pengawasan;
             $dataRow = [
                 "no"            => $no,
@@ -126,16 +145,13 @@ class KesesuaianPengawasanRegulerRepositories
             })->get();
     }
 
-    public function checkAvaibleData($periode_bulan, $periode_tahun){
-        $model = $this->getByPeriode($periode_bulan, $periode_tahun);
-        if($model !== null)
-            throw new \Exception("Telah ada data sebelumnya berdasarkan periode yang digunakan. Harap gunakan periode lain",
-                400);
-    }
-
     public function store(Request $request){
         DB::beginTransaction();
         try {
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate('hawasbid',
+                $request->periode_tahun,
+                $request->periode_bulan);
+
             $model = new KesesuaianPengawasanRegularModel;
             $model->sector_id = $this->sector->id;
             $model->uraian = $request->uraian_kesesuaian;
@@ -160,8 +176,13 @@ class KesesuaianPengawasanRegulerRepositories
     public function update($id,Request $request){
         DB::beginTransaction();
         try {
+
             $model = KesesuaianPengawasanRegularModel::where('id',$id)
                 ->where('sector_id', $this->sector->id)->first();
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate('hawasbid',
+                $model->periode_tahun,
+                $model->periode_bulan);
+
             $model->uraian = $request->uraian_kesesuaian;
             $model->save();
 
@@ -181,10 +202,13 @@ class KesesuaianPengawasanRegulerRepositories
     public function delete($id){
         DB::beginTransaction();
         try {
-            KesesuaianPengawasanRegularModel::where('sector_id',$this->sector->id)
-                ->where('id', $id)
-                ->delete();
+            $model = KesesuaianPengawasanRegularModel::where('sector_id',$this->sector->id)
+                ->where('id', $id)->first();
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate('hawasbid',
+                $model->periode_tahun,
+                $model->periode_bulan);
 
+            $model->delete();
             DB::commit();
             return response()->json([
                 'status'    => 'success',
