@@ -31,6 +31,8 @@ $user  = \Auth::user();
     </div>
   </div>
 
+@include("message")
+
 <div class="form-group text-right mb-3">
     <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
 </div>

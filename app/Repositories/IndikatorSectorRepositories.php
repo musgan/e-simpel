@@ -6,6 +6,7 @@ use App\Helpers\CostumHelpers;
 use App\Helpers\DataTableHelper;
 use App\Helpers\VariableHelper;
 use App\IndikatorSector;
+use App\SettingPeriodHawasbid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,6 +29,9 @@ class IndikatorSectorRepositories
     }
     public function setKategori($kategori){
         $this->kategori = $kategori;
+    }
+    public function getKategori(){
+        return $this->kategori;
     }
 
     public function setBaseUrl($base_url){
@@ -77,6 +81,16 @@ class IndikatorSectorRepositories
 
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
+        try{
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
+                $params['periode_tahun'],
+                $params['periode_bulan']);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
+                $params['periode_tahun'],
+                $params['periode_bulan']);
+        }catch (\Exception $e){
+            $hasAction = false;
+        }
         $dataTable = array();
         $no = $params['start']+1;
         foreach ($resultData as $row){
@@ -84,8 +98,9 @@ class IndikatorSectorRepositories
             $url_view = '<a href="'.url($this->base_url."/".$row->id).'" class="btn btn-sm btn-success mr-1 ml-1">'.__('form.button.view.icon').'</a>';
             $url_edit = '<a href="'.url($this->base_url."/".$row->id.'/edit').'" class="btn btn-sm btn-warning mr-1 ml-1">'.__('form.button.edit.icon').'</a>';
 
-            $action .= $url_view;
-            $action .= $url_edit;
+                $action .= $url_view;
+            if(($this->kategori == "tindak-lanjut" & $hasAction))
+                $action .= $url_edit;
 
             $secretariat = $row->secretariat;
             $periode = ($secretariat)?VariableHelper::getMonthName($secretariat->periode_bulan)." ".$secretariat->periode_tahun: '';
@@ -156,9 +171,18 @@ class IndikatorSectorRepositories
     }
 
     public function updateUraian($id,Request $request){
+
         $model = IndikatorSector::where('id',$id)
             ->where('sector_id',$this->sector->id)
             ->first();
+        $secretariat = $model->secretariat;
+        SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
+            $secretariat->periode_tahun,
+            $secretariat->periode_bulan);
+        SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
+            $secretariat->periode_tahun,
+            $secretariat->periode_bulan);
+
         $model->uraian = $request->uraian;
         $model->save();
         $this->checkAndDeleteEvidence($id, $request->evidence_filechecked);

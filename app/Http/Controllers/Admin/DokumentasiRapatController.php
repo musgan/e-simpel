@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Repositories\DokumentasiRapatPengawasanAPMReporitories;
+use App\Repositories\IndikatorSectorRepositories;
+use App\Repositories\SettingPeriodeRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -71,8 +73,16 @@ class DokumentasiRapatController extends Controller
 
         $redirect = url(implode("/",[$kategori_redirect,$submenu_category, $submenu]));
         try {
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($request->kategori_dokumentasi,
+                $request->periode_tahun,
+                $request->periode_bulan);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($request->kategori_dokumentasi,
+                $request->periode_tahun,
+                $request->periode_bulan);
+
             $repo  = new DokumentasiRapatPengawasanAPMReporitories($submenu_category, $submenu);
             $repo->setKategori($request->kategori_dokumentasi);
+
             $repo->store($request);
         }catch (\Exception $e){
             $message = [
@@ -99,7 +109,15 @@ class DokumentasiRapatController extends Controller
             $kategori_url = "tindak-lanjutan";
 
         try{
+
             $repo = new DokumentasiRapatPengawasanAPMReporitories($submenu_category, $submenu);
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($request->kategori,
+                $request->periode_tahun,
+                $request->periode_bulan);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($request->kategori,
+                $request->periode_tahun,
+                $request->periode_bulan);
+
             $repo->delete($request);
         }catch (\Exception $e){
             $message  = [

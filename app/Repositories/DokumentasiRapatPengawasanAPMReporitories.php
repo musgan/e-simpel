@@ -37,6 +37,17 @@ class DokumentasiRapatPengawasanAPMReporitories
 
     public function getDataTableArray(Request  $request){
         $dtbHelper = new DataTableHelper($request);
+        $hasAction = true;
+        try{
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
+                $request->periode_tahun,
+                $request->periode_bulan);
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
+                $request->periode_tahun,
+                $request->periode_bulan);
+        }catch (\Exception $e){
+            $hasAction = false;
+        }
         try {
             if($request->periode_bulan == null || $request->periode_tahun == null)
                 throw new \Exception("Anda harus memilih periode",400);
@@ -45,7 +56,6 @@ class DokumentasiRapatPengawasanAPMReporitories
             $periode = $request->periode_tahun."-".$request->periode_bulan;
             $perent_dir = "public/evidence/" . $this->sector_alias . "/dokumentasi_rapat/".$periode."/".$this->kategori;
             foreach (Storage::allFiles($perent_dir) as $file){
-
                 $split_file_name = explode("_",basename($file));
                 if(count($split_file_name) >= 3) {
                     $action = "";
@@ -67,7 +77,9 @@ class DokumentasiRapatPengawasanAPMReporitories
                             <input type="hidden" name="path" value="' . $file . '" />
                             <button type="submit" class="btn btn-flat btn-sm btn-danger">' . __('form.button.delete.icon') . '</button>
                         </form>';
-                    $action .= $url_delete;
+
+                    if($hasAction === true)
+                        $action .= $url_delete;
 
                     $row = [
                         "created_at" => date('d F Y', $time),
@@ -108,7 +120,6 @@ class DokumentasiRapatPengawasanAPMReporitories
         $this->saveEvidenceToStorage("notulen",$periode,$request->notulensi);
         $this->saveEvidenceToStorage("absensi",$periode,$request->absensi);
         $this->saveEvidenceToStorage("foto",$periode,$request->foto);
-
     }
     public function delete(Request  $request){
         Storage::delete($request->path);

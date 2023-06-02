@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Repositories\IndikatorSectorRepositories;
+use App\Repositories\SettingPeriodeRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
+use Illuminate\Support\Facades\DB;
 
 class TindakLanjutanController extends Controller
 {
@@ -145,23 +147,36 @@ class TindakLanjutanController extends Controller
     public function edit($submenu_category, $submenu,$id)
     {
         //
-        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
-        $indikator_sector = $repo->getById($id);
-        $sector = $repo->getSector();
-
-        $send = [
-            'root_menu' => 'pengawas_bidang',
-            'menu' => $sector->category,
-            'title' => 'Pengguna',
-            'menu_sectors'   => $this->sectors,
-            'sub_menu'  => $submenu,
-            'sector'    => $sector,
-            'indikator_sector'  => $indikator_sector,
-            'secretariat'   => $indikator_sector->secretariat,
-            'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
-            'path_url'  => implode("/",['tindak-lanjutan',$submenu_category,$submenu])
-        ];
-        return view('admin.tindak_lanjutan.edit',$send);
+        try{
+            $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+            $repo->setKategori("tindak-lanjut");
+            $indikator_sector = $repo->getById($id);
+            $sector = $repo->getSector();
+            $secretariat = $indikator_sector->secretariat;
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($repo->getKategori(),
+                $secretariat->periode_tahun,
+                $secretariat->periode_bulan);
+            $send = [
+                'root_menu' => 'pengawas_bidang',
+                'menu' => $sector->category,
+                'title' => 'Pengguna',
+                'menu_sectors'   => $this->sectors,
+                'sub_menu'  => $submenu,
+                'sector'    => $sector,
+                'indikator_sector'  => $indikator_sector,
+                'secretariat'   => $secretariat,
+                'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
+                'path_url'  => implode("/",['tindak-lanjutan',$submenu_category,$submenu])
+            ];
+            return view('admin.tindak_lanjutan.edit',$send);
+        }catch (\Exception $e){
+            $redirect = implode("/",["tindak-lanjutan",$submenu_category,$submenu]);
+            $message = [
+                'status'    => 'error',
+                'message'   => $e->getMessage()
+            ];
+            return redirect(url($redirect))->with($message);
+        }
     }
 
     /**
@@ -182,15 +197,19 @@ class TindakLanjutanController extends Controller
             'status'    => 'success',
             'message'   => 'Update data berhasil'
         ];
+        DB::beginTransaction();
         try {
             $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+            $repo->setKategori("tindak-lanjut");
             $repo->updateUraian($id,$request);
+            DB::commit();
         }catch (\Exception $e){
             $flash['status']    = "error";
             $flash['message']   = "Update data gagal ".$e->getMessage();
             if ($e->getCode() == 400){
                 $flash['message']   = $e->getMessage();
             }
+            DB::rollBack();
         }
         return redirect(url($redirect))->with($flash);
 

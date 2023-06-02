@@ -24,91 +24,84 @@ Route::post('variables/gettable', 'VariableController@getTable')->middleware(['a
 Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 	Route::get('home', 'HomeController@index')
 		->name('home');
-	Route::middleware(['role:admin,mpn,hawasbid,kapan'])->resource('akun-saya','MyAccountController',['except' => ['store','destroy','create','show','edit']]);
+	Route::resource('akun-saya','MyAccountController',['except' => ['store','destroy','create','show','edit']]);
 	
-	Route::post('akun-saya/update-profil','MyAccountController@update_profil')
-		->middleware('role:admin,mpn,hawasbid,kapan');
+	Route::post('akun-saya/update-profil','MyAccountController@update_profil');
 
 	Route::get('users/data','UserController@data')->middleware('can:master');
 	Route::middleware('can:master')->resource('users','UserController');
 
 	Route::get('hawasbid_indikator','HawasbidIndikatorController@index')
-		->middleware('role:admin,mpn');
+		->middleware('can:master');
     Route::get('hawasbid_indikator/create','HawasbidIndikatorController@create')
-        ->middleware('role:admin');
+        ->middleware('can:master');
     Route::get('hawasbid_indikator/{id}/edit','HawasbidIndikatorController@edit')
-        ->middleware('role:admin');
+        ->middleware('can:master');
     Route::get('hawasbid_indikator/{id}','HawasbidIndikatorController@show')
-		->middleware('role:admin,mpn,hawasbid');
+		->middleware('can:master');
     Route::post('hawasbid_indikator/gettable','HawasbidIndikatorController@getTable')
-        ->middleware('role:admin,mpn');
+        ->middleware('can:master');
 	Route::post('hawasbid_indikator','HawasbidIndikatorController@post')
-		->middleware('role:admin');
+		->middleware('can:master');
 	Route::put('hawasbid_indikator/{id}','HawasbidIndikatorController@update')
-		->middleware('role:admin');
+		->middleware('can:master');
 	Route::delete('hawasbid_indikator/{id}','HawasbidIndikatorController@destroy')
-		->middleware('role:admin');
+		->middleware('can:master');
 
     Route::middleware('can:master')->resource('setting_time_hawasbid','SettingTimeHawasbid');
 
 	Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store')
-		->middleware('role:admin,hawasbid');
+		->middleware('can:pengawasan-hawasbid,sub_menu_category,sub_menu');
     Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat/gettable','DokumentasiRapatController@getTable')
-        ->middleware('role:admin,hawasbid');
+        ->middleware('can:pengawasan-hawasbid.view,sub_menu_category,sub_menu');
     Route::delete('pengawas-bidang/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy')
-		->middleware('role:admin,hawasbid');
+		->middleware('can:pengawasan-hawasbid,sub_menu_category,sub_menu');
 
 	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}','SecretariatController@index')
-		->middleware('role:admin,mpn,hawasbid');
-	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}/edit','SecretariatController@edit')
-		->middleware('role:admin,hawasbid');
+        ->middleware('can:pengawasan-hawasbid.view,sector_category,sector_alias');
+//	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}/edit','SecretariatController@edit')
+//        ->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
 	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@show')
-		->middleware('role:admin,mpn,hawasbid');
+        ->middleware('can:pengawasan-hawasbid.view,sub_menu_category,sub_menu');
     Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/gettable','SecretariatController@getTable')
-        ->middleware('role:admin,hawasbid');
-    Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence')
-		->middleware('role:admin,hawasbid');
-	Route::put('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@update')
-		->middleware('role:admin,hawasbid');
-	Route::delete('pengawas-bidang/{sub_menu_category}/{sub_menu}/delete_file/{id}','SecretariatController@destroy_file')
-		->middleware('role:admin,hawasbid');
+        ->middleware('can:pengawasan-hawasbid.view,sub_menu_category,sub_menu');
+//    Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence')
+//		->middleware('role:admin,hawasbid');
+//	Route::put('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@update')
+//		->middleware('role:admin,hawasbid');
 
     Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}','TindakLanjutanController@index')
-        ->middleware('role:admin,kapan,mpn');
+        ->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}/edit','TindakLanjutanController@edit')
-        ->middleware('role:admin,kapan,mpn');
+        ->middleware('can:pengawasan-tl,sector_category,sector_alias');
     Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}','TindakLanjutanController@show')
-        ->middleware('role:admin,kapan,mpn');
+        ->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/gettable','TindakLanjutanController@getTable')
-        ->middleware('role:admin,kapan,mpn');
+        ->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','TindakLanjutanController@upload_evidence')
-        ->middleware('role:admin,kapan');
+        ->middleware('can:pengawasan-tl,sector_category,sector_alias');
     Route::put('tindak-lanjutan/{sub_menu_category}/{sub_menu}/{id}','TindakLanjutanController@update')
-        ->middleware('role:admin,kapan');
-    Route::delete('tindak-lanjutan/{sub_menu_category}/{sub_menu}/delete_file/{id}','TindakLanjutanController@destroy_file')
-        ->middleware('role:admin,kapan');
+        ->middleware('can:pengawasan-tl,sector_category,sector_alias');
 
     Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@store')
-        ->middleware('role:admin,kapan');
+        ->middleware('can:pengawasan-tl,sector_category,sector_alias');
     Route::post('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat/gettable','DokumentasiRapatController@getTable')
-        ->middleware('role:admin,kapan');
+        ->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::delete('tindak-lanjutan/{sub_menu_category}/{sub_menu}/dokumentasi_rapat','DokumentasiRapatController@destroy')
-        ->middleware('role:admin,kapan');
+        ->middleware('can:pengawasan.view,sector_category,sector_alias');
 
-	Route::get('laporan/hawasbid','ReportHawasbid@index')
-		->middleware('role:admin,mpn,hawasbid,kapan');
-	Route::post('laporan/hawasbid','ReportHawasbid@print_laporan')
-		->middleware('role:admin,mpn,hawasbid,kapan');
+	Route::get('laporan/hawasbid','ReportHawasbid@index');
+	Route::post('laporan/hawasbid','ReportHawasbid@print_laporan');
 
-	Route::middleware('role:admin,kapan')->resource('sector_hawasbid','SectorHawasbid', ['except' => ['store','destroy','create','show']]);
-	Route::middleware('role:admin,kapan')->resource('generate_indikator','GenerateIndikatorController', ['except' => ['update','create','show','edit','destroy']]);
-	Route::middleware('role:admin,kapan')->delete('generate_indikator','GenerateIndikatorController@delete_periode');
+	Route::middleware('can:master')->resource('sector_hawasbid','SectorHawasbid', ['except' => ['store','destroy','create','show']]);
+	Route::middleware('can:master')->resource('generate_indikator','GenerateIndikatorController', ['except' => ['update','create','show','edit','destroy']]);
+	Route::middleware('can:master')->delete('generate_indikator','GenerateIndikatorController@delete_periode');
 
 	Route::get('performa-hawasbid','PerformaHawasbidController@index')
-	    ->middleware('role:admin,kapan');
+	    ->middleware('can:master');
 
 	Route::post('performa-hawasbid','PerformaHawasbidController@store')
-	    ->middleware('role:admin,kapan');
+	    ->middleware('can:master');
 });
 
 Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
@@ -140,7 +133,7 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::delete('pengawasan-bidang/{sector_category}/{sector_alias}/{id}','PengawasanRegulerController@destroy')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
     Route::post('pengawasan-bidang/{sector_category}/{sector_alias}/uploadtemplate','PengawasanRegulerController@uploadTemplate')->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
 
-    Route::get('kesesuaian/{sector_category}/{sector_alias}/create','KesesuaianPengawasanRegularController@create')->middleware('role:admin');
+    Route::get('kesesuaian/{sector_category}/{sector_alias}/create','KesesuaianPengawasanRegularController@create')->middleware('can:kesesuaian,sector_category,sector_alias');
     Route::get('kesesuaian/{sector_category}/{sector_alias}/getbyperiode','KesesuaianPengawasanRegularController@getByPeriode')->middleware('can:kesesuaian.view,sector_category,sector_alias');
     Route::post('kesesuaian/{sector_category}/{sector_alias}','KesesuaianPengawasanRegularController@store')->middleware('can:kesesuaian,sector_category,sector_alias');
     Route::post('kesesuaian/{sector_category}/{sector_alias}/gettable','KesesuaianPengawasanRegularController@getTable')->middleware('can:kesesuaian.view,sector_category,sector_alias');
