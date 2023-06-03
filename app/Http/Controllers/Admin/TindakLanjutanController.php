@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\VariableHelper;
 use App\Repositories\IndikatorSectorRepositories;
 use App\Repositories\SettingPeriodeRepositories;
 use Illuminate\Http\Request;
@@ -24,20 +25,7 @@ class TindakLanjutanController extends Controller
             ->orderBy('category','ASC')
             ->orderBy('id','ASC')->get();
         $this->user_levels = 10;
-        $this->bulan = [
-            "01"    => "Januari",
-            "02"    => "Februari",
-            "03"    => "Maret",
-            "04"    => "April",
-            "05"    => "Mei",
-            "06"    => "Juni",
-            "07"    => "Juli",
-            "08"    => "Agustus",
-            "09"    => "September",
-            "10"    => "Oktober",
-            "11"    => "November",
-            "12"    => "Desember",
-        ];
+        $this->bulan = VariableHelper::getDictOfMonth();
     }
 
     public function index($submenu_category,$submenu, Request $request)

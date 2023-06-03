@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\VariableHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
@@ -20,20 +21,7 @@ class ReportHawasbid extends Controller
     {
     	date_default_timezone_set('Asia/Jakarta');
         $this->sectors = Sector::select('id','nama','alias','category')->orderBy('id','ASC')->get();
-        $this->bulan = [
-            "01"    => "Januari",
-            "02"    => "Februari",
-            "03"    => "Maret",
-            "04"    => "April",
-            "05"    => "Mei",
-            "06"    => "Juni",
-            "07"    => "Juli",
-            "08"    => "Agustus",
-            "09"    => "September",
-            "10"    => "Oktober",
-            "11"    => "November",
-            "12"    => "Desember",
-        ];
+        $this->bulan = VariableHelper::getDictOfMonth();
     }
 
     public function index(){

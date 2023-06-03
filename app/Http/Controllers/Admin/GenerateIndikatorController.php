@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\VariableHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -18,23 +19,9 @@ class GenerateIndikatorController extends Controller
     //
     public function __construct()
     {
-
         date_default_timezone_set('Asia/Jakarta');
         $this->sectors = Sector::select('id','nama','alias','category')->orderBy('id','ASC')->get();
-        $this->bulan = [
-            "01"    => "Januari",
-            "02"    => "Februari",
-            "03"    => "Maret",
-            "04"    => "April",
-            "05"    => "Mei",
-            "06"    => "Juni",
-            "07"    => "Juli",
-            "08"    => "Agustus",
-            "09"    => "September",
-            "10"    => "Oktober",
-            "11"    => "November",
-            "12"    => "Desember",
-        ];
+        $this->bulan = VariableHelper::getDictOfMonth();
     }
 
     public function index(){
@@ -131,7 +118,7 @@ class GenerateIndikatorController extends Controller
 
 	        return redirect(url('/generate_indikator'))->with('status',['success','Berhasil Melakukan generate Periode Indikator']);
 	    }else{
-	    	return redirect(url('/generate_indikator'))->with('status',['danger','Indikator untuk periode '.$this->getNameMonth($request->periode_bulan).' '.$request->periode_tahun.' telah tersedia']);
+	    	return redirect(url('/generate_indikator'))->with('status',['danger','Indikator untuk periode '.VariableHelper::getMonthName($request->periode_bulan).' '.$request->periode_tahun.' telah tersedia']);
 	    }
     }
 
@@ -147,65 +134,4 @@ class GenerateIndikatorController extends Controller
 
     	return redirect(url('/generate_indikator'))->with('status',['success','Berhasil Menghapus Periode Indikator']);
     }
-
-    private function getNameMonth($m){
-      $bulan = "";
-      switch ($m) {
-        case "01":
-          $bulan = "Januari";
-          # code...
-          break;
-        case "02":
-          $bulan = "Februari";
-          # code...
-          break;
-        case "03":
-          $bulan = "Maret";
-          # code...
-          break;
-        case "04":
-          $bulan = "April";
-          # code...
-          break;
-        case "05":
-          $bulan = "Mei";
-          # code...
-          break;
-        case "06":
-          $bulan = "Juni";
-          # code...
-          break;
-        case "07":
-          $bulan = "Juli";
-          # code...
-          break;
-        case "08":
-          $bulan = "Agustus";
-          # code...
-          break;
-        case "09":
-          $bulan = "September";
-          # code...
-          break;
-        case "10":
-          $bulan = "Oktober";
-          # code...
-          break;
-        case "11":
-          $bulan = "November";
-          # code...
-          break;
-        case "12":
-          $bulan = "Desember";
-          # code...
-          break;
-        
-        default:
-          # code...
-          break;
-      }
-
-      return $bulan;
-    }
-
 }
