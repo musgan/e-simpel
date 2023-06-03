@@ -114,7 +114,7 @@ class PerformaHawasbidController extends Controller
             $this->calculate_performa($base_query, $periode_bulan, $periode_tahun);
         }
 
-        return redirect(url(session('role').'/performa-hawasbid?periode_tahun='.$periode_tahun.'&periode_bulan='.$periode_bulan));
+        return redirect(url('/performa-hawasbid?periode_tahun='.$periode_tahun.'&periode_bulan='.$periode_bulan));
     }
 
     private function calculate_performa($base_query, $periode_bulan, $periode_tahun){
@@ -123,8 +123,6 @@ class PerformaHawasbidController extends Controller
             ->where('periode_tahun', $periode_tahun)
             ->first();
         if ($periode) {
-            # code...
-            // dd($periode);
             // getting total evidence each sectors
             $total_evicence = clone $base_query;
             $total_evicence = $total_evicence

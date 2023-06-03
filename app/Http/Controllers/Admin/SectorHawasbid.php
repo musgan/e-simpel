@@ -112,7 +112,7 @@ class SectorHawasbid extends Controller
         $send->penanggung_jawab = $request->penanggung_jawab;
         $send->save();
 
-        return redirect(url(session('role').'/sector_hawasbid/'.$id.'/edit'))->with('status','Berhasil memperbaharui Data');
+        return redirect(url('/sector_hawasbid/'.$id.'/edit'))->with('status','Berhasil memperbaharui Data');
     }
 
     /**

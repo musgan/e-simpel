@@ -118,7 +118,7 @@ class MyAccountController extends Controller
 
         $user->save();
 
-        return redirect(url(session('role').'/akun-saya'))->with('status','Berhasil memperbaharui Data');        
+        return redirect(url('/akun-saya'))->with('status','Berhasil memperbaharui Data');
     }
 
     public function update_profil(Request $request){

@@ -152,34 +152,7 @@ class HawasbidIndikatorController extends Controller
         $user = Auth::user();
         $id_indikator = time().$user->id;
         
-        // #check indikator
-        // $check = DB::table('secretariats')
-        //     ->where('indikator', rtrim(ltrim($request->indikator)))
-        //     ->where('periode_tahun', $request->tahun)
-        //     ->where('periode_bulan', $request->bulan);
-        // $check_id = clone $check;
-        // $check_id = $check_id->first();
 
-        // if(count($check_id) == 1){
-        //     $check_sectors = clone $check;
-        //     $check_sectors = $check_sectors->join('indikator_sectors','secretariats.id','=','secretariat_id')
-        //         ->pluck('sector_id')->toArray();
-
-        //     $id_indikator = $check_id->id;
-        //     for ($i=0; $i < count($request->sector_id) ; $i++) { 
-        //         # code...
-        //         if(!in_array($request->sector_id[$i], $check_sectors)){
-        //             $id_s = $id_indikator.$request->sector_id[$i];
-        //             $send_sec = new IndikatorSector;
-        //             $send_sec->id = $id_s;
-        //             $send_sec->secretariat_id = $id_indikator;
-        //             $send_sec->sector_id = $request->sector_id[$i];
-        //             $send_sec->save();
-        //         }
-        //     }
-        //     return redirect(url(session('role').'/pengawas-bidang/hawasbid_indikator/create'))->with('status','Indikator telah ada sebelumnya. Berhasil Menambah Data Bidang Pada Indikator');
-
-        // }else{
         $send = new Secretariat;
         $send->id = $id_indikator;
         $send->user_level_id = 10;
@@ -201,7 +174,7 @@ class HawasbidIndikatorController extends Controller
             }
         }
 
-        return redirect(url(session('role').'/hawasbid_indikator/create'))->with('status','Berhasil Menambah Data');
+        return redirect(url('/hawasbid_indikator/create'))->with('status','Berhasil Menambah Data');
         // }
     }
 
@@ -224,10 +197,8 @@ class HawasbidIndikatorController extends Controller
             ->select('sectors.nama','indikator_sectors.id','evidence','uraian','category','alias')
             ->get();
 
-
-        $uraian_sector = DB::table('sectors')->where('sec');
         if($secretariat == null)
-            return redirect(url(session('role').'/home'));
+            return redirect(url('/home'));
         $send = [
             'title' => '-',
             'menu_sectors'   => $this->sectors,
@@ -330,7 +301,7 @@ class HawasbidIndikatorController extends Controller
             }
 
         }
-        return redirect(url(session('role').'/hawasbid_indikator/'.$id.'/edit'))->with('status','Berhasil Memperbaharui Data');
+        return redirect(url('/hawasbid_indikator/'.$id.'/edit'))->with('status','Berhasil Memperbaharui Data');
     }
 
     /**
@@ -348,7 +319,7 @@ class HawasbidIndikatorController extends Controller
         return redirect(
 
             (session('backlink_indikator_hawasbid'))? session('backlink_indikator_hawasbid'): 
-            url(session('role').'/hawasbid_indikator')
+            url('/hawasbid_indikator')
             
         )->with('status','Berhasil Menghapus Data');
     }

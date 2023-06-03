@@ -102,12 +102,8 @@ class GenerateIndikatorController extends Controller
                 $set_idx = "0".$idx;
               else $set_idx = $idx;
 
-              // if($secretariat_id != "")
-	        		// 	sleep(1);
-	        		
-	        		$secretariat_id = $row->secretariat_id;
-	        		$id_indikator = time().$set_idx.$user->id;
-              // dd($id_indikator);
+                $secretariat_id = $row->secretariat_id;
+                $id_indikator = time().$set_idx.$user->id;
 
 	        		array_push($bath_indikator,array(
 	        			'id'	=> $id_indikator,
@@ -133,9 +129,9 @@ class GenerateIndikatorController extends Controller
 	        Secretariat::insert($bath_indikator);
 	        IndikatorSector::insert($bath_indikator_sektor);
 
-	        return redirect(url(session('role').'/generate_indikator'))->with('status',['success','Berhasil Melakukan generate Periode Indikator']);
+	        return redirect(url('/generate_indikator'))->with('status',['success','Berhasil Melakukan generate Periode Indikator']);
 	    }else{
-	    	return redirect(url(session('role').'/generate_indikator'))->with('status',['danger','Indikator untuk periode '.$this->getNameMonth($request->periode_bulan).' '.$request->periode_tahun.' telah tersedia']);
+	    	return redirect(url('/generate_indikator'))->with('status',['danger','Indikator untuk periode '.$this->getNameMonth($request->periode_bulan).' '.$request->periode_tahun.' telah tersedia']);
 	    }
     }
 
@@ -149,7 +145,7 @@ class GenerateIndikatorController extends Controller
     		->where('periode_tahun',$request->periode_tahun)
     		->delete();
 
-    	return redirect(url(session('role').'/generate_indikator'))->with('status',['success','Berhasil Menghapus Periode Indikator']);
+    	return redirect(url('/generate_indikator'))->with('status',['success','Berhasil Menghapus Periode Indikator']);
     }
 
     private function getNameMonth($m){

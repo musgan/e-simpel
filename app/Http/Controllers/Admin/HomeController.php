@@ -46,15 +46,6 @@ class HomeController extends Controller
             array_push($domain_sector, $value->nama);
         }
 
-        $date_start30 = date('Y-m-d', strtotime('-30 days'));
-        $date_end30 = date('Y-m-d');
-        
-        $date_start7 = date('Y-m-d', strtotime('-7 days'));
-        $date_end7 = date('Y-m-d');
-        
-        $year = date('Y');
-        
-
         $check_evidence = DB::table('indikator_sectors')
             ->join('secretariats','secretariats.id','=','secretariat_id')
             ->join('sectors','sectors.id','=','secretariats.sector_id')
@@ -64,15 +55,12 @@ class HomeController extends Controller
             ->orderBy('sectors.category','ASC')
             ->orderBy('sectors.id','ASC');
 
-        
-
         $tindak_lanjut_evidence = [];
         $m = date('m');
         $y = date('Y');
-        $treshold_d = null;
+
         $periode_tindak_lanjut = "";
 
-        $treshold_temuan  = null;
         $treshold_date = $y."-".$m."-03";
 
         if(date('d') < 16){
@@ -155,8 +143,6 @@ class HomeController extends Controller
         $idx = count($query_performa_year) - 1;
         foreach ($query_performa_year as $val) {
             # code...
-            // array_push($label_performa, $val->periode_bulan.'-'.$val->periode_tahun);
-            
             $label_performa[$idx] = $val->periode_bulan.'-'.$val->periode_tahun;
             $idx -= 1;
         }

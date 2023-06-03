@@ -95,7 +95,7 @@ class SettingTimeHawasbid extends Controller
             ->first();
 
         if ($checkData !== null) {
-            return redirect(url(session('role').'/setting_time_hawasbid'))->with('failed','Gagal memasukan data. Periode telah ada. Silahkan anda mengubah atau menghapus periode yang telah ada');
+            return redirect(url('/setting_time_hawasbid'))->with('failed','Gagal memasukan data. Periode telah ada. Silahkan anda mengubah atau menghapus periode yang telah ada');
         }else{
 
             $send = new SettingPeriodHawasbid;
@@ -108,7 +108,7 @@ class SettingTimeHawasbid extends Controller
 
             $send->save();
 
-            return redirect(url(session('role').'/setting_time_hawasbid'))->with('status','Berhasil Menambah Data');        
+            return redirect(url('/setting_time_hawasbid'))->with('status','Berhasil Menambah Data');
         }
     }
 
@@ -144,7 +144,7 @@ class SettingTimeHawasbid extends Controller
             ];
             return view('admin.hawasbid.setting_time.edit', $send);
         }else{
-            return redirect(url(session('role').'/setting_time_hawasbid'))
+            return redirect(url('/setting_time_hawasbid'))
             ->with('failed','Hei, anda kemungkinan salah link');
         }
     }
@@ -176,7 +176,7 @@ class SettingTimeHawasbid extends Controller
 
         $send->save();
 
-        return redirect(url(session('role').'/setting_time_hawasbid'))->with('status','Berhasil Memperbaharui Data');         
+        return redirect(url('/setting_time_hawasbid'))->with('status','Berhasil Memperbaharui Data');
     }
 
     /**
@@ -189,6 +189,6 @@ class SettingTimeHawasbid extends Controller
     {
         //
         SettingPeriodHawasbid::findOrFail($id)->delete();
-        return redirect(url(session('role').'/setting_time_hawasbid'))->with('status','Berhasil Menghapus Periode');
+        return redirect(url('/setting_time_hawasbid'))->with('status','Berhasil Menghapus Periode');
     }
 }

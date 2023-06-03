@@ -109,7 +109,7 @@ class UserController extends Controller
             UserLevelGroup::insert($batch);
         }
 
-        return redirect(url(session('role').'/users/create'))->with('status','Berhasil Menambah Data');
+        return redirect(url('/users/create'))->with('status','Berhasil Menambah Data');
     }
 
     /**
@@ -210,7 +210,7 @@ class UserController extends Controller
             UserLevelGroup::insert($batch);
         }
 
-        return redirect(url(session('role').'/users/'.$id.'/edit'))->with('status','Berhasil memperbaharui Data');
+        return redirect(url('/users/'.$id.'/edit'))->with('status','Berhasil memperbaharui Data');
     }
 
     /**
