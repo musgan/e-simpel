@@ -81,6 +81,7 @@ class IndikatorSectorRepositories
 
     public function generateDataDatatable(array $params){
         $resultData = $this->getDataDatatable($params);
+        $hasAction = true;
         try{
             SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
                 $params['periode_tahun'],

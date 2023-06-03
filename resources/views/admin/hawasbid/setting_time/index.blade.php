@@ -22,18 +22,7 @@
 		</div>
 	</div>
 @endif
-@if (session('status'))
-	<div class="alert alert-success">
-		{{ session('status') }}
-	</div>
-@endif
-
-@if (session('failed'))
-	<div class="alert alert-warning">
-		{{ session('failed') }}
-	</div>
-@endif
-
+@include("message")
 <div class="form-group text-right">
 	<a class="btn btn-primary btn-flat" href="{{url("setting_time_hawasbid/create")}}" >@lang("form.button.add.show")</a>
 </div>
