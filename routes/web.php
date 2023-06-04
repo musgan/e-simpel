@@ -59,16 +59,16 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth']], function() {
 
 	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}','SecretariatController@index')
         ->middleware('can:pengawasan-hawasbid.view,sector_category,sector_alias');
-//	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}/edit','SecretariatController@edit')
-//        ->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
+	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}/edit','SecretariatController@edit')
+        ->middleware('can:pengawasan-hawasbid,sector_category,sector_alias');
 	Route::get('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@show')
         ->middleware('can:pengawasan-hawasbid.view,sub_menu_category,sub_menu');
     Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/gettable','SecretariatController@getTable')
         ->middleware('can:pengawasan-hawasbid.view,sub_menu_category,sub_menu');
 //    Route::post('pengawas-bidang/{sub_menu_category}/{sub_menu}/upload_evidence/{id}','SecretariatController@upload_evidence')
-//		->middleware('role:admin,hawasbid');
-//	Route::put('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@update')
-//		->middleware('role:admin,hawasbid');
+//        ->middleware('can:pengawasan-hawasbid,sub_menu_category,sub_menu');
+	Route::put('pengawas-bidang/{sub_menu_category}/{sub_menu}/{id}','SecretariatController@update')
+        ->middleware('can:pengawasan-hawasbid,sub_menu_category,sub_menu');
 
     Route::get('tindak-lanjutan/{sub_menu_category}/{sub_menu}','TindakLanjutanController@index')
         ->middleware('can:pengawasan-tl.view,sector_category,sector_alias');

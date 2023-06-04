@@ -56,7 +56,10 @@ class IndikatorSectorRepositories
     public function getQueryDatatable(array $params){
         $query = IndikatorSector::select('indikator_sectors.*')
             ->join('secretariats','secretariats.id','=','secretariat_id')
-            ->where("indikator_sectors.sector_id",$this->sector->id)
+            ->where(function ($query){
+                return $query->where('indikator_sectors.sector_id',$this->sector->id)
+                    ->orWhere('secretariats.sector_id',$this->sector->id);
+            })
             ->WhereHas('secretariat', function ($query) use($params){
                 $query->where('periode_tahun', $params['periode_tahun'])
                     ->where('periode_bulan', $params['periode_bulan']);
@@ -100,7 +103,7 @@ class IndikatorSectorRepositories
             $url_edit = '<a href="'.url($this->base_url."/".$row->id.'/edit').'" class="btn btn-sm btn-warning mr-1 ml-1">'.__('form.button.edit.icon').'</a>';
 
                 $action .= $url_view;
-            if(($this->kategori == "tindak-lanjut" & $hasAction))
+            if($hasAction & $row->secretariat->sector_id == $this->sector->id)
                 $action .= $url_edit;
 
             $secretariat = $row->secretariat;
@@ -108,8 +111,10 @@ class IndikatorSectorRepositories
 
             $dataRow = [
                 "no"                => $no,
+                "bidang"            => $row->sector->nama,
                 "indikator"         => ($secretariat)?$secretariat->indikator: '',
                 "periode"           => $periode,
+                "uraian_hawasbid"   => $row->uraian_hawasbid,
                 "uraian"            => $row->uraian,
                 "evidence"          => ($row->evidence == 1)?$this->has_evidence:$this->has_not_evicende,
                 "created_at"        => CostumHelpers::getDateDMY($row->created_at),
@@ -135,7 +140,11 @@ class IndikatorSectorRepositories
 
     public function getById($id){
         return IndikatorSector::Where('id', $id)
-            ->where('sector_id', $this->sector->id)
+            ->where(function ($query){
+                return $query->WhereHas('secretariat',function($query){
+                    return $query->where('sector_id',$this->sector->id);
+                })->orWhere('sector_id',$this->sector->id);
+            })
             ->first();
     }
 
@@ -149,44 +158,71 @@ class IndikatorSectorRepositories
 
                 $file->storeAs($pth,$fname);
             }
-
-            $directory = "public/evidence/".$this->sector_alias."/".$id;
-            $files = Storage::allFiles($directory);
-
-            if(count($files) > 0){
-                IndikatorSector::where('id',$id)
-                    ->where('sector_id', $this->sector->id)
-                    ->update([
-                        'evidence'  => 1
-                    ]);
-            }
         }
+        $directory = "public/evidence/".$this->sector_alias."/".$id;
+        $files = Storage::allFiles($directory);
+        $status_evidence = 0;
+        if(count($files) > 0){
+            $status_evidence = 1;
+        }
+        IndikatorSector::where('id',$id)
+            ->where(function ($query){
+                return $query->WhereHas('secretariat',function($query){
+                    return $query->where('sector_id',$this->sector->id);
+                })->orWhere('sector_id',$this->sector->id);
+            })
+            ->update([
+                'evidence'  => $status_evidence
+            ]);
     }
 
     public function checkAndDeleteEvidence($id, $evidence_filechecked){
         $dir_evicende = implode("/",["public/evidence","$this->sector_alias",$id]);
         foreach(Storage::allfiles($dir_evicende) as $file){
-            if(!in_array($file,$evidence_filechecked))
-                Storage::delete($file);
+            if($evidence_filechecked !== null) {
+                if (!in_array($file, $evidence_filechecked))
+                    Storage::delete($file);
+            }
+            else Storage::delete($file);
         }
+    }
+    public function updateUraianHawasbid($id,Request $request){
+
+        $model = IndikatorSector::where('id',$id)
+            ->WhereHas('secretariat',function($query){
+                return $query->where('sector_id',$this->sector->id);
+            })
+            ->first();
+        if($model !== null) {
+            $secretariat = $model->secretariat;
+            SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
+                $secretariat->periode_tahun,
+                $secretariat->periode_bulan);
+
+            $model->uraian_hawasbid = $request->uraian_hawasbid;
+            $model->save();
+        } else
+            throw new \Exception("Tidak dapat memperbaharui data", 400);
     }
 
     public function updateUraian($id,Request $request){
 
         $model = IndikatorSector::where('id',$id)
-            ->where('sector_id',$this->sector->id)
+            ->WhereHas('secretariat',function($query){
+                return $query->where('sector_id',$this->sector->id);
+            })
             ->first();
-        $secretariat = $model->secretariat;
-        SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
-            $secretariat->periode_tahun,
-            $secretariat->periode_bulan);
-        SettingPeriodeRepositories::isHawasbidAvaibleToupdate($this->kategori,
-            $secretariat->periode_tahun,
-            $secretariat->periode_bulan);
+        if($model) {
+            $secretariat = $model->secretariat;
+            SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($this->kategori,
+                $secretariat->periode_tahun,
+                $secretariat->periode_bulan);
 
-        $model->uraian = $request->uraian;
-        $model->save();
-        $this->checkAndDeleteEvidence($id, $request->evidence_filechecked);
-        $this->upload_evidence($id,$request);
+            $model->uraian = $request->uraian;
+            $model->save();
+            $this->checkAndDeleteEvidence($id, $request->evidence_filechecked);
+            $this->upload_evidence($id, $request);
+        }else
+            throw new \Exception("Tidak dapat memperbaharui data", 400);
     }
 }

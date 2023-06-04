@@ -43,7 +43,7 @@ $user  = \Auth::user();
           <thead>
           <tr>
               <th>No</th>
-              <th>Periode</th>
+              <th>Bidang</th>
               <th>Indikator</th>
               <th>Uraian</th>
               <th>Evidence</th>
@@ -126,7 +126,7 @@ $user  = \Auth::user();
       "autoWidth": false,
       columnDefs: [
           {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
-          {data:"periode", searchable: false,width: 100, orderable:false,targets: 1},
+          {data:"bidang", searchable: false,width: 100, orderable:false,targets: 1},
           {name: "indikator", data:"indikator",targets: 2, width: 350},
           {name: "uraian", data: "uraian", className:"text-wrap" ,searchable: false, orderable: false,targets: 3},
           {name: "evidence", data: "evidence",width: 50, className:"text-wrap" ,searchable: false, orderable: false,targets: 4},

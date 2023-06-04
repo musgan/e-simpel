@@ -3,12 +3,6 @@
 
 @section('content')
 
-<?php
-$user = \Auth::user();
-$action = CostumHelper::checkActionHawasbid($user->user_level_id, $secretariat->periode_bulan, $secretariat->periode_tahun);
-$terkait_bidang = $secretariat->indikator_sectors->pluck('sector.nama')->toArray();
-
-?>
 <section class="justify-content-between mb-4">
 	<div class="row">
 		<div class="col-sm-6">
@@ -26,28 +20,32 @@ $terkait_bidang = $secretariat->indikator_sectors->pluck('sector.nama')->toArray
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="row">
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label>Periode</label>
 				<div class="form-control h-auto" readonly >{{CostumHelper::getNameMonth($secretariat->periode_bulan)}}  {{$secretariat->periode_tahun}}</div>
 			</div>
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label>Penanggung Jawab Bidang</label>
 				<div class="form-control h-auto" readonly >{{$secretariat->sector->nama}}</div>
 			</div>
+			<div class="form-group col-md-4">
+				<label>Terkait Bidang</label>
+				<div class="form-control h-auto" readonly >{{$indikator_sector->sector->nama}}</div>
+			</div>
 		</div>
-
-		<div class="form-group">
-			<label>Terkait Bidang</label>
-			<div class="form-control h-auto" readonly >{{implode(", ",$terkait_bidang)}}</div>
-		</div>
-
 		<div class="form-group">
 			<label>Indikator</label>
-			<div class="form-control h-auto" readonly >{!! $secretariat->indikator !!}</div>
+			<div class="form-control h-auto" readonly="" style="min-height: 100px" >{!! ($secretariat->indikator)?str_replace("\n","<br />",$secretariat->indikator):'' !!}</div>
+		</div>
+		<div class="form-group">
+			<label>Uraian Hawasbid</label>
+			<div class="form-control h-auto" readonly="" style="min-height: 100px">
+				{!! ($indikator_sector->uraian_hawasbid)?str_replace("\n","<br />",$indikator_sector->uraian_hawasbid):'' !!}
+			</div>
 		</div>
 		<div class="form-group">
 			<label>Uraian</label>
-			<div class="form-control h-auto" readonly >{!! ($indikator_sector->uraian)?str_replace("\n","<br />",$indikator_sector->uraian):'Tidak ada'  !!}</div>
+			<div class="form-control h-auto" readonly="" style="min-height: 100px" >{!! ($indikator_sector->uraian)?str_replace("\n","<br />",$indikator_sector->uraian):''  !!}</div>
 		</div>
 		<div class="form-group">
 			<label>Evidence</label>

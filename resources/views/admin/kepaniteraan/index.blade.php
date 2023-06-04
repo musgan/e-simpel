@@ -46,8 +46,9 @@
             <thead>
               <tr>
                 <th>No</th>
+                <th>Bidang Terkait</th>
                 <th>Indikator</th>
-                <th>Uraian</th>
+                <th>Uraian Hawasbid</th>
                 <th>Evidence</th>
                 <th>Tanggal dibuat</th>
                 <th></th>
@@ -129,11 +130,12 @@
       "autoWidth": false,
       columnDefs: [
         {data:"no",width: 50, orderable: false, searchable:false, className:"text-center", targets:0},
-        {name: "indikator", data:"indikator",targets: 1, width: 350},
-        {name: "uraian", data: "uraian", className:"text-wrap" ,searchable: false, orderable: false,targets: 2},
-        {name: "evidence", data: "evidence",width: 50, className:"text-wrap" ,searchable: false, orderable: false,targets: 3},
-        {name: "id", data: "created_at",width: 100, searchable: false, orderable: false,targets: 4},
-        {data:"action",width: 80,orderable:false, searchable:false, className:"text-center", targets: 5},
+        {data:"bidang",width: 50, orderable: false, searchable:false, className:"text-center", targets:1},
+        {name: "indikator", data:"indikator",targets: 2, width: 300},
+        {name: "uraian_hawasbid", data: "uraian_hawasbid", className:"text-wrap" ,searchable: false, orderable: false,targets: 3},
+        {name: "evidence", data: "evidence",width: 50, className:"text-wrap" ,searchable: false, orderable: false,targets: 4},
+        {name: "id", data: "created_at",width: 100, searchable: false, orderable: false,targets: 5},
+        {data:"action",width: 80,orderable:false, searchable:false, className:"text-center", targets: 6},
       ],
       order : [[4,'asc']]
     });

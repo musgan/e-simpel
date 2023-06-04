@@ -115,7 +115,7 @@ class TindakLanjutanController extends Controller
             'menu' => $sector->category,
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,
-            'root_menu' => 'pengawas_bidang',
+            'root_menu' => 'tindak_lanjut',
             'sub_menu'  => $submenu,
             'sector'    => $sector,
             'indikator_sector'  => $indikator_sector,
@@ -123,7 +123,7 @@ class TindakLanjutanController extends Controller
             'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
             'path_url'  => implode("/",['tindak-lanjutan',$submenu_category,$submenu])
         ];
-        return view('admin.kepaniteraan.show',$send);
+        return view('admin.tindak_lanjutan.show',$send);
     }
 
     /**
@@ -139,13 +139,15 @@ class TindakLanjutanController extends Controller
             $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
             $repo->setKategori("tindak-lanjut");
             $indikator_sector = $repo->getById($id);
+            if($indikator_sector->secretariat->sector_id !== $repo->getSector()->id)
+                throw new \Exception("Tidak bisa melakukan edit data", 400);
             $sector = $repo->getSector();
             $secretariat = $indikator_sector->secretariat;
             SettingPeriodeRepositories::isTindakLanjutAvaibleToupdate($repo->getKategori(),
                 $secretariat->periode_tahun,
                 $secretariat->periode_bulan);
             $send = [
-                'root_menu' => 'pengawas_bidang',
+                'root_menu' => 'tindak_lanjut',
                 'menu' => $sector->category,
                 'title' => 'Pengguna',
                 'menu_sectors'   => $this->sectors,
@@ -192,12 +194,12 @@ class TindakLanjutanController extends Controller
             $repo->updateUraian($id,$request);
             DB::commit();
         }catch (\Exception $e){
+            DB::rollBack();
             $flash['status']    = "error";
             $flash['message']   = "Update data gagal ".$e->getMessage();
             if ($e->getCode() == 400){
                 $flash['message']   = $e->getMessage();
             }
-            DB::rollBack();
         }
         return redirect(url($redirect))->with($flash);
 

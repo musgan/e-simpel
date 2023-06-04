@@ -7,6 +7,7 @@ use App\Repositories\IndikatorSectorRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
+use Illuminate\Support\Facades\DB;
 
 class SecretariatController extends Controller
 {
@@ -121,23 +122,32 @@ class SecretariatController extends Controller
     public function edit($submenu_category, $submenu,$id)
     {
         //
-        $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
-        $indikator_sector = $repo->getById($id);
-        $sector = $repo->getSector();
-
-        $send = [
-            'root_menu' => 'pengawas_bidang',
-            'menu' => $sector->category,
-            'title' => 'Pengguna',
-            'menu_sectors'   => $this->sectors,
-            'sub_menu'  => $submenu,
-            'sector'    => $sector,
-            'indikator_sector'  => $indikator_sector,
-            'secretariat'   => $indikator_sector->secretariat,
-            'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
-            'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
-        ];
-        return view('admin.kepaniteraan.edit',$send);
+        try {
+            $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
+            $indikator_sector = $repo->getById($id);
+            if($indikator_sector->secretariat->sector_id !== $repo->getSector()->id)
+                throw new \Exception("Tidak bisa melakukan edit data", 400);
+            $sector = $repo->getSector();
+            $send = [
+                'root_menu' => 'pengawas_bidang',
+                'menu' => $sector->category,
+                'title' => '',
+                'menu_sectors'   => $this->sectors,
+                'sub_menu'  => $submenu,
+                'sector'    => $sector,
+                'indikator_sector'  => $indikator_sector,
+                'secretariat'   => $indikator_sector->secretariat,
+                'dir_evidence'  => implode("/",["public/evidence",$submenu,$indikator_sector->id]),
+                'path_url'  => implode("/",['pengawas-bidang',$submenu_category,$submenu])
+            ];
+            return view('admin.kepaniteraan.edit',$send);
+        }catch (\Exception $e){
+            $redirect = implode("/",["pengawas-bidang",$submenu_category, $submenu]);
+            return redirect($redirect)->with([
+               'status' => 'error',
+               'message'    => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -151,17 +161,20 @@ class SecretariatController extends Controller
     {
         //
         $this->validate($request,[
-            'uraian'    => 'required'
+            'uraian_hawasbid'    => 'required'
         ]);
         $redirect = implode("/",["pengawas-bidang",$submenu_category,$submenu,$id,"edit"]);
         $flash = [
             'status'    => 'success',
             'message'   => 'Update data berhasil'
         ];
+        DB::beginTransaction();
         try {
             $repo = new IndikatorSectorRepositories($submenu_category, $submenu);
-            $repo->updateUraian($id,$request);
+            $repo->updateUraianHawasbid($id,$request);
+            DB::commit();
         }catch (\Exception $e){
+            DB::rollBack();
             $flash['status']    = "error";
             $flash['message']   = "Update data gagal ".$e->getMessage();
             if ($e->getCode() == 400){

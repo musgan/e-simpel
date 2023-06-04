@@ -39,7 +39,7 @@
 	  'files' => true
   ]) !!}
 
-@include ('admin.kepaniteraan.form',['submitButtonText' => 'Update'])
+@include ('admin.tindak_lanjutan.form',['submitButtonText' => 'Update'])
 
 <div class="form-group">
 	<a class="btn btn-secondary btn-flat mr-2" href="{{url($path_url)}}">@lang("form.button.back.show")</a>
