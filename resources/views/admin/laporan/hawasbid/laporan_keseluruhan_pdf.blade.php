@@ -19,7 +19,7 @@
 			<th   class="text-center">No</th> 
 			<th class="text-center" >Bidang</th>
 			<th width="30%" class="text-center">Indikator</th>
-			<th  width="30%" class="text-center">Urairan</th>
+			<th  width="30%" class="text-center">Uraian</th>
 			<th class="text-center">Tindak Lanjut</th> 
 			<th class="text-center">Evidence</th>
 		</tr>

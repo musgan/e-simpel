@@ -39,7 +39,7 @@
 			<th  class="text-center">No</th>
 			<th>Bidang</th>
 			<th  class="text-center">Indikator</th>
-			<th  class="text-center">Urairan</th>
+			<th  class="text-center">Uraian</th>
 			<th  class="text-center">Tindak Lanjut</th>
 			<th  class="text-center">Evidence</th>
 			
