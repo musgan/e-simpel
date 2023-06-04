@@ -22,7 +22,6 @@ class PengawasanRegulerRepositories
     private  $base_url;
     private $sector_category, $sector_alias;
     private $sector;
-    private $type = "pengawasan-regular";
     private  $opsi_download = "";
     private $kategori = "hawasbid";
 
@@ -34,9 +33,6 @@ class PengawasanRegulerRepositories
 
     public function setBaseUrl(String $base_url){
         $this->base_url = $base_url;
-    }
-    public function setType($type){
-        $this->type = $type;
     }
 
     public function setOpsiDownload($opsi_download){
@@ -201,11 +197,11 @@ class PengawasanRegulerRepositories
             if(!array_key_exists($periode, $hasAction))
                 $hasAction[$periode] = $this->checkAvaibleToAction($row->periode_bulan, $row->periode_tahun);
 
-            if($this->type == "pengawasan-regular" && $hasAction[$periode]) {
+            if($this->kategori == "hawasbid" && $hasAction[$periode]) {
                 $action .= $url_edit;
                 $action .= $url_delete;
-            }else if($this->type == "tindak-lanjut" && $hasAction[$periode]){
-                $action = '<a href="' . url(implode("/",[$this->base_url, $row->id,"edit"])). '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
+            }else if($this->kategori == "tindak-lanjut" && $hasAction[$periode]){
+                $action .= '<a href="' . url(implode("/",[$this->base_url, $row->id,"edit"])). '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
             }
             $status = '<h5><span class="badge" style="padding: 5px;background-color: '.$row->background_color.'; color: '.$row->text_color.'" data-toggle="tooltip" data-placement="top" title="'.$row->status_pengawasan_regular_nama.'">'.$row->icon.'</span></h5>';
 

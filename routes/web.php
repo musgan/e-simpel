@@ -145,6 +145,7 @@ Route::group(["prefix" => "pr",'middleware' => ['auth']], function() {
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}','TindakLanjutPengawasanRegularController@index')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/gettable','TindakLanjutPengawasanRegularController@getTable')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::post('tindak-lanjutan/{sector_category}/{sector_alias}/download','TindakLanjutPengawasanRegularController@download')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
+    Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@show')->middleware('can:pengawasan-tl.view,sector_category,sector_alias');
     Route::get('tindak-lanjutan/{sector_category}/{sector_alias}/{id}/edit','TindakLanjutPengawasanRegularController@edit')->middleware('can:pengawasan-tl,sector_category,sector_alias');
     Route::put('tindak-lanjutan/{sector_category}/{sector_alias}/{id}','TindakLanjutPengawasanRegularController@update')->middleware('can:pengawasan-tl,sector_category,sector_alias');
 

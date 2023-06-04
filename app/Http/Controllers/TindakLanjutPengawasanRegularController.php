@@ -64,7 +64,7 @@ class TindakLanjutPengawasanRegularController extends Controller
 
     public function getTable($sector_category, $sector_alias, Request  $request){
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
-        $repo->setType("tindak-lanjut");
+        $repo->setKategori("tindak-lanjut");
         $repo->setBaseUrl($this->getPathUrl($sector_category, $sector_alias));
         return $repo->getDataTable($request);
     }
@@ -96,9 +96,27 @@ class TindakLanjutPengawasanRegularController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($sector_category, $sector_alias, $id)
     {
         //
+        $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        $repoLingkupPengawasanBidang = new LingkupPengawasanBidangRepositories();
+        $this->data["menu"] = $sector_category;
+        $this->data["sub_menu"] = $sector_alias;
+        $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
+        $this->data["path_url_kesesuaian"] = $this->getPathUrlKesesuaian($sector_category, $sector_alias);
+        $this->data['form'] = $repo->getById($id);
+        $this->data["sector_selected"] = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+        $this->data['lingkup_pengawasan_bidang']   = $repoLingkupPengawasanBidang->getLingkupPengawasanBidang($this->data["sector_selected"]->id);
+        if($this->data['form'] == null)
+            return redirect(url("/home"));
+        $dir = "public/pengawasan-reguler/" . $sector_alias."/".$this->data['form']->id;
+        $files = Storage::allFiles($dir);
+        $this->data["files"] = $files;
+        $this->data["form_detail"] = true;
+        $this->data['periode_tahun'] = $this->data['form']->periode_tahun;
+        $this->data['periode_bulan']    = $this->data['form']->periode_bulan;
+        return view($this->path_view."show", $this->data);
     }
 
     /**
@@ -169,7 +187,6 @@ class TindakLanjutPengawasanRegularController extends Controller
         ], $this->getValidationMessage());
 
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
-        $repo->setType("tindak-lanjut");
         $repo->setKategori("tindak-lanjut");
         $repo->setOpsiDownload($request->opsi_download);
         return $repo->exportExcelTindakLanjutReport($request);
