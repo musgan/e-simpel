@@ -400,6 +400,14 @@ class PengawasanRegulerRepositories
             }else return abort(500,$e->getMessage());
         }
     }
+    public static function updateStatusBelumDiselesaikanPengawasanRegular($periode_bulan, $periode_tahun){
+        PengawasanRegulerModel::where('periode_bulan', $periode_bulan)
+            ->where('periode_tahun', $periode_tahun)
+            ->where('status_pengawasan_regular_id','SUBMITEDBYHAWASBID')
+            ->update([
+                'status_pengawasan_regular_id' => 'NOTRESOLVED'
+            ]);
+    }
 
     public function uploadTemplate(Request  $request){
         try {

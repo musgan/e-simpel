@@ -34,6 +34,7 @@
 				<th>Nama Periode</th>
 				<th>Periode <br> Input Dokumen</th>
 				<th>Periode <br> Tindak Lanjut</th>
+				<th>Status</th>
 				<th></th>
 			</thead>
 			<tbody>
@@ -44,10 +45,17 @@
 						{!! $row->periode_bulan."/ ".$row->periode_tahun !!}
 					</td>
 					<td>
-						{!! date('d M',strtotime($row->start_input_session))."/ ".date('d M',strtotime($row->stop_input_session)) !!}
+						{!! date('d M Y',strtotime($row->start_input_session))." - ".date('d M Y',strtotime($row->stop_input_session)) !!}
 					</td>
 					<td>
-						{!! date('d M', strtotime($row->start_periode_tindak_lanjut))."/ ".date('d M', strtotime($row->stop_periode_tindak_lanjut)) !!}
+						{!! date('d M Y', strtotime($row->start_periode_tindak_lanjut))." - ".date('d M Y', strtotime($row->stop_periode_tindak_lanjut)) !!}
+					</td>
+					<td>
+						@if($row->status_periode == "NA")
+							<h6><span class="badge badge-danger">Not Active</span></h6>
+						@else
+							<h6><span class="badge badge-success">Active</span></h6>
+						@endif
 					</td>
 					<td>
 						<form class="delete" action="{{url(session('role').'/setting_time_hawasbid'.'/'.$row->id)}}" method="post">

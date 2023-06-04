@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Helpers\VariableHelper;
+use App\Repositories\SettingPeriodeHawasbidRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
@@ -26,7 +27,7 @@ class SettingTimeHawasbid extends Controller
      */
     public function index()
     {
-        //
+        $repo = new SettingPeriodeHawasbidRepositories();
         $data = SettingPeriodHawasbid::orderBy('periode_tahun','DESC')
             ->orderBy('periode_bulan','DESC')
             ->get();
@@ -75,28 +76,23 @@ class SettingTimeHawasbid extends Controller
             'start_input_session' => 'required',
             'stop_input_session' => 'required',
             'start_periode_tindak_lanjut' => 'required',
-            'stop_periode_tindak_lanjut' => 'required'
+            'stop_periode_tindak_lanjut' => 'required',
         ]);
-        // melakukan check apakah periode telah ada ataw belum
-        $checkData =  SettingPeriodHawasbid::where('periode_tahun', $request->periode_tahun)
-            ->where('periode_bulan', $request->periode_bulan)
-            ->first();
-
-        if ($checkData !== null) {
-            return redirect(url('/setting_time_hawasbid'))->with('failed','Gagal memasukan data. Periode telah ada. Silahkan anda mengubah atau menghapus periode yang telah ada');
-        }else{
-
-            $send = new SettingPeriodHawasbid;
-            $send->periode_bulan = $request->periode_bulan;
-            $send->periode_tahun = $request->periode_tahun;
-            $send->start_input_session = $request->start_input_session;
-            $send->stop_input_session = $request->stop_input_session;
-            $send->start_periode_tindak_lanjut = $request->start_periode_tindak_lanjut;
-            $send->stop_periode_tindak_lanjut = $request->stop_periode_tindak_lanjut;
-
-            $send->save();
-
-            return redirect(url('/setting_time_hawasbid'))->with('status','Berhasil Menambah Data');
+        DB::beginTransaction();
+        try{
+            $repo = new SettingPeriodeHawasbidRepositories();
+            $repo->save($request);
+            DB::commit();
+            return redirect(url('/setting_time_hawasbid'))->with([
+                'status'    => 'success',
+                'message'   => 'Berhasil menambah data'
+            ]);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect(url('/setting_time_hawasbid'))->with([
+                'status'    => 'error',
+                'message'   => ($e->getCode() == 400)?$e->getMessage():'Gagal memperbaharui data'
+            ]);
         }
     }
 
@@ -132,8 +128,7 @@ class SettingTimeHawasbid extends Controller
             ];
             return view('admin.hawasbid.setting_time.edit', $send);
         }else{
-            return redirect(url('/setting_time_hawasbid'))
-            ->with('failed','Hei, anda kemungkinan salah link');
+            return redirect(url('/setting_time_hawasbid'));
         }
     }
 
@@ -153,18 +148,25 @@ class SettingTimeHawasbid extends Controller
             'start_input_session' => 'required',
             'stop_input_session' => 'required',
             'start_periode_tindak_lanjut' => 'required',
-            'stop_periode_tindak_lanjut' => 'required'
+            'stop_periode_tindak_lanjut' => 'required',
+            'status_periode'            => 'required'
         ]);
-
-        $send = SettingPeriodHawasbid::findOrFail($id);
-        $send->start_input_session = $request->start_input_session;
-        $send->stop_input_session = $request->stop_input_session;
-        $send->start_periode_tindak_lanjut = $request->start_periode_tindak_lanjut;
-        $send->stop_periode_tindak_lanjut = $request->stop_periode_tindak_lanjut;
-
-        $send->save();
-
-        return redirect(url('/setting_time_hawasbid'))->with('status','Berhasil Memperbaharui Data');
+        DB::beginTransaction();
+        try {
+            $repo = new SettingPeriodeHawasbidRepositories();
+            $repo->update($id, $request);
+            DB::commit();
+            return redirect(url('/setting_time_hawasbid'))->with([
+                'status'    => 'success',
+                'message'   => 'Berhasil Memperbaharui Data'
+            ]);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect(url('/setting_time_hawasbid'))->with([
+                'status'    => 'success',
+                'message'   => ($e->getCode() == 400)?$e->getMessage():'Gagal memperbaharui data'
+            ]);
+        }
     }
 
     /**
