@@ -182,7 +182,7 @@ class HawasbidIndikatorController extends Controller
         
         $ev_sector = DB::table('indikator_sectors')->where('secretariat_id',$id)
             ->join('sectors','sectors.id','=','sector_id')
-            ->select('sectors.nama','indikator_sectors.id','evidence','uraian','category','alias')
+            ->select('sectors.nama','indikator_sectors.id','evidence','uraian','category','alias','indikator_sectors.uraian_hawasbid')
             ->get();
 
         if($secretariat == null)
@@ -190,7 +190,7 @@ class HawasbidIndikatorController extends Controller
         $send = [
             'title' => '-',
             'menu_sectors'   => $this->sectors,
-            'menu' => "hawasbid",
+            'menu' => "master",
             'sub_menu'  => "hawasbid_indikator",
             'ev_sector'    => $ev_sector,
             'secretariat'   => $secretariat
