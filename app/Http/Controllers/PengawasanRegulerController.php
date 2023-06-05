@@ -12,6 +12,7 @@ use App\Repositories\SettingPeriodeRepositories;
 use App\Repositories\StatusPengawasanRegularRepositories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class PengawasanRegulerController extends Controller
 {
@@ -154,6 +155,9 @@ class PengawasanRegulerController extends Controller
         $this->data['periode_tahun'] = $this->data['form']->periode_tahun;
         $this->data['periode_bulan']    = $this->data['form']->periode_bulan;
         $this->data["form_detail"] = true;
+        $dir = "public/pengawasan-reguler/" . $sector_alias."/".$this->data['form']->id;
+        $files = Storage::allFiles($dir);
+        $this->data["files"] = $files;
 
         return view($this->path_view."show", $this->data);
     }

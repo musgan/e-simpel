@@ -1,6 +1,8 @@
 @extends('layouts.app_admin')
 @extends('layouts.nav_admin')
-
+@php
+    $status = $form->statuspengawasanregular;
+@endphp
 @section('content')
     <section class="justify-content-between mb-4">
         <div class="row">
@@ -16,8 +18,11 @@
             </div>
         </div>
     </section>
-
-
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4><span class="badge mr-3" style="color: {{$status->text_color}}; background-color: {{$status->background_color}};">{!! $status->icon !!}</span>{{$status->nama}}</h4>
+        </div>
+    </div>
     @include($path_view."form")
-
+    @include("admin.pengawasan-reguler.tindak-lanjut.form-detail")
 @endsection

@@ -24,7 +24,9 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     private $listIdTindakLanjut = [];
 
     public function setTglTindakLanjut($tgl_tindak_lanjut){
-        $this->tgl_tindak_lanjut = $tgl_tindak_lanjut;
+        if($tgl_tindak_lanjut)
+            $this->tgl_tindak_lanjut = $tgl_tindak_lanjut;
+        else  $this->tgl_tindak_lanjut(date('Y-m-d'));
     }
     public function setNamaPenganggungJawab($nama_penanggung_jawab){
         $this->nama_penanggung_jawab = $nama_penanggung_jawab;
