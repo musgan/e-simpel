@@ -16,7 +16,7 @@ class DokumentasiRapatPengawasanAPMReporitories
     private $sector_category = "";
     private $sector_alias = "";
 
-    private $isAuthorizeToAction = true;
+    private $isAuthorizeToAction;
 
     public function __construct($sector_category, $sector_alias)
     {
@@ -24,8 +24,7 @@ class DokumentasiRapatPengawasanAPMReporitories
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
 
-        if(!Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias])))
-            $this->isAuthorizeToAction = false;
+        $this->isAuthorizeToAction = Gate::allows("pengawasan-hawasbid",[$sector_category,$sector_alias]);
     }
 
     public function setBaseUrl($base_url){
@@ -34,8 +33,9 @@ class DokumentasiRapatPengawasanAPMReporitories
     public function setKategori($kategori){
         if(!in_array($kategori,["hawasbid","tindak-lanjut"]))
             throw new \Exception("proses data gagal");
-
         $this->kategori = $kategori;
+        if($kategori == "tindak-lanjut")
+            $this->isAuthorizeToAction = Gate::allows("pengawasan-tl",[$this->sector_category,$this->sector_alias]);
     }
     public function getKategori(){
         return $this->kategori;

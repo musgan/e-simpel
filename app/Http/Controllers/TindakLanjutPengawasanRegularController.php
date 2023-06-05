@@ -6,6 +6,7 @@ use App\Helpers\VariableHelper;
 use App\Repositories\LingkupPengawasanBidangRepositories;
 use App\Repositories\PengawasanRegulerRepositories;
 use App\Repositories\SectorRepositories;
+use App\Repositories\SettingPeriodeHawasbidRepositories;
 use App\Repositories\StatusPengawasanRegularRepositories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -54,7 +55,8 @@ class TindakLanjutPengawasanRegularController extends Controller
     {
         //
         $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
-        $this->data['isAuthorizeToAction'] = Gate::allows(implode(",",["pengawasan-tl",$sector_category,$sector_alias]));
+        $this->data['isAuthorizeToAction'] = Gate::allows("pengawasan-tl",[$sector_category,$sector_alias]);
+        $this->data['all_setting_periode'] = SettingPeriodeHawasbidRepositories::getPeriodeActive();
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\VariableHelper;
 use App\Repositories\IndikatorSectorRepositories;
+use App\Repositories\SettingPeriodeHawasbidRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
@@ -39,9 +40,9 @@ class SecretariatController extends Controller
         $request->session()->put('backlink_hawasbid'.$submenu, $full_url);
 
         $sector = Sector::where('alias',$submenu)->first();
-
         $send = [
-            'isAuthorizeToAction' => Gate::allows(implode(",",["pengawasan-hawasbid",$submenu_category,$submenu])),
+            'isAuthorizeToAction' => Gate::allows("pengawasan-hawasbid",[$submenu_category,$submenu]),
+            'all_setting_periode' => SettingPeriodeHawasbidRepositories::getPeriodeActive(),
             'menu' => $sector->category,
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,

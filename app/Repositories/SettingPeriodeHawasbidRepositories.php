@@ -15,9 +15,10 @@ class SettingPeriodeHawasbidRepositories
             throw new \Exception("Periode telah ada. Silahkan edit data tersebut", 400);
         }
     }
+    public static function getPeriodeActive(){
+        return SettingPeriodHawasbid::where('status_periode','A')->get();
 
-
-
+    }
     public function save(Request $request){
 
         $this->isPeriodeHasAvaible($request->periode_bulan, $request->periode_tahun);

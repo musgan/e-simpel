@@ -22,7 +22,7 @@ class IndikatorSectorRepositories
 
     private $kategori = "hawasbid";
 
-    private $isAuthorizeToAction = true;
+    private $isAuthorizeToAction;
 
     public function __construct($sector_category, $sector_alias)
     {
@@ -30,15 +30,13 @@ class IndikatorSectorRepositories
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
 
-        if(!Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias])))
-            $this->isAuthorizeToAction = false;
+        $this->isAuthorizeToAction = Gate::allows("pengawasan-hawasbid",[$sector_category,$sector_alias]);
     }
     public function setKategori($kategori){
         $this->kategori = $kategori;
 
         if($kategori == "tindak-lanjut")
-            if(!Gate::allows(implode(",",["pengawasan-tl",$this->sector_category,$this->sector_alias])))
-                $this->isAuthorizeToAction = false;
+            $this->isAuthorizeToAction = Gate::allows("pengawasan-tl",[$this->sector_category,$this->sector_alias]);
     }
     public function getKategori(){
         return $this->kategori;

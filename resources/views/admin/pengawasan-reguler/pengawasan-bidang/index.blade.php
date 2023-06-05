@@ -38,6 +38,8 @@
     </div>
     @endif
 
+    @include("info-setting-periode")
+
     <div class="card mb-3">
         <div class="card-header">
             <h5>Temuan {{$sector_selected->nama}}</h5>

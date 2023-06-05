@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\VariableHelper;
 use App\Repositories\IndikatorSectorRepositories;
+use App\Repositories\SettingPeriodeHawasbidRepositories;
 use App\Repositories\SettingPeriodeRepositories;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -52,7 +53,8 @@ class TindakLanjutanController extends Controller
 
 
         $send = [
-            'isAuthorizeToAction' => Gate::allows(implode(",",["pengawasan-tl",$submenu_category,$submenu])),
+            'isAuthorizeToAction' => Gate::allows("pengawasan-tl",[$submenu_category,$submenu]),
+            'all_setting_periode' => SettingPeriodeHawasbidRepositories::getPeriodeActive(),
             'menu' => $sector->category,
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,

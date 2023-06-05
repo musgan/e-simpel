@@ -42,6 +42,8 @@
   </div>
   @endif
 
+  @include("info-setting-periode")
+
   <div class="card mb-3">
     <div class="card-body">
       <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">

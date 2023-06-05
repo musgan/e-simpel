@@ -14,12 +14,12 @@ class DokumentasiRapatPengawasanRegulerRepositories
     private $sector_category, $sector_alias;
     private $sector;
     private $kategori = "hawasbid";
-    private $isAuthorizeToAction = true;
+    private $isAuthorizeToAction;
     public function __construct($sector_category, $sector_alias){
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
-        $this->isAuthorizeToAction = Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias]));
+        $this->isAuthorizeToAction = Gate::allows("pengawasan-hawasbid",[$sector_category,$sector_alias]);
     }
 
     public function setBaseUrl(String $base_url){
@@ -28,7 +28,7 @@ class DokumentasiRapatPengawasanRegulerRepositories
     public function setKategori($kategori){
         $this->kategori = $kategori;
         if($kategori == "tindak-lanjut")
-            $this->isAuthorizeToAction = Gate::allows(implode(",",["pengawasan-tl",$this->sector_category,$this->sector_alias]));
+            $this->isAuthorizeToAction = Gate::allows("pengawasan-tl",[$this->sector_category,$this->sector_alias]);
     }
 
     public function getDataTableArray(Request  $request){
