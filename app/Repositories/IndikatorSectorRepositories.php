@@ -8,6 +8,7 @@ use App\Helpers\VariableHelper;
 use App\IndikatorSector;
 use App\SettingPeriodHawasbid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class IndikatorSectorRepositories
@@ -21,14 +22,23 @@ class IndikatorSectorRepositories
 
     private $kategori = "hawasbid";
 
+    private $isAuthorizeToAction = true;
+
     public function __construct($sector_category, $sector_alias)
     {
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+
+        if(!Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias])))
+            $this->isAuthorizeToAction = false;
     }
     public function setKategori($kategori){
         $this->kategori = $kategori;
+
+        if($kategori == "tindak-lanjut")
+            if(!Gate::allows(implode(",",["pengawasan-tl",$this->sector_category,$this->sector_alias])))
+                $this->isAuthorizeToAction = false;
     }
     public function getKategori(){
         return $this->kategori;
@@ -103,7 +113,7 @@ class IndikatorSectorRepositories
             $url_edit = '<a href="'.url($this->base_url."/".$row->id.'/edit').'" class="btn btn-sm btn-warning mr-1 ml-1">'.__('form.button.edit.icon').'</a>';
 
                 $action .= $url_view;
-            if($hasAction & $row->secretariat->sector_id == $this->sector->id)
+            if($hasAction & $row->secretariat->sector_id == $this->sector->id & $this->isAuthorizeToAction)
                 $action .= $url_edit;
 
             $secretariat = $row->secretariat;

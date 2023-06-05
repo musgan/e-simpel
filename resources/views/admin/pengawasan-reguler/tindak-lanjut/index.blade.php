@@ -29,10 +29,11 @@
             </ol>
         </div>
     </div>
-    <div class="text-right mb-3">
-        <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
-    </div>
-
+    @if($isAuthorizeToAction)
+        <div class="text-right mb-3">
+            <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
+        </div>
+    @endif
 
     <div class="card mb-3">
         <div class="card-header">

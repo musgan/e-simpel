@@ -30,12 +30,14 @@
             </ol>
         </div>
     </div>
-
+    @if($isAuthorizeToAction)
     <div class="form-group text-right">
         <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
         <a class="btn btn-info btn-flat mr-2 mb-1" href="{{url($path_url_kesesuaian."/create")}}" >@lang("form.button.add.show") Kesesuaian</a>
         <a class="btn btn-primary btn-flat mr-2 mb-1" href="{{url($path_url."/create")}}" >@lang("form.button.add.show") Temuan</a>
     </div>
+    @endif
+
     <div class="card mb-3">
         <div class="card-header">
             <h5>Temuan {{$sector_selected->nama}}</h5>

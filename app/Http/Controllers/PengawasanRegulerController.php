@@ -10,6 +10,7 @@ use App\Repositories\SectorRepositories;
 use App\Repositories\SettingPeriodeRepositories;
 use App\Repositories\StatusPengawasanRegularRepositories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PengawasanRegulerController extends Controller
 {
@@ -46,6 +47,7 @@ class PengawasanRegulerController extends Controller
     {
         //
         $repo = new PengawasanRegulerRepositories($sector_category, $sector_alias);
+        $this->data['isAuthorizeToAction'] = Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias]));
         $this->data["template_word_name"] = $repo->getReportTemplateName();
         $this->data["template_word_url"] = $repo->getReportTemplateUrl();
         $this->data["is_template_word_avaible"] = $repo->isTemplateWordAvaible();

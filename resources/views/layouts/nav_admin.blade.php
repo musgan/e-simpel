@@ -53,7 +53,7 @@ if(isset($root_menu))
     </li>
   @endif
 
-  @if($user->user_level_id == 1 || $user->user_level_id == 2 || $user->user_level_id == 3)
+  @can('master')
     <li class="nav-item {{($menu == "master")?'active': ''}}">
 
       <a class="nav-link {{($menu == "master")?'': 'collapsed'}}" href="#" data-toggle="collapse" data-target="#collapseHawasbid" aria-expanded="true" aria-controls="collapseHawasbid">
@@ -75,7 +75,7 @@ if(isset($root_menu))
         </div>
       </div>
     </li>
-  @endif
+  @endcan
 
   <!-- Divider -->
   <hr class="sidebar-divider">

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Helpers\CostumHelpers;
 use App\Helpers\DataTableHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class DokumentasiRapatPengawasanAPMReporitories
@@ -15,11 +16,16 @@ class DokumentasiRapatPengawasanAPMReporitories
     private $sector_category = "";
     private $sector_alias = "";
 
+    private $isAuthorizeToAction = true;
+
     public function __construct($sector_category, $sector_alias)
     {
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+
+        if(!Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias])))
+            $this->isAuthorizeToAction = false;
     }
 
     public function setBaseUrl($base_url){
@@ -78,7 +84,7 @@ class DokumentasiRapatPengawasanAPMReporitories
                             <button type="submit" class="btn btn-flat btn-sm btn-danger">' . __('form.button.delete.icon') . '</button>
                         </form>';
 
-                    if($hasAction === true)
+                    if($hasAction === true & $this->isAuthorizeToAction)
                         $action .= $url_delete;
 
                     $row = [

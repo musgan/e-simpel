@@ -21,9 +21,11 @@
                                 Template world belum ada. Silahkan upload.
                                 @endif
                             </div>
+                            @if($isAuthorizeToAction)
                             <div class="input-group-append">
                                 <button class="btn btn-sm btn-primary" id="upload-template" type="button">UPLOAD</button>
                             </div>
+                            @endif
                         </div>
                         <input type="file" id="file-template" class="d-none">
                     </div>
@@ -55,7 +57,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-success btn-flat mr-5"  href="{{url("template-report/template_pr_hawasbid.docx")}}" target="_blank">Contoh template</a>
+                    @if($isAuthorizeToAction)
+                        <a class="btn btn-success btn-flat mr-5"  href="{{url("template-report/template_pr_hawasbid.docx")}}" target="_blank">Contoh template</a>
+                    @endif
                     <button type="button" class="btn btn-secondary btn-flat" data-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary btn-flat"><i class="fa fa-file-word-o mr-2" aria-hidden="true"></i>Download</button>
                 </div>

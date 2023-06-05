@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class SecretariatController extends Controller
 {
@@ -40,6 +41,7 @@ class SecretariatController extends Controller
         $sector = Sector::where('alias',$submenu)->first();
 
         $send = [
+            'isAuthorizeToAction' => Gate::allows(implode(",",["pengawasan-hawasbid",$submenu_category,$submenu])),
             'menu' => $sector->category,
             'menu_sectors'   => $this->sectors,
             'sub_menu'  => $submenu,

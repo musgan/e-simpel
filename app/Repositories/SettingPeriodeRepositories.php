@@ -13,6 +13,7 @@ class SettingPeriodeRepositories
         $model = SettingPeriodHawasbid::where('periode_bulan',$periode_bulan)
             ->where('periode_tahun', $periode_tahun)
             ->whereRaw('? BETWEEN start_periode_tindak_lanjut and stop_periode_tindak_lanjut',[$currentDate])
+            ->where('status_periode','A')
             ->first();
         if($model == null)
             throw new \Exception("Proses data gagal karena tidak dalam batas waktu yang ditentukan",400);
@@ -22,6 +23,7 @@ class SettingPeriodeRepositories
             return;
         $currentDate = date("Y-m-d");
         $model = SettingPeriodHawasbid::where('periode_bulan',$periode_bulan)
+            ->where('status_periode','A')
             ->where('periode_tahun', $periode_tahun)
             ->whereRaw('? BETWEEN start_input_session and stop_input_session',[$currentDate])
             ->first();

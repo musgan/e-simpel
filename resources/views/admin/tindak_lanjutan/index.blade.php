@@ -32,10 +32,11 @@ $user  = \Auth::user();
   </div>
 
 @include("message")
-
+@if($isAuthorizeToAction)
 <div class="form-group text-right mb-3">
     <button id="btn-form-dokumentasi-rapat" type="button" class="btn btn-info btn-flat mr-2 mb-1">@lang("form.button.add.show") Dokumentasi Rapat</button>
 </div>
+@endif
 
 <div class="card shadow mb-4">
   <div class="card-body">

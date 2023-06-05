@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sector;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class TindakLanjutanController extends Controller
 {
@@ -51,6 +52,7 @@ class TindakLanjutanController extends Controller
 
 
         $send = [
+            'isAuthorizeToAction' => Gate::allows(implode(",",["pengawasan-tl",$submenu_category,$submenu])),
             'menu' => $sector->category,
             'title' => 'Pengguna',
             'menu_sectors'   => $this->sectors,

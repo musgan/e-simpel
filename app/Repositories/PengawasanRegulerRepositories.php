@@ -14,6 +14,7 @@ use App\Variable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
@@ -24,11 +25,13 @@ class PengawasanRegulerRepositories
     private $sector;
     private  $opsi_download = "";
     private $kategori = "hawasbid";
+    private $isAuthorizeToAction = true;
 
     public function __construct($sector_category, $sector_alias){
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+        $this->isAuthorizeToAction = Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias]));
     }
 
     public function setBaseUrl(String $base_url){
@@ -41,6 +44,8 @@ class PengawasanRegulerRepositories
 
     public function setKategori($kategori){
         $this->kategori = $kategori;
+        if($kategori == "tindak-lanjut")
+            $this->isAuthorizeToAction = Gate::allows(implode(",",["pengawasan-tl",$this->sector_category,$this->sector_alias]));
     }
 
     public function isSectorInArray(Array $sectors){
@@ -197,10 +202,10 @@ class PengawasanRegulerRepositories
             if(!array_key_exists($periode, $hasAction))
                 $hasAction[$periode] = $this->checkAvaibleToAction($row->periode_bulan, $row->periode_tahun);
 
-            if($this->kategori == "hawasbid" && $hasAction[$periode]) {
+            if($this->kategori == "hawasbid" && $hasAction[$periode] && $this->isAuthorizeToAction) {
                 $action .= $url_edit;
                 $action .= $url_delete;
-            }else if($this->kategori == "tindak-lanjut" && $hasAction[$periode]){
+            }else if($this->kategori == "tindak-lanjut" && $hasAction[$periode] && $this->isAuthorizeToAction){
                 $action .= '<a href="' . url(implode("/",[$this->base_url, $row->id,"edit"])). '" class="btn btn-sm btn-flat btn-warning mr-1 ml-1">' . __('form.button.edit.icon') . '</a>';
             }
             $status = '<h5><span class="badge" style="padding: 5px;background-color: '.$row->background_color.'; color: '.$row->text_color.'" data-toggle="tooltip" data-placement="top" title="'.$row->status_pengawasan_regular_nama.'">'.$row->icon.'</span></h5>';

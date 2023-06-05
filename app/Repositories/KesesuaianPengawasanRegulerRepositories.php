@@ -7,17 +7,20 @@ use App\KesesuaianPengawasanRegularModel;
 use App\LingkupPengawasanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class KesesuaianPengawasanRegulerRepositories
 {
     private $sector_category, $sector_alias;
     private $sector;
     private  $base_url;
+    private $isAuthorizeToAction = true;
 
     public function __construct($sector_category, $sector_alias){
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+        $this->isAuthorizeToAction = Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias]));
     }
 
     public function setBaseUrl(String $base_url){
@@ -69,7 +72,7 @@ class KesesuaianPengawasanRegulerRepositories
             $url_delete = '<a href="'.url($this->base_url."/".$row->id).'" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">'.__('form.button.delete.icon').'</a>';
 
             $action .= $url_view;
-            if($hasAction[$periode]) {
+            if($hasAction[$periode] && $this->isAuthorizeToAction) {
                 $action .= $url_edit;
                 $action .= $url_delete;
             }

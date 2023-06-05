@@ -19,10 +19,14 @@ class PengawasanPolicy
     {
         //
     }
-    protected function isAvaibleTorun($user,$sector_category,$sector_alias, $roleAllowed){
+    protected function isAvaibleTorun($user,$sector_category,$sector_alias, $roleAllowed, $view = false){
         $role = strtolower($user->user_level->alias);
         if($role == "admin")
             return true;
+
+        if($view == true & $role == "mpn")
+            return true;
+
         $sectors = $user->user_level_groups->pluck('sector_id')->toArray();
         $cek_role = in_array($role, $roleAllowed);
         if($cek_role === false)

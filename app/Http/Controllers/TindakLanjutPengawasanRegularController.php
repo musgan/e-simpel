@@ -8,6 +8,7 @@ use App\Repositories\PengawasanRegulerRepositories;
 use App\Repositories\SectorRepositories;
 use App\Repositories\StatusPengawasanRegularRepositories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class TindakLanjutPengawasanRegularController extends Controller
@@ -53,6 +54,7 @@ class TindakLanjutPengawasanRegularController extends Controller
     {
         //
         $sector_selected = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
+        $this->data['isAuthorizeToAction'] = Gate::allows(implode(",",["pengawasan-tl",$sector_category,$sector_alias]));
         $this->data["menu"] = $sector_category;
         $this->data["sub_menu"] = $sector_alias;
         $this->data["path_url"] = $this->getPathUrl($sector_category, $sector_alias);
