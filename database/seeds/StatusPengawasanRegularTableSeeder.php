@@ -46,14 +46,6 @@ class StatusPengawasanRegularTableSeeder extends Seeder
                 'urutan'    => 4
             ],
             [
-                'id' => 'NOTRESOLVED',
-                'nama' => 'Belum diselesaikan',
-                'text_color' => 'white',
-                'background_color' => '#e74a3b', #text-warning
-                'icon' => '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>',
-                'urutan'    => 4
-            ],
-            [
                 'id' => 'NOTACTIONABLE',
                 'nama' => 'Tidak dapat ditindaklanjuti',
                 'text_color' => 'white',
