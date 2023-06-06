@@ -487,11 +487,11 @@ class PengawasanRegulerRepositories
 
     function addEvidenceToZip($listId,ZipArchive $zip){
         $baseDir = "public/pengawasan-reguler/" . $this->sector_alias."/";
-        foreach ($listId as $id){
+        foreach ($listId as $id => $number){
             $dir = $baseDir.strval($id);
             $listFiles = Storage::allFiles($dir);
             foreach ($listFiles as $file){
-                $zip->addFile(public_path(Storage::url($file)), "evidence/".$id."_".basename($file));
+                $zip->addFile(public_path(Storage::url($file)), "evidence/".$number."/".basename($file));
             }
         }
     }

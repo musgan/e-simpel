@@ -21,7 +21,7 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     private $jabatan_penanggung_jawab;
 
     private $no = 0;
-    private $listIdTindakLanjut = [];
+    private $listIdTindakLanjut = []; // {"id" => "number"}
 
     public function setTglTindakLanjut($tgl_tindak_lanjut){
         if($tgl_tindak_lanjut)
@@ -182,8 +182,8 @@ class ExportExcelTindakLanjutPengawasanRegularReport
     function setTemuan(LaravelExcelWorksheet $sheet, $row, $data_list_temuan){
         $is_add = false;
         foreach($data_list_temuan as $row_item){
-            array_push($this->listIdTindakLanjut, $row_item->id);
             $this->no += 1;
+            $this->listIdTindakLanjut[$row_item->id]=$this->no;
             $sheet->cell('A'.$row, function ($cell){
                 $cell->setValue($this->no);
             });
