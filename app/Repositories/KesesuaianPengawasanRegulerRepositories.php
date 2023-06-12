@@ -20,7 +20,7 @@ class KesesuaianPengawasanRegulerRepositories
         $this->sector_category = $sector_category;
         $this->sector_alias = $sector_alias;
         $this->sector = SectorRepositories::getByAliasAndCategory($sector_alias, $sector_category);
-        $this->isAuthorizeToAction = Gate::allows(implode(",",["pengawasan-hawasbid",$sector_category,$sector_alias]));
+        $this->isAuthorizeToAction = Gate::allows("pengawasan-hawasbid",[$sector_category,$sector_alias]);
     }
 
     public function setBaseUrl(String $base_url){
@@ -72,7 +72,7 @@ class KesesuaianPengawasanRegulerRepositories
             $url_delete = '<a href="'.url($this->base_url."/".$row->id).'" class="btn-link-delete btn btn-sm btn-flat btn-danger mr-1 ml-1">'.__('form.button.delete.icon').'</a>';
 
             $action .= $url_view;
-            if($hasAction[$periode] && $this->isAuthorizeToAction) {
+            if($hasAction[$periode] && $this->isAuthorizeToAction == true) {
                 $action .= $url_edit;
                 $action .= $url_delete;
             }
@@ -153,7 +153,7 @@ class KesesuaianPengawasanRegulerRepositories
         try {
             SettingPeriodeRepositories::isHawasbidAvaibleToupdate('hawasbid',
                 $request->periode_tahun,
-                $request->periode_bulan);
+                $request->peride_bulan);
 
             $model = new KesesuaianPengawasanRegularModel;
             $model->sector_id = $this->sector->id;

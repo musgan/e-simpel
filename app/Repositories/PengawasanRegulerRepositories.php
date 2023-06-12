@@ -259,7 +259,7 @@ class PengawasanRegulerRepositories
         try {
             SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
                 $request->periode_tahun,
-                $request->periode_bulan);
+                $request->peride_bulan);
 
             $model = new PengawasanRegulerModel;
             $model->periode_tahun = $request->periode_tahun;
@@ -294,7 +294,7 @@ class PengawasanRegulerRepositories
         try {
             SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
                 $request->periode_tahun,
-                $request->periode_bulan);
+                $request->peride_bulan);
 
             $model = $this->getById($id);
             $model->periode_tahun = $request->periode_tahun;
