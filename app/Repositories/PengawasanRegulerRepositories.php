@@ -387,7 +387,7 @@ class PengawasanRegulerRepositories
         DB::beginTransaction();
         try {
             $model = PengawasanRegulerModel::where('id',$id)
-                ->where('sector_id', $this->sector->id);
+                ->where('sector_id', $this->sector->id)->first();
             SettingPeriodeRepositories::isHawasbidAvaibleToupdate("hawasbid",
                 $model->periode_tahun,
                 $model->periode_bulan);
